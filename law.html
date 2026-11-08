@@ -1,0 +1,672 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Law Midterm Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: sticky progress header, one tab per exam block, cards you tick off, cases you reveal, quiz you grade yourself. */
+:root{
+  --bg:#f1f4f3; --surface:#ffffff; --surface2:#e9eeed; --ink:#14201f; --muted:#52615e; --line:#d3dbd9;
+  --legal:#1d6a86; --legal-soft:#dcedf3;
+  --eu:#4151b8; --eu-soft:#e3e6f7;
+  --mkt:#a64f0c; --mkt-soft:#faebd9;
+  --prop:#2a7a4b; --prop-soft:#dff0e5;
+  --good:#1f7a43; --bad:#b3261e; --warn-soft:#fff1c9; --warn-ink:#6b4b00;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1514; --surface:#16201f; --surface2:#1e2b29; --ink:#e7efed; --muted:#9fb1ad; --line:#2c3b38;
+    --legal:#63b7d4; --legal-soft:#16323c;
+    --eu:#8f9cf0; --eu-soft:#1e2447;
+    --mkt:#f0a566; --mkt-soft:#3a2514;
+    --prop:#6fcb93; --prop-soft:#173325;
+    --good:#6fcb93; --bad:#ff8f86; --warn-soft:#3b3010; --warn-ink:#f5d778;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1514; --surface:#16201f; --surface2:#1e2b29; --ink:#e7efed; --muted:#9fb1ad; --line:#2c3b38;
+  --legal:#63b7d4; --legal-soft:#16323c;
+  --eu:#8f9cf0; --eu-soft:#1e2447;
+  --mkt:#f0a566; --mkt-soft:#3a2514;
+  --prop:#6fcb93; --prop-soft:#173325;
+  --good:#6fcb93; --bad:#ff8f86; --warn-soft:#3b3010; --warn-ink:#f5d778;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.wrap{max-width:980px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:12px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.top-in{max-width:980px;margin:0 auto}
+.brand{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
+.brand h1{font-family:var(--display);font-size:1.35rem;line-height:1.1;margin:0;letter-spacing:-.01em}
+.meta{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.bar{display:flex;align-items:center;gap:10px;margin:8px 0 6px}
+.track{flex:1;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;display:flex}
+.track i{display:block;height:100%}
+.pct{font-family:var(--mono);font-size:.8rem;min-width:7.5ch;text-align:right}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:thin}
+nav.tabs button{flex:none;font:600 .92rem var(--body);padding:8px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:40px}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav.tabs button:focus-visible,.btn:focus-visible,summary:focus-visible,input:focus-visible,.chip:focus-visible{outline:3px solid var(--eu);outline-offset:2px}
+main{padding-top:18px}
+section.panel{display:block}
+h2{font-family:var(--display);font-size:1.6rem;margin:4px 0 6px;letter-spacing:-.015em;text-wrap:balance}
+h3{font-family:var(--display);font-size:1.1rem;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 14px;max-width:68ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card.k{border-left:5px solid var(--c,var(--line))}
+.stack{display:flex;flex-direction:column;gap:12px}
+.btn{font:600 .9rem var(--body);padding:8px 13px;min-height:40px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.sm{min-height:34px;padding:5px 10px;font-size:.85rem}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:500 .72rem var(--mono);padding:3px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+.chip.gap{background:var(--warn-soft);color:var(--warn-ink);border-color:transparent}
+.chip.past{background:var(--ink);color:var(--bg);border-color:transparent}
+.chip.b{border-color:transparent;color:var(--c);background:var(--cs)}
+.b-legal{--c:var(--legal);--cs:var(--legal-soft)}.b-eu{--c:var(--eu);--cs:var(--eu-soft)}
+.b-market{--c:var(--mkt);--cs:var(--mkt-soft)}.b-property{--c:var(--prop);--cs:var(--prop-soft)}
+.topic{--c:var(--c);}
+.topic header{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.topic ul{margin:10px 0 2px;padding-left:1.15em}
+.topic li{margin:4px 0}
+.topic li b{font-weight:700}
+.topic .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.know{flex:none;display:flex;align-items:center;gap:7px;font:600 .85rem var(--body);cursor:pointer;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface);min-height:40px}
+.know input{width:20px;height:20px;accent-color:var(--good)}
+.topic.done{opacity:.62}
+.topic.done h3{text-decoration:line-through;text-decoration-thickness:1px}
+details.case{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:0}
+details.case summary{cursor:pointer;list-style:none;padding:12px 14px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between;min-height:44px}
+details.case summary::-webkit-details-marker{display:none}
+details.case summary .nm{font-family:var(--display);font-weight:700;font-size:1.02rem}
+details.case summary .tg{color:var(--muted);font-size:.9rem;flex-basis:100%}
+details.case[open] summary{border-bottom:1px dashed var(--line)}
+details.case .bd{padding:10px 14px 14px}
+details.case .bd p{margin:6px 0}
+.lab{font:500 .7rem var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.held{background:var(--cs);border-radius:8px;padding:8px 10px;margin-top:6px}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;margin-top:10px}
+.sec-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:26px 0 4px}
+.sec-h h2{margin:0;font-size:1.25rem}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.filters button.chip{cursor:pointer;font-size:.8rem;padding:6px 11px;min-height:34px}
+.filters button.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+input[type=search]{font:inherit;padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:40px;width:100%;max-width:340px}
+.pbar{height:7px;border-radius:99px;background:var(--surface2);overflow:hidden;margin:8px 0 6px}
+.pbar i{display:block;height:100%;background:var(--c)}
+.big{font-family:var(--display);font-size:2rem;line-height:1;letter-spacing:-.02em}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.fact .big{font-size:1.5rem}
+.todo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.todo label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.todo input{width:20px;height:20px;margin-top:3px;accent-color:var(--good);flex:none}
+.todo .done span{text-decoration:line-through;color:var(--muted)}
+.quiz-card{min-height:240px;display:flex;flex-direction:column;gap:14px;justify-content:space-between}
+.quiz-q{font-family:var(--display);font-size:1.3rem;line-height:1.25;text-wrap:balance}
+.quiz-a{background:var(--surface2);border-radius:10px;padding:12px 14px;white-space:pre-line}
+.score{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+.note{background:var(--warn-soft);color:var(--warn-ink);border-radius:10px;padding:10px 12px;font-size:.95rem}
+.cov li{margin:6px 0}
+.small{font-size:.9rem;color:var(--muted)}
+@media (max-width:520px){.topic header{flex-direction:column}.brand h1{font-size:1.2rem}}
+@media (prefers-reduced-motion:no-preference){.pbar i,.track i{transition:width .3s}}
+.prow{display:grid;grid-template-columns:minmax(120px,1fr) 2fr;gap:10px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.pc{font-family:var(--display);font-weight:700;align-self:center}
+.rv{text-align:left;font:inherit;color:var(--ink);background:var(--eu-soft);border:1px solid var(--line);border-radius:9px;padding:9px 11px;cursor:pointer;min-height:44px;display:block;width:100%}
+.rv small{display:block;color:var(--muted);margin-top:3px;font-size:.88rem}
+.rv.hid,.rv.hid *{color:transparent;text-shadow:0 0 9px var(--muted)}
+@media (max-width:560px){.prow{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+<header class="top"><div class="top-in">
+  <div class="brand"><h1>Law Midterm Guide</h1><span class="meta">Fri 6 Nov 2026 · 60 min · closed book</span></div>
+  <div class="bar"><div class="track" id="mainTrack" aria-hidden="true"></div><span class="pct" id="mainPct">0 of 0</span></div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Guide sections"></nav>
+</div></header>
+<main id="main"></main>
+</div>
+
+<script>
+/* DATA: all facts come from this year's decks II to V, the Friday practical decks and LAW_everything. */
+const BLOCKS = {
+  legal:{name:"Legal systems",short:"Legal",desc:"Lecture II and practical I. LAW_everything pages 1 to 8."},
+  eu:{name:"EU law I",short:"EU law",desc:"Lecture III and practical II. LAW_everything pages 8 to 10, 14 to 16."},
+  market:{name:"Market and competition",short:"Market",desc:"Lecture IV. LAW_everything pages 11 to 13, 16 to 19."},
+  property:{name:"Property",short:"Property",desc:"Lecture V and practical III. LAW_everything pages 20 to 48."}
+};
+const TOPICS = [
+ {id:"l1",b:"legal",t:"Why law matters, and how it developed",src:"Deck II",file:"p1",pts:[
+  "Law is a body of rules created by the state that governs the conduct of its citizens.",
+  "<b>Adam Smith:</b> commerce cannot flourish where people do not feel secure in their property, where contracts are not enforced and where debts are not enforced.",
+  "<b>Friedman:</b> voluntary exchange presumes the state provides law and order, contract enforcement and a definition of property rights. <b>Cardozo:</b> the aim of law is social utility.",
+  "<b>History:</b> Hammurabi code is the oldest known legislation. The civilian tradition goes back to Roman law compiled under Justinian (6th century). Scholars called Glossators and Commentators worked on it.",
+  "<b>Magna Carta:</b> no one is above the law, including the king. Limits on taxation, fair trial, due process (clause 39). Only three clauses are still valid.",
+  "<b>Codification:</b> after the French revolution judges were seen as corrupt, the common law of France was abolished and the Code Napoleon (1804) filled the gap. Napoleon's armies spread it. Germany: Bavarian code, General German Commercial Code 1861, then the German Civil Code from commissions of 1874 and 1895 to 1900.",
+  "Frederick the Great's Prussian law had 17,000 articles, an attempt at a judge proof statute. Yet laws are always imperfect, which is why interpretation exists."]},
+ {id:"l2",b:"legal",t:"Rule of law and separation of powers",src:"Deck II",file:"p1",gap:true,pts:[
+  "<b>Rule of law (Tamanaha, 2012):</b> government officials and citizens are bound by the law and abide by it. Government by laws, not by individuals.",
+  "Alvazzi del Frate and Torini (2021): the meaning has become broad, symbolic and full of emotion.",
+  "<b>Separation of powers:</b> judicial, executive and legislative branches with checks and balances (Locke, 17th century). Montesquieu (1748): there is no liberty where legislative and executive power are united."]},
+ {id:"l3",b:"legal",t:"Common law versus civil law",src:"Deck II",file:"p1 to 2",pts:[
+  "<b>Common law</b> (English speaking countries): based on precedent. Judges justify decisions by precedents, social norms and public policy. Method is learned by reading cases. Adversarial process, two advocates before a jury and judge. Said to be faster. Equity softens its rigour.",
+  "<b>Civil law</b> (Western Europe, Roman law roots): core principles are codified and the code is the primary source. Judges justify by the meaning of the code and scholarly commentary. Method is learned by reading the code. Inquisitorial process, the judge finds the truth.",
+  "<b>Juries:</b> in the US a party has a right to a jury trial, though it is often waived. In the UK juries were abolished in almost all civil trials since 1966 but are used in criminal trials. France and Germany: no jury except in the most severe criminal cases.",
+  "US bridges the gap with Restatements and the UCC."]},
+ {id:"l4",b:"legal",t:"Hierarchy, sources and validity of law",src:"Deck II",file:"p2 to 4",pts:[
+  "<b>Hierarchy:</b> constitution over statutes, statutes over lower rules. The higher law prevails in a conflict. A newer law prevails over an older one.",
+  "<b>Sources:</b> legislation, commentaries (Restatements in the US), cases, natural justice (natural law), usages (customs), scholarly literature. Usage example: villagers always share a well in a set order, unwritten but recognised.",
+  "<b>Slovenia:</b> laws are published in the Official Gazette (Uradni list RS) and as a rule enter into force 15 days after publication (<b>vacatio legis</b>). The date is tied to publication, not adoption. They can enter into force earlier if stated.",
+  "A law ends when a new law replaces it or its term expires."]},
+ {id:"l5",b:"legal",t:"Retroactivity (likely exam question)",src:"Deck II",file:"p3",past:true,pts:[
+  "General principle: <b>prohibition of retroactivity</b>, for legal certainty. Also called ex post facto law.",
+  "Exception, <b>three conditions</b>: (1) the public interest requires it, (2) the law itself provides for retroactive effect, (3) it does not interfere with already acquired rights.",
+  "Examples: denationalisation laws, confiscation of property of suspicious origin."]},
+ {id:"l6",b:"legal",t:"Mandatory and default rules, behavioural angle",src:"Deck II",file:"p4",pts:[
+  "<b>Default rule:</b> you can choose to follow it or to formulate your own rule. <b>Mandatory rule:</b> binding, any other conduct violates it, cannot be replaced.",
+  "<b>Loss aversion</b> (Kahneman and Tversky, 1979): people dislike losses far more than they like equal gains.",
+  "A default rule sets the status quo, the reference point. Any deviation feels like a loss.",
+  "Savings plan: if people are not enrolled automatically, opting in feels like a loss of salary. If enrolled automatically, opting out feels like a loss of savings.",
+  "Other defaults: order of food in self service restaurants, cash at the ATM, office thermostat (OECD experiment: default set 1 degree lower cut temperature a lot, 2 degrees much less)."]},
+ {id:"l7",b:"legal",t:"Criminal law versus civil law, key terms",src:"Deck II",file:"p2, p5",pts:[
+  "<b>Criminal law:</b> the state enforces it, severe penalties, protects the public. Standard of proof: <b>beyond reasonable doubt</b>.",
+  "<b>Civil law</b> (law of obligations in Europe): parties sue each other and seek remedies such as damages. Standard: <b>balance of probabilities</b>, a much lower bar.",
+  "Parties: claimant and defendant (civil), prosecution and defence (criminal), appellant and respondent (appeal).",
+  "Legal professions: judges, advocates and lawyers, scholars, notaries, public prosecutors."]},
+ {id:"l8",b:"legal",t:"Core principles, judicial review, jurisdiction",src:"Deck II",file:"p2, p5",pts:[
+  "<b>Equity</b> mitigates the rigour of common law (judge's discretion, natural justice). <b>Certainty</b> is its counterpart.",
+  "<b>Legality:</b> law must be clear, ascertainable and not retroactive. <b>Presumption of innocence</b> (in dubio pro reo): the prosecution carries the burden, doubt means acquittal.",
+  "<b>Fair trial:</b> fair and public hearing before an independent and impartial tribunal. <b>Jury trial:</b> judged by fellow citizens. <b>Good faith</b> (bona fides): honesty and good moral standards.",
+  "<b>Judicial review:</b> the main remedy against the state. A court rules whether a decision of the state or a public body was lawful.",
+  "<b>Jurisdiction:</b> the territory where a law and legal system apply, national or supranational. The UK has several, English law means England and Wales, Scotland has its own."]},
+ {id:"l9",b:"legal",t:"Interpretation of legislation",src:"Deck II",file:"p5",pts:[
+  "Why: statutes are vague and abstract, only judicial interpretation makes them certain.",
+  "<b>Literal</b> (look at the words, the UK style). <b>Purposive</b> (look at the reason for the law, the continental style). <b>Contextual</b> (other parts of the statute). <b>Principles</b> (general principles of constitution and law). <b>Historical</b> (documents before enactment). <b>Objective</b> (current circumstances). <b>Teleological</b> (objective or purpose). Also <b>evolutive</b> interpretation, changing the law to suit modern needs.",
+  "<b>Formalism</b> (Posner): the judge applies the text and canons, 'the law made me do it', indifferent to consequences. <b>Realism:</b> considers morality, fairness, public policy and consequences, pragmatic, analytical and empirical."]},
+ {id:"l10",b:"legal",t:"Arbitration and ADR",src:"Deck II",file:"p5",pts:[
+  "<b>Arbitration:</b> parties appoint an arbitrator and are legally bound by the decision. Advantages: confidentiality, flexibility, specialist knowledge.",
+  "<b>ADR:</b> any method of resolving disputes that is neither arbitration nor court. Not binding, very flexible. Types: mediation, conciliation.",
+  "Slovenia has compulsory ADR mechanisms in the pre litigation stage of civil litigation."]},
+
+ {id:"e1",b:"eu",t:"Nature and evolution of the EU",src:"Deck III",file:"p8",gap:true,pts:[
+  "Unique institutional structure and unique legal order: rules directly invokable by individuals (direct effect) and overriding even national constitutions. Debate: state or international organisation?",
+  "<b>Evolution:</b> 1951 Coal and Steel Community, 1958 EEC, 1960s tensions, 1970s new members and crisis, 1980s Single Market, then EMU and EU citizenship, Constitution rejected 2005, <b>Lisbon Treaty in force 1 December 2009</b>.",
+  "<b>Today:</b> 27 member states (your friend's file says 28, that is outdated), about 400 million citizens, 24 official languages, four economic freedoms, internal market, EU citizenship.",
+  "<b>Context slides, lower priority:</b> Thatcher's Bruges speech (cooperation of sovereign states, light touch pro market bureaucracy, enterprise, no protectionism, defence via NATO). Polish Constitutional Court (EU acting beyond transferred competences). German court in Karlsruhe (ECB overstepped its mandate). Barnier on France regaining legal sovereignty. Draghi report is only a title slide. These show supremacy is contested."]},
+ {id:"e2",b:"eu",t:"The institutions",src:"Deck III",file:"p8 to 9",pts:[
+  "<b>Commission</b> (guards the EU interest): President plus 27 commissioners, about 25,000 civil servants in Directorate Generals. Policy shaping, legislative initiative, watchdog, negotiates international agreements.",
+  "<b>Council of the EU</b> (national interests): ministers of member states, forum where national interests collide, no decision without its approval, qualified majority voting, in practice aims for consensus.",
+  "<b>European Parliament</b> (democratic arm): the only directly elected institution, 705 MEPs in 7 political groups, co decision with the Council, accountability of commissioners.",
+  "<b>Courts:</b> Court of Justice (CJEU), General Court (competition issues), Civil Tribunal (EU civil servant cases), Advocates General (amicus curiae). Role: ensures respect for EU law, legality check of EU laws, cooperates with national judges.",
+  "<b>Citizen rights:</b> economic (work abroad), political (vote and stand in the country of residence, vote for the EP), consular protection in a third country."]},
+ {id:"e3",b:"eu",t:"Competence, subsidiarity, proportionality, measures",src:"Deck III",file:"p9 to 10",pts:[
+  "<b>Conferral:</b> the EU acts only where member states have agreed it has competence. <b>Exclusive</b> competence: only the EU may act. <b>Shared:</b> both EU and member states.",
+  "<b>Subsidiarity:</b> the EU acts only where objectives are better attained at EU level, and must not act where member states can satisfactorily do it. Institutions, especially the Commission, must demonstrate a real need for EU rules.",
+  "<b>Proportionality:</b> the legal instrument must be necessary, check whether a less constraining means achieves the same result. No burdens beyond what is necessary (Italy v Watson and Bellman).",
+  "<b>Regulation:</b> aim is uniformity, standard rule, immediately applicable in all member states, sets goal and how. <b>Directive:</b> aim is harmonisation, sets only the objective, each state chooses how to implement."]},
+ {id:"e4",b:"eu",t:"Direct effect, supremacy, autonomy, indirect effect (likely exam question)",src:"Deck III",file:"p9 to 10, 14",past:true,pts:[
+  "<b>Autonomy:</b> EU law is an independent, self referential order, distinct from national and international law. National law cannot alter, condition or block it.",
+  "<b>Direct effect:</b> individuals can invoke EU law in national courts. Established in Van Gend en Loos (1963).",
+  "<b>Supremacy:</b> EU law overrides conflicting national law, even constitutions. Every national judge must give it precedence. Established in Costa v ENEL (6/64, 1964).",
+  "<b>Directives:</b> direct effect only against the state or an emanation of the state (vertical), never against private parties (no horizontal effect): Marshall, Duke. Only once the implementation deadline has passed: Ratti.",
+  "<b>Indirect effect:</b> national courts must interpret national law in line with EU law as far as possible (Von Colson).",
+  "Together: autonomy, direct effect and supremacy make EU law the law of the land."]},
+ {id:"e5",b:"eu",t:"Preliminary ruling (Art. 267 TFEU)",src:"Deck III",file:"p14",pts:[
+  "A CJEU decision on <b>interpretation</b> or <b>validity</b> of EU law, given on request of a national court. Goal: uniform application in every member state.",
+  "<b>Lower courts may refer</b> (discretion). <b>Courts of last resort must refer</b> (no judicial remedy under national law).",
+  "The national court alone decides whether a reference is needed and relevant. A referring body must be established by law and permanent, have compulsory jurisdiction, apply rules of law and be independent."]},
+ {id:"e6",b:"eu",t:"Council of Europe and business human rights (likely exam question)",src:"Deck III",file:"p8, p14",past:true,gap:true,pts:[
+  "<b>Council of Europe:</b> 46 member states, established 1950, a <b>separate organisation from the EU</b>. Its treaty is the European Convention on Human Rights, enforced by the European Court of Human Rights in Strasbourg.",
+  "<b>How businesses use it:</b> Art. 6 fair trial (challenge planning procedures). Art. 8 private and family life (challenge intrusive media reporting). Art. 10 freedom of expression (challenge advertising restrictions). Art. 1 Protocol 1 property (challenge taxation and compulsory purchase)."]},
+ {id:"e7",b:"eu",t:"Slovenian judiciary and the ECtHR",src:"Deck III and practical II",file:null,gap:true,pts:[
+  "<b>Courts:</b> general and specialised (labour and social, administrative). General jurisdiction has four levels: 44 local courts, 11 district courts, 4 higher courts, the Supreme Court. Plus 4 specialised labour courts of first instance.",
+  "<b>Backlogs:</b> 199,893 unresolved cases in 1992, peak 597,587 in 1998 (213,559 'important'), improving after 1999. Clearance rate about 99 to 110 percent in 2010 to 2018. In 2021 pending cases were down 4 percent versus 2019 and 31 percent versus end of 2016.",
+  "<b>ECtHR 1959 to 2021:</b> 373 judgements against Slovenia. 267 on effective remedy, 263 on length of proceedings, 25 on fair trial, 8 on protection of property.",
+  "<b>Cases:</b> Lukenda (2002, 5 years 3 months, excessive), Lekic (2018, no violation), Alisic (2011, foreign currency savings), plus the property cases in the case bank below."]},
+ {id:"e8",b:"eu",t:"Precautionary principle (practical II)",src:"Practical II",file:null,gap:true,pts:[
+  "<b>Art. 191(2) TFEU:</b> allows regulators to act, restrict or block products, technologies or chemicals even when scientific certainty about a risk is incomplete.",
+  "<b>Critique (Sunstein):</b> incoherent, there are risks on both sides of every decision, precaution itself creates risks. Links to type one versus type two error, stagnation, missing the next big thing."]},
+
+ {id:"m1",b:"market",t:"Tariff barriers and discriminatory taxation",src:"Deck IV, practical II",file:"p11, 17 to 18",pts:[
+  "<b>Customs union (Art. 23 TFEU):</b> all customs duties and charges of equivalent effect are forbidden between member states.",
+  "<b>Charge of equivalent effect:</b> any pecuniary charge, however small, imposed unilaterally because goods cross a frontier, whatever its name. Forbidden regardless of reason, destination or goal.",
+  "<b>Art. 90 TFEU:</b> no internal taxation higher than on similar domestic products, and none that gives indirect protection to other products. The tax must be neutral."]},
+ {id:"m2",b:"market",t:"Non tariff barriers, MEEs and mutual recognition",src:"Deck IV",file:"p11",pts:[
+  "<b>Art. 28 TFEU:</b> quantitative restrictions (quotas) and measures having equivalent effect (MEEs) are prohibited.",
+  "<b>MEE (Dassonville formula):</b> all trading measures capable of hindering, directly or indirectly, actually or potentially, intra EU trade. The effect matters, not the aim. Discrimination is not required.",
+  "<b>Mutual recognition (Cassis):</b> goods lawfully produced and marketed in one member state can be sold in another unless a justified exception applies. Promotes integration but erodes high national standards.",
+  "<b>Exceptions (Art. 30 TFEU):</b> public morality, public policy, public security, protection of health and life of humans, animals or plants, national treasures, industrial and commercial property. Never a means of arbitrary discrimination or disguised restriction.",
+  "Keck and Mithouard later narrowed what counts as an MEE."]},
+ {id:"m3",b:"market",t:"The four freedoms",src:"Deck IV",file:"p11",pts:[
+  "<b>Four freedoms:</b> workers, establishment (self employed persons and companies), services (and recognition of diplomas), capital. Core rule: <b>no discrimination based on nationality</b>.",
+  "<b>Workers (Art. 39 old numbering):</b> no discrimination in employment, pay and conditions. Even rules applying without distinction can be obstacles if they deter leaving the home state.",
+  "<b>Establishment:</b> includes setting up agencies, branches and subsidiaries. <b>Services:</b> national laws that discriminate against service providers from other states are prohibited, directly or indirectly.",
+  "<b>Capital:</b> Directive 88/361 prohibits restrictions on movement of capital, directly effective from 1 July 1990. A declaration may be required, prior authorisation may not."]},
+ {id:"m4",b:"market",t:"Art. 101: restrictive practices",src:"Deck IV",file:"p12",pts:[
+  "Agreements between undertakings, decisions of associations and concerted practices that have the <b>object or effect</b> of preventing, restricting or distorting competition in the EU. Such agreements are <b>null and void</b>.",
+  "Examples: (a) fixing prices or trading conditions, (b) limiting production, markets or investment, (c) applying dissimilar conditions to comparable transactions, (d) tying, making a contract subject to unrelated extra obligations, (e) sharing markets or sources of supply.",
+  "<b>Horizontal:</b> between undertakings at the same level, such as competing manufacturers. <b>Vertical:</b> at different levels, manufacturer and distributor, wholesaler and retailer. Both can breach Art. 101 (Consten and Grundig)."]},
+ {id:"m5",b:"market",t:"Art. 102: abuse of dominant position",src:"Deck IV",file:"p12 to 13",pts:[
+  "<b>Dominance:</b> economic strength that lets a company prevent effective competition on the relevant market and behave to an appreciable extent independently of competitors and customers.",
+  "<b>Dominance itself is not prohibited.</b> Only abuse is. Dominant firms have a special responsibility. A non dominant firm doing the same thing is not caught.",
+  "<b>Two components:</b> (a) the relevant market (geographic, product, cross elasticity of supply) and (b) market share. Firms argue for a wide market, the Commission for a narrow one.",
+  "Below 50 percent share, other factors must be checked (United Brands: 40 to 45 percent plus weak competitors and own fleet)."]},
+ {id:"m6",b:"market",t:"Tech giants: Microsoft and Google",src:"Deck IV",file:"p13 (Microsoft only)",gap:true,pts:[
+  "<b>Microsoft (EU):</b> two abuses, refusal to supply interoperability information and tying Windows Media Player to Windows. Fine of 497 million euro upheld. A further 899 million in 2008 for non compliance.",
+  "<b>Google (EU):</b> Android fine of 4.34 billion euro upheld by the General Court on 14.9.2022, the largest ever. A separate 2.42 billion for favouring its own shopping comparison.",
+  "<b>Google (US):</b> Judge Mehta, 4.8.2024, Google is a monopolist in general search and search text ads. Exclusive default deals foreclosed rivals. Remedies on 2.9.2025: no breakup (no forced sale of Chrome or Android), but no exclusive contracts, data sharing with rivals for six years, ad syndication for five years, a technical committee.",
+  "<b>US versus EU:</b> the US worries more about false positives (wrongly punishing a firm, rule of reason). The EU worries more about false negatives (letting abuse continue)."]},
+ {id:"m7",b:"market",t:"Merger control",src:"Deck IV",file:"p13 (summary only)",gap:true,pts:[
+  "<b>Law:</b> EC Merger Regulation (substance) and Implementing Regulation (procedure, forms CO, Short Form CO, Form RS). <b>Test:</b> would the merger significantly impede effective competition (SIEC)?",
+  "<b>Outcomes:</b> unconditional approval, approval with commitments (sell a business part, license technology), or prohibition.",
+  "<b>Thresholds, option 1:</b> combined worldwide turnover over 5,000 million euro and EU turnover over 250 million for each of at least two firms. <b>Option 2:</b> worldwide over 2,500 million, combined over 100 million in each of three member states, over 25 million each for two firms in those states, and EU turnover over 100 million each for two firms. No EU dimension if each firm makes more than two thirds of its EU turnover in one member state.",
+  "<b>Phase 1:</b> 25 working days, over 90 percent of cases end here. <b>Phase 2:</b> 90 working days, extensions of 15 or 20. Remedies can be offered in either phase. Review: General Court, then Court of Justice.",
+  "<b>2022 General Court rulings:</b> Wieland/ARP and Thyssenkrupp/Tata Steel prohibitions upheld. The Commission need only show a likely SIEC. It has broad discretion on remedies. Thyssenkrupp/Tata was a 'gap case': no dominant firm but a market leader and a lost competitor in concentrated markets."]},
+ {id:"m8",b:"market",t:"State aid",src:"Deck IV",file:"p13 (summary only)",gap:true,pts:[
+  "<b>Four elements:</b> (1) state intervention or state resources (grants, interest and tax reliefs, guarantees, holdings, preferential goods and services), (2) selective advantage, (3) competition is or may be distorted, (4) trade between member states is likely affected.",
+  "Generally prohibited unless justified by general economic development. Member states must <b>notify</b>, aid may be implemented only after Commission approval, and the Commission can <b>recover</b> incompatible aid."]},
+ {id:"m9",b:"market",t:"Conclusions on EU law (slide)",src:"Decks III and IV",file:null,pts:[
+  "Spectacular extension of areas where the EU regulates, limited by subsidiarity. Institutions are distant from citizens.",
+  "EU law becomes the law of the states. Internal market means free flow of factors of production, no discrimination by nationality, broad liberalisation with few justified exceptions.",
+  "A level playing field for companies, and 'workable' competition."]},
+
+ {id:"p1",b:"property",t:"Economics of property",src:"Deck V",file:"p20 to 21",gap:true,pts:[
+  "Societies create property rights to encourage production, discourage theft and reduce the cost of protecting goods. Blackstone: 'sole and despotic dominion'. Marx: abolish private property.",
+  "Establishing property rights is not enough for growth: rights must also be <b>transferable</b> (Farmer A values land at 20,000, Farmer B at 30,000, trade moves it to the higher valuer).",
+  "Themes: tragedy of the commons, why there are no property rights in fish, transaction costs of the property system, rights on water.",
+  "<b>Four ways to hold property:</b> private ownership, public open access, public closed access, state ownership.",
+  "<b>Business purposes:</b> incentivise investment, facilitate exchange, protect competitive advantage (IP), reduce transaction and conflict costs, define residual control and risk.",
+  "<b>Economic functions in a past answer:</b> right to sell, to lease, to mortgage, to subdivide and to grant easements."]},
+ {id:"p2",b:"property",t:"Legal concept of property",src:"Deck V",file:"p20 to 21, 25",pts:[
+  "<b>Bundle of rights:</b> possess, use, transform, sell, donate, bequeath, mortgage, lease, exclude others. The owner is free to exercise them and others are forbidden to interfere. It creates a zone of privacy.",
+  "<b>In rem</b> rights (against everyone, property) versus <b>in personam</b> rights (against a person, contract).",
+  "<b>Features:</b> has monetary value, is an absolute right enforceable against all third persons, the object is an individually defined thing, and <b>numerus clausus</b> (a closed list of property rights).",
+  "<b>Classification:</b> possession, ownership (freehold and leasehold), mortgage, servitudes, land charge, building right (owning a house without the land)."]},
+ {id:"p3",b:"property",t:"Possession",src:"Deck V",file:"p22 to 24",pts:[
+  "Control a person intentionally exercises over a thing. In civil law, possession is a <b>fact, not a right</b>, but the law protects it. It is evidence of ownership, not proof.",
+  "Owner and possessor can differ: an owner lends a car, the driver possesses it.",
+  "Only <b>legal, bona fide and regular</b> possession (not acquired by force or deceit) can become ownership over time. A possessor is protected against third parties even if not the owner.",
+  "Types: actual, adverse, constructive, joint, physical and more, all derived from actual possession."]},
+ {id:"p4",b:"property",t:"Land, things attached, and what lies above and below",src:"Deck V",file:"p26, 31",pts:[
+  "<b>Land</b> includes mines and minerals, buildings and easements.",
+  "<b>Superficies solo cedit:</b> what is built or planted becomes part of the land and belongs to the landowner. Many exceptions today, such as condominium ownership.",
+  "<b>Air above:</b> only up to the height reasonably necessary for ordinary use and enjoyment (Bernstein). <b>Below:</b> the owner has rights to what lies beneath. Minerals, oil, coal and gas often belong to the state."]},
+ {id:"p5",b:"property",t:"Land register",src:"Deck V",file:"p27 to 29",pts:[
+  "A public register in civil law countries (Austria, Slovenia, Switzerland, Germany, Netherlands). Records plots and rights in rem: title, condominium, liens, building rights, servitudes.",
+  "<b>Three sheets:</b> A sheet (property), B sheet (title, the owner), C sheet (charges: pre emptive rights, mortgages, liens).",
+  "Entries are usually made by a lawyer or notary. To acquire ownership you must request registration before the land register court.",
+  "<b>Before registration:</b> clear encumbrances or take them over in the price, pay real estate transfer tax, get authorisations (foreign buyers, agricultural or forest land, restricted municipalities). The application states the exact property and the applicant's name, birth date and residence, usually filed electronically with the district court."]},
+ {id:"p6",b:"property",t:"Types of ownership",src:"Deck V",file:"p30 to 38",pts:[
+  "<b>Freehold:</b> absolute title, but limited by legislation. <b>Leasehold:</b> the landlord grants a tenant the right to use for rent and keeps a <b>freehold reversion</b>. When the lease ends, full title returns to the landlord.",
+  "<b>Co ownership:</b> English law has joint tenancy (whole property held collectively, equals common ownership in civil law) and tenancy in common (a notional share). In civil law each co owner has a share, shown as a promille or percent and entered in the land register.",
+  "<b>Condominium (PPE):</b> a share in the whole building plus exclusive rights to a unit. Annual general assembly with an administrator. Shares depend on floor space, accessibility, direction, position, noise exposure, views and number of rooms.",
+  "<b>Common (joint) ownership:</b> no shares, all own equally the whole, typically from marriage or inheritance."]},
+ {id:"p7",b:"property",t:"How property is established",src:"Deck V",file:"p39 to 41",pts:[
+  "Four ways: <b>statute</b> (occupation, possession, fruits), <b>legal transaction</b> (contract), <b>court decision</b>, <b>inheritance</b>.",
+  "<b>Adverse possession:</b> a bona fide possessor acquires a movable after <b>3 years</b> and land after <b>10 years</b>. Needs factual, exclusive possession with the necessary intention and good faith. (Your friend's slide shows only 10 years.)",
+  "<b>Occupation:</b> only for discarded things, not lost things. <b>Fruits</b> belong to the owner of the main thing.",
+  "<b>Legal transaction conditions:</b> (a) ability to dispose of the property, (b) a valid binding transaction plus delivery of a movable or entry in the land register with the intabulation clause, (c) a non owner can still transfer to a good faith buyer if it was an auction, sold in the seller's ordinary business, or the seller got it from the original owner.",
+  "<b>Inheritance:</b> acquired the moment inheritance is introduced, by will or by law (hereditary orders)."]},
+ {id:"p8",b:"property",t:"Intabulation clause and the 8 steps of a real estate transfer",src:"Deck V",file:null,gap:true,pts:[
+  "<b>Intabulation clause:</b> the seller's explicit and unconditional statement permitting entry in the land register. The signature must be certified by a notary. It can sit in the contract or be issued later in a special notarial deed. Art. 49 SPZ: it must state the seller's name, address, tax number and the plot number and cadastral municipality.",
+  "You become the owner only on <b>registration</b>, not when you pay. Anyone who honestly relies on the register is protected.",
+  "<b>Steps:</b> (1) check the register, public and free via e Sodstvo, (2) check permits (building and use permit, land use certificate from the municipality), (3) agree price and terms, valuation, (4) gather documents, (5) sign the contract in writing with a notarial deed including the intabulation clause, (6) pay tax: application within 15 days of the contract, payment within 30 days, stamp on the contract, (7) notary certifies the signature (ID, signed contract, land use certificate), (8) apply for entry in the land register, usually via a notary, cost normally borne by the buyer."]},
+ {id:"p9",b:"property",t:"Security over assets: mortgage, land charge, pledge, lien (likely exam question)",src:"Deck V",file:"p42 (pledge only)",past:true,gap:true,pts:[
+  "<b>Mortgage (hypothek):</b> security for a loan over real estate. It is <b>accessory</b>: (a) arises only for the mortgagee who is the creditor, (b) ends if the secured claim ends, (c) can be enforced only if the claim is due, (d) cannot be assigned without the claim.",
+  "<b>Land charge (grundschuld):</b> <b>non accessory</b>, independent of the claim, flexible, a separate security purpose agreement. Most common collateral in Germany. Abolished in Slovenia. Both need a land register application signed by the owner and certified by a notary, and the right arises on registration. Rank depends on the registration date.",
+  "<b>Pledge:</b> goods are deposited as security, the lender keeps them until repayment and may sell them if unpaid. Accessory. To perfect it over movables the pledgee must take possession. A <b>non possessory pledge</b> lets the debtor keep and use the things (machines, cattle, cars).",
+  "<b>Lien (retention):</b> the creditor refuses to hand back property until the debt is paid. <b>Security transfer:</b> non accessory, title passes but the transferee agrees not to use it until a trigger event, the transferor keeps possession. Slide 70 says a notary deed is required, slide 72 says no form or registration is needed for pledges and security transfers of movables. Learn both and stress that assets must be clearly identified."]},
+ {id:"p10",b:"property",t:"Bill of lading",src:"Deck V",file:null,gap:true,pts:[
+  "Issued by the carrier on the shipper's demand, transferable by endorsement. <b>Three functions:</b> (a) conclusive receipt that goods were loaded, (b) contains or evidences the contract of carriage, (c) <b>document of title</b> to the goods.",
+  "<b>Straight</b> BL: named consignee, not negotiable, used when paid in advance. <b>Order</b> BL: can be negotiated to a third party, used when shipping before payment, can serve as collateral. Types: on board versus received for shipment.",
+  "<b>Nemo dat quod non habet:</b> a seller cannot pass better title than he has, so a BL does not give full title if goods are stolen or encumbered.",
+  "<b>Electronic BL:</b> legally equivalent if it replicates the three functions (UNCITRAL Model Law on Electronic Transferable Records, UK Electronic Trade Documents Act of July 2023, German Commercial Code sec. 516). Sea shipments follow the Hague, Hague Visby or Hamburg Rules.",
+  "<b>Trade flow:</b> seller gives goods to the carrier and gets the BL. Seller passes the BL to its bank for payment. Bank passes it to the buyer's bank and the buyer. Buyer shows the BL to the carrier and takes delivery. The BL is one of three key documents with the insurance policy and the invoice."]},
+ {id:"p11",b:"property",t:"Servitudes and the end of property rights",src:"Deck V",file:null,gap:true,pts:[
+  "<b>Servitude:</b> a registered right over another person's immovable property, such as a right of way. <b>Praedial:</b> attached to a property, binds the new owner. <b>Personal:</b> for one individual, falls away when they leave.",
+  "<b>Property right ends</b> when someone else acquires it, the object is abandoned, destroyed, or legislation removes it (nationalisation)."]},
+ {id:"p12",b:"property",t:"Protecting property rights",src:"Deck V",file:null,gap:true,pts:[
+  "<b>Rei vindicatio:</b> the owner demands the thing back from someone wrongly possessing it. It needs ownership, not a contract. Roman origin, still the core remedy.",
+  "<b>Damages</b> are the usual remedy for broken promises and accidents. An <b>injunction</b> (equitable relief) is the usual remedy for trespass and interference with property.",
+  "<b>Art. 99 Property Code, negatory action (actio negatoria):</b> where a third party disturbs the owner without taking the thing, the owner can demand that the disturbance stops and is prohibited in future, plus damages. High Court of Ljubljana case 2110/2019: a wall and foundation built on the plaintiff's parcel, removal ordered.",
+  "<b>Art. 73(1):</b> neighbours must exercise rights so as not to disturb or damage each other (nuisance). <b>Art. 75(1) prohibited emission:</b> the owner must avoid actions and remove causes that make other properties harder to use than normal or cause significant damage."]}
+];
+
+const CASES = [
+ {b:"legal",n:"Interbrew v Competition Commission (2001)",tag:"Judicial review of a merger decision",facts:"Belgian brewer Interbrew bought Bass. The UK Competition Commission ordered it to sell Bass. Interbrew sought judicial review, saying the procedure was unfair.",held:"High Court quashed the decision. The Office of Fair Trading reconsidered, and Interbrew still had to sell some UK brewing interests but kept Bass."},
+ {b:"legal",n:"IRC v Hinchy (1960)",tag:"Literal interpretation",facts:"Tax law set a fixed penalty plus treble the tax 'which he ought to be charged'. Was the treble based on the whole tax or only the unpaid part?",held:"House of Lords used the literal approach: the defaulting taxpayer pays triple the original tax bill."},
+ {b:"legal",n:"Alpha Business Machines",tag:"Civil claim for payment",facts:"Alpha sold equipment for 30,000, got a 5,000 deposit, delivered and invoiced 25,000. Customer refused, claiming faults. Alpha's engineers blamed the customer.",held:"If Alpha wins, the court orders payment of 25,000 plus interest from the due date until payment, and normally Alpha's reasonable legal costs."},
+ {b:"legal",n:"Adler v George (1964)",tag:"Literal versus purposive",facts:"A demonstrator entered an army base and was charged with obstructing forces 'in the vicinity of' a prohibited place. She argued she was on the base, not near it.",held:"Literal reading gives an absurd result. 'Vicinity' includes the place itself."},
+ {b:"legal",n:"Smith v Hughes (1960)",tag:"Purposive interpretation",facts:"A prostitute solicited men from her window and was prosecuted for 'soliciting in the street'.",held:"The Act aims to prevent annoyance to people in public places. Her conduct was felt in the street, so she fell within the Street Offences Act 1959."},
+ {b:"legal",n:"Royal College of Nursing v DHSS (1981)",tag:"Literal versus purposive, split courts",facts:"The Abortion Act 1967 required a 'registered medical practitioner'. New methods meant nurses did most of the procedure under a doctor's supervision.",held:"Court of Appeal (literal): unlawful. House of Lords by majority (purposive): lawful. Lord Diplock: the Act aims at broader grounds and proper skill and hygiene."},
+ {b:"legal",n:"Sweet v Parsley (1969)",tag:"Strict liability and guilty knowledge",facts:"Miss Sweet let a house. Police found cannabis with the tenants. She was charged with being concerned in the management of premises where drugs were found.",held:"Not guilty without proof of guilty knowledge. Strict liability is presumed not to be intended unless the statute clearly says so."},
+ {b:"legal",n:"Playing music (park bye laws)",tag:"Purposive approach on a hypothetical",facts:"Bye laws ban 'singing or playing music'. Wayne plays a phone radio loudly and says he is not playing anything.",held:"Even literally, playing music includes a radio playing music. The purpose is to stop noise pollution, so a purposive reading also covers broadcast music. Wayne probably breached the bye laws."},
+ {b:"legal",n:"DPP v Bull (1995)",tag:"Mischief rule",facts:"A male prostitute was charged under the Street Offences Act 1959, which targets a 'common prostitute'.",held:"Court applied the mischief rule: the Act aimed at a mischief created by women, so it applied only to female prostitutes. Mischief rule dates from Heydon's Case (1584) and applies only where the statute is ambiguous (Re Sussex Peerage)."},
+ {b:"legal",n:"R v Dudley and Stephens (1884)",tag:"Necessity is no defence to murder",facts:"Shipwrecked sailors in a lifeboat killed and ate the cabin boy to survive, relying on a custom of the sea.",held:"Necessity is not a defence to murder. Who is to decide whose life is worth less? The principle could become a legal cloak for unbridled passion. Sentenced to death with a recommendation for mercy."},
+
+ {b:"eu",n:"Van Gend en Loos (1963)",tag:"Direct effect",facts:"Benelux countries reclassified a chemical into a category with higher customs duties, against a treaty rule to reduce duties between member states.",held:"Treaty provisions can create rights that individuals enforce before national courts. The Community is a new legal order whose subjects include nationals. This is direct effect."},
+ {b:"eu",n:"Costa v ENEL (6/64, 1964)",tag:"Supremacy",facts:"Costa, a shareholder, refused to pay an electricity bill after Italy nationalised the electricity company, claiming it breached EC law. Italy said its later statute beat the earlier ratification act.",held:"Supremacy is affirmed. The transfer of rights to the Community is a permanent limitation of sovereign rights that a later unilateral act cannot override."},
+ {b:"eu",n:"Publico Ministero v Ratti (148/78, 1979)",tag:"Direct effect of directives",facts:"Italian solvent maker Ratti was charged for labelling that followed two EC directives. The deadline had passed for one but not the other.",held:"Only the directive whose implementation deadline had expired can be relied on for direct effect, giving a defence to one charge."},
+ {b:"eu",n:"Von Colson and Kamann",tag:"Indirect effect",facts:"Two women were rejected for prison social work jobs in favour of men. Germany had not transposed the Equal Treatment Directive.",held:"Instead of direct effect, member states must interpret existing national law to give effect to the directive."},
+ {b:"eu",n:"Duke v GEC Reliance",tag:"No horizontal direct effect",facts:"GEC forced women to retire at 60 and men at 65. Mrs Duke relied on the Equal Treatment Directive.",held:"House of Lords: she could not use the directive because her employer was not an emanation of the state. No horizontal direct effect."},
+ {b:"eu",n:"Marshall v Southampton AHA (152/84, 1986)",tag:"Directives against the state",facts:"Miss Marshall, 62, was dismissed from the NHS at the statutory retirement age of 60 for women (65 for men) and relied on the equal treatment directive.",held:"The ECJ agreed, the directive had direct effect, but only because the employer was part of the state. Against a private employer she would have lost."},
+ {b:"eu",n:"Macarthys v Smith (1979)",tag:"EU law prevails over UK law",facts:"A woman was paid less than the man who held the job before her. UK law banned unequal pay only for simultaneous employment, EC law also covered successive employment.",held:"Community law prevails. Lord Denning: where inconsistent, Community law has priority. First clear EU versus UK law conflict."},
+ {b:"eu",n:"Factortame",tag:"Disapplying national law, interim relief",facts:"Spanish firm Factortame tried to register 95 vessels as British to use British quotas. The UK Merchant Shipping Act 1988 limited registration to British owners.",held:"After two references to the ECJ, national courts must set aside national law that conflicts with EU law, including granting interim relief. The Act was incompatible with EC law."},
+ {b:"eu",n:"Italy v Watson and Bellman (1976)",tag:"Proportionality",facts:"Italian law required foreigners to register their presence so authorities knew population movements.",held:"Freedom of movement does not stop states from registering movements. The burden must not exceed what is necessary (proportionality)."},
+ {b:"eu",n:"Pretura di Volterra v Messner (1989)",tag:"Proportionality of penalties",facts:"Italy required nationals of other states to declare residence within three days of arrival, under a penal sanction.",held:"The obligation itself is fine. A short deadline or a disproportionate penalty, such as imprisonment, is incompatible with free movement."},
+ {b:"eu",n:"Stretch v UK (2003)",tag:"Property right of a business",facts:"A council leased land to Stretch for 22 years with an option to renew. When he tried to renew, the option was said to be beyond the council's powers.",held:"English courts sided with the council. The ECtHR found a breach of Art. 1 Protocol 1: he was left without any remedy. He should at least get compensation for being misled."},
+ {b:"eu",n:"Rola v Slovenia (2019)",tag:"Professional licence as a possession",facts:"A liquidator lost his bankruptcy licence after a conviction for violent behaviour.",held:"His professional practice counts as a possession under Art. 1 Protocol 1, so revoking the licence interfered with property rights."},
+ {b:"eu",n:"Vaskrsic v Slovenia (2012)",tag:"Property at auction",facts:"His home was sold at auction for 50 percent of market value in enforcement over a debt of only 124 euro.",held:"Complaint under Art. 1 Protocol 1 that the interference with property was disproportionate."},
+ {b:"eu",n:"Pintar and others v Slovenia (2016)",tag:"Shares and subordinated bonds",facts:"Shares and subordinated bonds of banks placed in compulsory administration.",held:"Shares of an insolvent company still have economic value and are possessions under Art. 1 Protocol 1. Lekic (2018): applies even to cancelled shares."},
+
+ {b:"market",n:"Commission v Italy (24/68)",tag:"Charge of equivalent effect to a customs duty",facts:"Italy charged exporters a fee for statistical data collection, 28 euro on a 300,000 euro shipment. Dedex (bee exporter) is told to pay.",held:"Do not pay. Any pecuniary charge, however small, imposed unilaterally because goods cross a frontier is forbidden."},
+ {b:"market",n:"Bresciani (87/75)",tag:"Inspection fees on imports",facts:"Italy charged a flat rate veterinary and health inspection duty on imported raw cowhides, not on domestic ones.",held:"A charge equivalent to a customs duty, even if proportional to inspection costs. Public health inspection serves the general interest, so the whole state, not the importer, bears the cost."},
+ {b:"market",n:"Humblot (112/84)",tag:"Discriminatory internal taxation",facts:"Annual car tax: up to 1,100 euro below 16 HP, 5,500 euro above. Only a domestic maker built cars under 16 HP.",held:"Violates Art. 90 TFEU (old Art. 95). The tax reduces competition for domestic cars and breaches the principle of neutrality of domestic taxation."},
+ {b:"market",n:"Dassonville (8/74, 1974)",tag:"Measure equivalent to a quota",facts:"Scotch whisky imported into Belgium from France without a certificate of origin. Harder to get for parallel importers than direct importers.",held:"Defines an MEE: any measure capable of hindering trade directly or indirectly, actually or potentially. Effect matters, not aim. Reasonable anti fraud measures must not hinder trade."},
+ {b:"market",n:"Cassis de Dijon",tag:"Mutual recognition",facts:"Germany required fruit liqueurs to have at least 25 percent alcohol. Cassis from France has 15 to 20 percent.",held:"If a product is lawfully marketed in one member state it must be allowed in all. Created mutual recognition and paved the way for the 1993 single market."},
+ {b:"market",n:"Conegate (121/85)",tag:"Public morality exception",facts:"UK customs seized inflatable dolls imported from Germany on grounds of public morality.",held:"The UK could not rely on Art. 30 because it had no ban on making or marketing the same goods at home. Restrictions must not apply only to imports."},
+ {b:"market",n:"Graf (C 190/98, 2000)",tag:"Workers: what counts as an obstacle",facts:"Austrian termination pay was lost if a worker resigned. Graf resigned after 3.5 years to join a German firm.",held:"No obstacle to free movement of workers. Too uncertain and indirect a link to deter leaving."},
+ {b:"market",n:"Levin (53/81, 1982)",tag:"Who is a worker",facts:"British Mrs Levin worked 20 hours a week as a chambermaid in the Netherlands, below the minimum wage, partly to get worker status.",held:"Worker status depends on genuine work, not the size of earnings. Her motive was irrelevant."},
+ {b:"market",n:"Van Duyn v Home Office (41/74)",tag:"Limits on entry",facts:"Case on refusing leave to enter and reside to a national of another state.",held:"Limitations (such as public policy) can mean leave to enter or reside is refused to a national of another member state."},
+ {b:"market",n:"Thieffry (71/76, 1977)",tag:"Establishment: recognition of qualifications",facts:"Belgian Thieffry's law doctorate was recognised by Paris, but the Paris Bar refused to recognise it for bar admission.",held:"A breach of the freedom of establishment (Art. 43)."},
+ {b:"market",n:"Vlassopoulou (C 340/89, 1991)",tag:"Equivalence of qualifications",facts:"A Greek lawyer working in Germany applied to the German Bar but was refused for lacking German studies.",held:"Authorities must assess how equivalent her Greek qualifications are to the German ones."},
+ {b:"market",n:"Van Binsbergen (33/74, 1974)",tag:"Services: indirect discrimination",facts:"Dutch rules required lawyers to be habitually resident in the Netherlands.",held:"Indirect discrimination against foreigners, who are less likely to live there. Can strip the freedom to provide services of effect."},
+ {b:"market",n:"Deliege (C 51/96 and 191/97, 2000)",tag:"Services: sport",facts:"Belgian judoka not selected by her federation for international tournaments. Can an amateur rely on the services freedom?",held:"Sport is covered only if it is an economic activity. An elite athlete can provide services for remuneration. Federation selection rules inherent in organising a competition are not in themselves a restriction."},
+ {b:"market",n:"Bordessa (C 358 and 416/93, 1995)",tag:"Free movement of capital",facts:"Spanish and Italian nationals were charged for taking more money out of Spain than allowed without prior authorisation.",held:"Directive 88/361 is directly effective from 1 July 1990. States may require a declaration, but not prior authorisation (disproportionate). Sanz de Lera: same for coins."},
+ {b:"market",n:"IAZ International Belgium v Commission (1983)",tag:"Art. 101: standards agreement",facts:"Only machines meeting Belgian standards set by an agreement between water suppliers and a trade association could be connected to mains water.",held:"Disadvantaged suppliers outside the trade association. Caught by the competition rules on agreements."},
+ {b:"market",n:"Dyestuffs (C 48/69, 1972)",tag:"Concerted practice",facts:"Dye makers with over 80 percent of sales raised prices at exactly the same time. They said it was parallel behaviour in an oligopoly.",held:"No formal agreement needed. Telexes with identical wording showed coordination. Parallel behaviour is strong evidence of a concerted practice if it leads to abnormal market conditions."},
+ {b:"market",n:"Consten and Grundig (C 56/64, 1966)",tag:"Vertical agreements and Art. 101",facts:"Consten was Grundig's sole French distributor with a total ban on imports or exports elsewhere in the EU. UNEF sold Grundig goods in France.",held:"Vertical as well as horizontal agreements can breach what is now Art. 101 if they may affect trade between member states."},
+ {b:"market",n:"Flat Glass (C 89/93, 1992)",tag:"Collective dominance",facts:"A group of firms with 79 to 95 percent of flat glass engaged in concerted price fixing.",held:"They held a dominant position, so Art. 102 could apply. Dominance means power to behave independently of competitors, buyers and suppliers."},
+ {b:"market",n:"Continental Can v Commission (6/72)",tag:"Relevant market must be proven",facts:"US firm Continental Can, via its subsidiary, held 86 percent of Schmalbach (dominant in German tins) and proposed to take over Dutch firm Thomassen.",held:"The Commission found abuse, but the ECJ overturned it because the Commission failed to identify the relevant product market and so did not prove dominance."},
+ {b:"market",n:"United Brands v Commission (C 27/76, 1978)",tag:"Dominance with under 50 percent",facts:"United Brands handled 40 percent of EU banana trade and charged different prices for the same goods in different member states.",held:"Bananas form a separate product market. 40 to 45 percent share plus competitors at 16 and 10 percent and its own fleet meant dominance. Different pricing was abuse."},
+ {b:"market",n:"Microsoft v Commission (2007)",tag:"Interoperability and tying",facts:"Complaint from Sun Microsystems about licensing. Issues: refusal to share interoperability information and tying Windows Media Player to Windows.",held:"497 million euro fine upheld. Microsoft must offer Windows without Media Player and share information. Tying means making buyers of one product also buy another. Extra fine of 899 million in 2008."},
+ {b:"market",n:"Google (EU and US)",tag:"Dominance in the digital age",facts:"EU: Android abuse and shopping comparison favouritism. US: exclusive default search deals.",held:"EU General Court upheld the 4.34 billion fine on 14.9.2022. US court (4.8.2024) found monopoly, and on 2.9.2025 ordered behavioural remedies without a breakup."},
+ {b:"market",n:"Wieland and Thyssenkrupp/Tata Steel (2022)",tag:"Merger prohibitions upheld",facts:"Wieland/ARP would create a dominant player. Thyssenkrupp/Tata Steel would remove a competitor in concentrated markets without creating dominance (gap case).",held:"General Court upheld both prohibitions (18 May and 22 June 2022). The Commission need only show a likely significant impediment to competition and has wide discretion on remedies."},
+
+ {b:"property",n:"Mule born in a meadow",tag:"Fruits belong to the owner of the main thing",facts:"A mule is born in a remote meadow in Koroška. Does it belong to the owner of the mother, the owner of the land, the lumber company leasing the land, or the state because it is a national park?",held:"By the rule that ownership of fruits goes to the owner of the main thing (slide on establishment by statute), the mother's owner. This is applied from the rule, not stated in the slide."},
+ {b:"property",n:"Bernstein v Skyviews (1978)",tag:"Airspace",facts:"A plane flew several hundred feet over land to take an aerial photograph. The landowner relied on 'cuius est solum, eius est usque ad coelum'.",held:"No trespass. Rights over airspace reach only the height reasonably necessary for ordinary use and enjoyment of the land. Above that, the owner has no more rights than the public."},
+ {b:"property",n:"Grisby v Melville (1974)",tag:"A cellar below the house",facts:"Eva buys a house with a cellar that can only be entered from Jan's land. Jan uses it for storage.",held:"The house owner owns the cellar under her house, even without access. She can get an injunction against Jan."},
+ {b:"property",n:"Edwards v Lee's Administrators (1936)",tag:"Cave under a neighbour's land",facts:"The Great Onyx Cave was run as a tourist attraction by the owner of the entrance land, but extended under the neighbour's land.",held:"The neighbour is entitled to a proportionate share of the net profits from the cave."},
+ {b:"property",n:"Metropolitan Railway v Fowler and the Channel Tunnel",tag:"Can subsoil be owned separately?",facts:"Who owns the Channel Tunnel?",held:"A tunnel is an interest in land (Fowler, 1892). Title to the Channel Tunnel is registered separately from the surface owners above it."},
+ {b:"property",n:"Star Energy v Bocardo (2010)",tag:"Rights below the surface",facts:"An oil well started on a neighbour's land but passed through Bocardo's land several hundred feet down.",held:"A landowner's rights extend indefinitely below the surface, so there was trespass. Without proven loss, damages were only nominal."},
+ {b:"property",n:"Lejonvarn v Cromwell Mansions (2011)",tag:"Horizontal strata",facts:"A house split into three flats on 999 year leases. The ground floor leaseholder wanted to excavate the basement.",held:"The ground floor lease did not include the subsoil, which stayed with the freeholder (a company owned collectively by the tenants)."},
+ {b:"property",n:"Pierson v Fox",tag:"Possession of a wild animal",facts:"Post hunted and chased a fox with hounds on waste land. Pierson killed it and took it away.",held:"On appeal Pierson won. Post was not in possession of the fox, so Pierson did nothing illegal."},
+ {b:"property",n:"Hammonds v Central Kentucky Natural Gas",tag:"Fugitive property, rule of capture",facts:"A gas company drew gas from a dome partly under Hammonds' unleased land.",held:"Rule of capture: gas is like a wild animal. The company did not possess gas it had injected back into the ground, so it was not liable for trespass."},
+ {b:"property",n:"The three whale rules",tag:"Optimising investment",facts:"Rule 1: first harpooner gets nothing if the whale escapes. Rule 2: he gets half. Rule 3: he gets the whole whale if the harpoon stays in.",held:"First strike wins would flood the sea with amateur harpooners (wasteful race to be first). Reward only the killer and cooperation suffers. The half whale rule facilitates cooperation."},
+ {b:"property",n:"The stolen TV",tag:"Good faith buyer, US versus Europe",facts:"You buy a TV in a car park. The police arrive with the person it was stolen from.",held:"US rule: you must return it, which puts the risk on buyers and gives them incentives to check the seller. European rule: a good faith buyer acquires title, which gives owners incentives to protect their goods."},
+ {b:"property",n:"Joe Potatoe",tag:"Adverse possession",facts:"A house extends two feet over the boundary. Ten years later the neighbour sues for removal and refuses compensation.",held:"Potatoe may have acquired the strip by adverse possession: actual, exclusive possession for the statutory period, in good faith, with no protest from the owner."},
+ {b:"property",n:"Parking in your garage",tag:"Trespass versus efficiency",facts:"A neighbour who is an economist parks in your garage and argues his use is more valuable than yours.",held:"You can eject him. Use of another's property without permission is trespass, whatever its value to the user."},
+ {b:"property",n:"Ploof v Putnam (1908)",tag:"Private necessity",facts:"A sailor and his family moored at Putnam's island pier to escape a storm. Putnam's employee untied the boat.",held:"Private necessity is an exception to trespass. The user must compensate for the cost of use. Compensated trespass ensures it happens only when its value exceeds the owner's cost."},
+ {b:"property",n:"Vincent v Lake Erie Transport (1910)",tag:"Necessity still costs damages",facts:"A steamship stayed moored to a dock in a storm and damaged it, causing 30,000 dollars of damage.",held:"The dock owner was entitled to damages. The captain had the best information and should bear the cost."},
+ {b:"property",n:"Trenberth v National Westminster Bank (1979)",tag:"Injunction against trespass",facts:"A bank put up scaffolding on a neighbour's land to repair its building, without consent, after failed negotiations.",held:"Injunction granted for a flagrant invasion, even though the refusal was irrational. Statute now allows access orders for specified works."},
+ {b:"property",n:"Hunter v Canary Wharf (1997)",tag:"Nuisance",facts:"A new tower block interfered with a neighbour's TV reception.",held:"Not a nuisance, like a building that blocks a view. Nuisance depends on circumstances and location (Sturges v Bridgman: Belgrave Square versus Bermondsey). St Helens Smelting v Tipping: noxious gases damaging trees was nuisance."},
+ {b:"property",n:"High Court of Ljubljana 2110/2019",tag:"Negatory action, Art. 99",facts:"A road builder put a wall, foundation and fence on the plaintiff's parcel and removed drainage.",held:"The plaintiff may demand removal of the wall and foundation and restoration under the negatory action: protection against disturbance that does not take the thing."}
+];
+
+const QUIZ = [
+ {b:"legal",q:"List the three conditions for an exception to the prohibition of retroactivity, and give an example.",a:"1. The public interest requires it.\n2. The law itself provides for retroactive effect.\n3. It does not interfere with already acquired rights.\nExamples: denationalisation laws, confiscation of property of suspicious origin.",past:true},
+ {b:"legal",q:"Give four differences between common law and civil law.",a:"Source (precedent versus code), how judges justify (precedent and public policy versus meaning of the code and commentary), method (read cases versus read the code), process (adversarial versus inquisitorial), jury practice, speed."},
+ {b:"legal",q:"What are the standards of proof in criminal and civil cases?",a:"Criminal: beyond reasonable doubt. Civil: balance of probabilities, only a breach of law needs to be proved."},
+ {b:"legal",q:"When does a Slovenian law enter into force, and what is the Latin term?",a:"15 days after publication in the Official Gazette (Uradni list RS). Vacatio legis. Tied to publication, not adoption. Earlier entry is possible if the act says so."},
+ {b:"legal",q:"Difference between a mandatory rule and a default rule? Give a behavioural example.",a:"Mandatory rules bind and cannot be replaced. Default rules can be replaced by your own choice. Defaults set the reference point, so with loss aversion, opting out of an automatic savings plan feels like a loss."},
+ {b:"legal",q:"Name the interpretation approaches and say which one the UK and which one the continent prefers.",a:"Literal (UK), purposive (continent), contextual, principles, historical, objective, teleological, evolutive."},
+ {b:"legal",q:"A park bye law bans 'playing music'. Someone plays a phone radio. Outcome and reasoning?",a:"Wayne probably breached it. Playing music even literally includes a radio playing music. The purpose is to prevent noise pollution, so a purposive reading also covers broadcast music."},
+ {b:"legal",q:"Formalism versus realism in judging?",a:"Formalist: applies text and canons, 'the law made me do it', indifferent to consequences. Realist: considers morality, fairness, public policy and consequences, pragmatic, analytical and empirical."},
+ {b:"legal",q:"Arbitration versus ADR?",a:"Arbitration: an appointed arbitrator, binding decision, confidential, flexible, specialist. ADR: any method that is not court or arbitration, not binding, very flexible, for example mediation and conciliation."},
+ {b:"legal",q:"What is judicial review? Example case?",a:"A court checks whether a decision of the state or public body was lawful. Interbrew v Competition Commission: the decision was quashed for unfair procedure."},
+ {b:"legal",q:"Dudley and Stephens: what rule came out of it?",a:"Necessity is not a defence to murder. Sailors who killed and ate the cabin boy were sentenced to death with a recommendation for mercy."},
+ {b:"eu",q:"Describe direct effect and supremacy, and name the cases that established them.",a:"Direct effect: individuals can invoke EU law in national courts, Van Gend en Loos (1963). Supremacy: EU law overrides conflicting national law, even constitutions, and every national judge must give it precedence, Costa v ENEL (1964).",past:true},
+ {b:"eu",q:"What is the Council of Europe? How is it different from the EU?",a:"A separate organisation, 46 member states, established 1950, based on the European Convention on Human Rights, enforced by the ECtHR in Strasbourg. Not an EU institution.",past:true},
+ {b:"eu",q:"Name the EU institutions and one role of each.",a:"Commission: legislative initiative and watchdog. Council of the EU: ministers, national interests, qualified majority. Parliament: directly elected, co decision. Court of Justice: legality check and cooperation with national courts."},
+ {b:"eu",q:"Regulation versus directive?",a:"Regulation: uniformity, immediately applicable, sets goal and how. Directive: harmonisation, sets only the objective, member states choose how."},
+ {b:"eu",q:"Subsidiarity versus proportionality?",a:"Subsidiarity: act at EU level only if objectives are better attained there and a real need is shown. Proportionality: the instrument must be necessary and the least constraining means. Case: Italy v Watson and Bellman."},
+ {b:"eu",q:"Can a private employer be sued directly on a directive? Which cases?",a:"No. Directives have vertical direct effect only, against the state or its emanations. Marshall (state employer, success) and Duke v GEC Reliance (private employer, failure). Indirect effect (Von Colson) is the fallback."},
+ {b:"eu",q:"Who may and who must refer to the CJEU under Art. 267?",a:"Lower courts may refer (discretion). Courts of last resort must refer. Topics: interpretation and validity of EU law."},
+ {b:"eu",q:"Which court levels does Slovenia have, and what was the main ECtHR problem?",a:"44 local, 11 district, 4 higher courts, the Supreme Court, plus specialised courts. Main issues: length of proceedings and effective remedy (263 and 267 of 373 judgements)."},
+ {b:"eu",q:"What does Factortame decide?",a:"National courts must set aside national law that conflicts with EU law and may grant interim relief. The UK Merchant Shipping Act 1988 was incompatible with EC law."},
+ {b:"market",q:"What is a measure having equivalent effect? Which case defines it?",a:"All trading measures capable of hindering, directly or indirectly, actually or potentially, intra EU trade. Dassonville (8/74)."},
+ {b:"market",q:"Explain mutual recognition and the case behind it.",a:"Goods lawfully made and marketed in one member state can be sold in all others unless justified exceptions apply. Cassis de Dijon, German 25 percent alcohol minimum versus French 15 to 20 percent."},
+ {b:"market",q:"A state charges 28 euro per export shipment for statistics. Pay it?",a:"No. Any pecuniary charge, however small, imposed unilaterally because goods cross a frontier is a charge of equivalent effect to a customs duty (Commission v Italy 24/68). Similar: Bresciani."},
+ {b:"market",q:"Art. 30 exceptions and the limit on them? Which case?",a:"Public morality, policy, security, health and life, national treasures, industrial and commercial property. Never arbitrary discrimination or disguised restriction. Conegate: no morality ban on domestic production, so not allowed."},
+ {b:"market",q:"Name the four freedoms and one case for each.",a:"Workers: Levin. Establishment: Thieffry or Vlassopoulou. Services: Van Binsbergen or Deliege. Capital: Bordessa."},
+ {b:"market",q:"What does Art. 101 prohibit? Horizontal versus vertical?",a:"Agreements, decisions of associations and concerted practices with the object or effect of preventing, restricting or distorting competition. Horizontal: same level. Vertical: different levels. Cases: Dyestuffs (concerted practice), Consten and Grundig (vertical)."},
+ {b:"market",q:"Is being dominant illegal? What must be shown for a dominance case?",a:"No, only abuse. Show the relevant market (geographic, product, cross elasticity) and market share. Continental Can failed for not defining the market. United Brands: 40 to 45 percent was enough with other factors."},
+ {b:"market",q:"Microsoft: what were the two abuses and the fine?",a:"Refusal to supply interoperability information and tying Windows Media Player to Windows. 497 million euro fine upheld, 899 million more in 2008 for non compliance."},
+ {b:"market",q:"Google: what happened in the EU and the US?",a:"EU: Android fine 4.34 billion euro upheld 14.9.2022. US: monopoly ruling 4.8.2024, remedies 2.9.2025 behavioural not structural (no breakup)."},
+ {b:"market",q:"Merger control: phases and time limits?",a:"Phase 1: 25 working days, most cases end here. Phase 2: 90 working days, extensions of 15 or 20. Outcomes: clear, clear with remedies, prohibit. Test: significant impediment to effective competition."},
+ {b:"market",q:"What are the four elements of State aid?",a:"State resources, selective advantage, distortion of competition, effect on trade between member states. Notify and wait for Commission approval, aid can be recovered."},
+ {b:"property",q:"List at least four economic functions of property law.",a:"Right to sell, lease, mortgage, subdivide, grant easements. Also: incentivise investment, facilitate exchange, protect competitive advantage, reduce transaction and conflict costs, define control and risk.",past:true},
+ {b:"property",q:"What is a pledge? Can it be an accessory security?",a:"Goods deposited as security for an obligation, kept by the lender until repayment, who may sell if unpaid. Yes, it is accessory to the secured claim. Perfected over movables by possession. A non possessory pledge lets the debtor keep using the goods.",past:true},
+ {b:"property",q:"Mortgage versus land charge?",a:"Mortgage is accessory (tied to the claim in four ways). Land charge is non accessory, independent, flexible, common in Germany, abolished in Slovenia."},
+ {b:"property",q:"Describe the three sheets of the land register.",a:"A sheet: property. B sheet: title (owner). C sheet: charges, pre emptive rights, mortgages, liens."},
+ {b:"property",q:"What is the intabulation clause and when do you become owner?",a:"The seller's explicit and unconditional permission to register, with notarised signature. You become owner on registration in the land register, not on payment."},
+ {b:"property",q:"Adverse possession: periods and requirements?",a:"Movables 3 years, land 10 years. Factual exclusive possession with the necessary intention and good faith. Applied in the Joe Potatoe case."},
+ {b:"property",q:"Possession versus ownership in civil law?",a:"Possession is a protected fact, not a right. It is evidence of ownership but not proof. Only legal, bona fide and regular possession can turn into ownership over time."},
+ {b:"property",q:"Freehold, leasehold, co ownership, condominium: one line each.",a:"Freehold: absolute title. Leasehold: tenant's right, landlord keeps reversion. Co ownership: shares in the land register. Condominium: share of the building plus exclusive unit, general assembly."},
+ {b:"property",q:"Name the three functions of a bill of lading and straight versus order.",a:"Receipt, evidence of the contract of carriage, document of title. Straight: named consignee, not negotiable. Order: negotiable to third parties."},
+ {b:"property",q:"What is rei vindicatio and what is the negatory action?",a:"Rei vindicatio: owner reclaims the thing from a wrongful possessor. Negatory action (Art. 99): stop disturbance that does not take the thing, plus damages."},
+ {b:"property",q:"Airspace and subsoil: how far do a landowner's rights reach?",a:"Air: only to a height reasonably necessary for ordinary use (Bernstein). Below: indefinitely (Star Energy v Bocardo), though minerals often belong to the state."},
+ {b:"property",q:"Stolen TV: who keeps it under the US rule and under the European rule?",a:"US: the original owner gets it back. European: a good faith buyer acquires title. US rule pushes buyers to check, European rule pushes owners to protect."},
+ {b:"property",q:"Servitude: praedial versus personal?",a:"Praedial: attached to a property, binds new owners. Personal: for one individual, falls away when they leave."}
+];
+
+/* APP */
+const ORDER=["plan","prio","latin","legal","eu","market","property","cases","quiz"];
+const TABNAMES={plan:"Plan",prio:"Priority",latin:"Latin",legal:"Legal systems",eu:"EU law I",market:"Market",property:"Property",cases:"Case bank",quiz:"Quiz"};
+const BCOL={legal:"var(--legal)",eu:"var(--eu)",market:"var(--mkt)",property:"var(--prop)"};
+let S={known:{},quiz:{},todo:{},hide:false};
+try{const raw=localStorage.getItem("law_midterm_v1");if(raw){const p=JSON.parse(raw);S=Object.assign(S,p)}}catch(e){}
+function save(){try{localStorage.setItem("law_midterm_v1",JSON.stringify(S))}catch(e){}}
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+function blockCount(b){const t=TOPICS.filter(x=>x.b===b);return{n:t.length,k:t.filter(x=>S.known[x.id]).length}}
+function renderTop(){
+  const tot=TOPICS.length,k=TOPICS.filter(x=>S.known[x.id]).length;
+  $("#mainPct").textContent=k+" of "+tot;
+  $("#mainTrack").innerHTML=Object.keys(BLOCKS).map(b=>{const c=blockCount(b);return `<i style="width:${(c.k/tot*100).toFixed(2)}%;background:${BCOL[b]}"></i>`}).join("");
+}
+function topicCard(t){
+  const done=!!S.known[t.id];
+  return `<article class="card k topic b-${t.b}${done?" done":""}" style="--c:${BCOL[t.b]}" data-id="${t.id}">
+   <header><h3>${t.t}</h3>
+   <label class="know"><input type="checkbox" data-know="${t.id}" ${done?"checked":""}> I know this</label></header>
+   <div class="chips"><span class="chip">${t.src}</span>${t.file?`<span class="chip">LAW_everything ${t.file}</span>`:""}${t.gap?`<span class="chip gap">Learn from the deck, not in your friend's file</span>`:""}${t.past?`<span class="chip past">Style of past exam question</span>`:""}</div>
+   <ul>${t.pts.map(p=>`<li>${p}</li>`).join("")}</ul></article>`;
+}
+function caseCard(c){
+  return `<details class="case b-${c.b}" style="--c:${BCOL[c.b]};--cs:var(--${{legal:"legal",eu:"eu",market:"mkt",property:"prop"}[c.b]}-soft)">
+   <summary><span class="nm">${c.n}</span><span class="chip b b-${c.b}">${BLOCKS[c.b].short}</span><span class="tg">${c.tag}</span></summary>
+   <div class="bd"><p class="lab">Facts</p><p>${c.facts}</p><p class="lab">Held and rule</p><div class="held"><b>${c.held}</b></div></div></details>`;
+}
+function renderBlock(b){
+  const c=blockCount(b), cs=CASES.filter(x=>x.b===b);
+  const topics=TOPICS.filter(x=>x.b===b).filter(x=>!(S.hide&&S.known[x.id]));
+  return `<section class="panel"><h2>${BLOCKS[b].name}</h2>
+   <p class="lead">${BLOCKS[b].desc} Tick a topic when you could explain it without looking. <b>${c.k} of ${c.n}</b> done.</p>
+   <div class="row"><button class="btn sm" id="hideBtn" aria-pressed="${S.hide}">${S.hide?"Show topics I know":"Hide topics I know"}</button></div>
+   <div class="stack" style="margin-top:12px">${topics.map(topicCard).join("")||'<div class="card">Everything in this block is ticked. Move to the case bank or the quiz.</div>'}</div>
+   <div class="sec-h"><h2>Cases for this block</h2><span class="small">${cs.length} cases, tap to reveal the ruling</span></div>
+   <div class="cases">${cs.map(caseCard).join("")}</div>
+   <div class="row" style="margin-top:18px"><button class="btn pri" data-go="quiz" data-qb="${b}">Quiz me on ${BLOCKS[b].short}</button></div></section>`;
+}
+function renderPlan(){
+  const bl=Object.keys(BLOCKS).map(b=>{const c=blockCount(b),p=c.n?c.k/c.n*100:0;return `<div class="card k" style="--c:${BCOL[b]}"><h3>${BLOCKS[b].name}</h3><div class="pbar"><i style="width:${p}%;--c:${BCOL[b]}"></i></div><div class="row" style="justify-content:space-between"><span class="small">${c.k} of ${c.n} topics</span><button class="btn sm" data-go="${b}">Open</button></div></div>`}).join("");
+  const todos=[["t1","Legal systems: read the cards, then the 11 cases"],["t2","EU law I: institutions, direct effect and supremacy, Council of Europe"],["t3","Market and competition: free movement cases, Art. 101 and 102, mergers"],["t4","Property: possession, land register, ownership types, intabulation, security"],["t5","Case bank: reveal each case only after you have said the ruling aloud"],["t6","Quiz: all blocks mixed, repeat the ones you missed"],["t7","Night before: pack ID, pencil and a printed dictionary. Sleep."]];
+  return `<section class="panel"><h2>Friday, 60 minutes, closed book</h2>
+  <p class="lead">Built from this year's lecture decks, the Friday practical decks and the best parts of LAW_everything.</p>
+  <div class="facts">
+   <div class="card fact"><span class="lab">Date</span><div class="big">6 Nov</div><span class="small">Lilla Hall</span></div>
+   <div class="card fact"><span class="lab">9:00 group</span><div class="big">A to Mi</div><span class="small">Abdolmaleki to Miklić</span></div>
+   <div class="card fact"><span class="lab">11:00 group</span><div class="big">Mi to Z</div><span class="small">Milev to Zunic</span></div>
+   <div class="card fact"><span class="lab">You may bring</span><div class="big">3 items</div><span class="small">ID, pencil, printed general dictionary. No notes, no e dictionary.</span></div>
+  </div>
+  <div class="note" style="margin-top:12px">The exam format is not announced. Past exam recreations show short questions with definitions and lists, essays, and a case study. Prepare for all three.</div>
+  <div class="sec-h"><h2>Progress by block</h2></div><div class="grid">${bl}</div>
+  <div class="sec-h"><h2>Order of work</h2></div>
+  <div class="card"><ul class="todo">${todos.map(t=>`<li><label class="${S.todo[t[0]]?"done":""}"><input type="checkbox" data-todo="${t[0]}" ${S.todo[t[0]]?"checked":""}><span>${t[1]}</span></label></li>`).join("")}</ul></div>
+  <div class="sec-h"><h2>What your friend's file covers</h2></div>
+  <div class="card"><ul class="cov" style="margin:0;padding-left:1.1em">
+   <li><b>Legal systems:</b> pages 1 to 8 cover most of it. Missing: history and codification, rule of law, behavioural default rule details.</li>
+   <li><b>EU law I:</b> pages 8 to 10, 14 to 16. Says 28 member states, the slides say 27. Missing: Council of Europe in depth, Slovenian courts, precautionary principle.</li>
+   <li><b>Market:</b> pages 11 to 13, 16 to 19. Competition and mergers are summaries only. Missing: the worker, establishment and services cases, the competition cases, Google, merger phases, state aid.</li>
+   <li><b>Property:</b> pages 20 to 48 stop at how property is established. Missing: the 8 transfer steps, security, bill of lading, servitudes, protection of rights. Adverse possession shows only 10 years.</li>
+   <li>Topics marked in yellow on each card are the ones to learn from the decks.</li></ul></div>
+  <p class="small" style="margin-top:14px">Slide numbers disagree in one place (security transfer formalities). The card for security says how to handle it.</p></section>`;
+}
+let casesFilter="all",casesQ="";
+function renderCases(){
+  const list=CASES.filter(c=>(casesFilter==="all"||c.b===casesFilter)&&(c.n+" "+c.tag).toLowerCase().includes(casesQ.toLowerCase()));
+  const chips=[["all","All"]].concat(Object.keys(BLOCKS).map(b=>[b,BLOCKS[b].short])).map(x=>`<button class="chip" data-cf="${x[0]}" aria-pressed="${casesFilter===x[0]}">${x[1]}</button>`).join("");
+  return `<section class="panel"><h2>Case bank</h2><p class="lead">${CASES.length} cases. Read the name and the one line prompt, say the ruling aloud, then open the card.</p>
+   <div class="filters" id="cf">${chips}</div><div class="row" style="margin:8px 0"><input type="search" id="cq" placeholder="Search a case" value="${esc(casesQ)}" aria-label="Search cases"><span class="small">${list.length} shown</span></div>
+   <div class="cases" id="caseList">${list.map(caseCard).join("")||'<div class="card">No case matches.</div>'}</div></section>`;
+}
+let qb="all",qMode="all",qi=0,qOrder=[],qShown=false;
+function buildQ(){
+  let pool=QUIZ.map((q,i)=>i).filter(i=>(qb==="all"||QUIZ[i].b===qb)&&(qMode==="all"||S.quiz[i]==="miss"||S.quiz[i]===undefined&&false));
+  if(qMode==="miss")pool=QUIZ.map((q,i)=>i).filter(i=>(qb==="all"||QUIZ[i].b===qb)&&S.quiz[i]==="miss");
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  qOrder=pool;qi=0;qShown=false;
+}
+function renderQuiz(){
+  const got=Object.values(S.quiz).filter(v=>v==="got").length,miss=Object.values(S.quiz).filter(v=>v==="miss").length;
+  const chips=[["all","All blocks"]].concat(Object.keys(BLOCKS).map(b=>[b,BLOCKS[b].short])).map(x=>`<button class="chip" data-qb="${x[0]}" aria-pressed="${qb===x[0]}">${x[1]}</button>`).join("");
+  let card;
+  if(!qOrder.length){card=`<div class="card quiz-card"><div class="quiz-q">${qMode==="miss"?"No missed questions in this set. Good.":"No questions in this set."}</div></div>`}
+  else if(qi>=qOrder.length){card=`<div class="card quiz-card"><div class="quiz-q">Round finished.</div><div class="row"><button class="btn pri" id="again">Shuffle and go again</button></div></div>`}
+  else{const q=QUIZ[qOrder[qi]];
+    card=`<div class="card quiz-card"><div><div class="row" style="margin-bottom:10px"><span class="chip b b-${q.b}" style="--c:${BCOL[q.b]};--cs:var(--${{legal:"legal",eu:"eu",market:"mkt",property:"prop"}[q.b]}-soft)">${BLOCKS[q.b].short}</span>${q.past?'<span class="chip past">Style of past exam question</span>':""}<span class="score">${qi+1} of ${qOrder.length}</span></div><div class="quiz-q">${q.q}</div></div>
+    ${qShown?`<div class="quiz-a">${esc(q.a)}</div><div class="row"><button class="btn pri" data-grade="got">I had it</button><button class="btn" data-grade="miss">I missed it</button></div>`:`<div class="row"><button class="btn pri" id="reveal">Show answer</button></div><span class="small">Say your answer out loud first.</span>`}</div>`}
+  return `<section class="panel"><h2>Quiz</h2><p class="lead">Mixed recall questions. Be honest when you grade yourself, missed ones can be repeated.</p>
+   <div class="filters">${chips}</div><div class="row" style="margin:6px 0 10px"><button class="chip" data-qm="all" aria-pressed="${qMode==="all"}">All questions</button><button class="chip" data-qm="miss" aria-pressed="${qMode==="miss"}">Missed only</button><span class="score">Got ${got} · Missed ${miss}</span><button class="btn sm" id="resetQ">Reset scores</button></div>${card}</section>`;
+}
+const PRIO=[
+ ["Direct effect","Van Gend en Loos (1963)","Individuals can enforce EU law in national courts. New legal order."],
+ ["Supremacy","Costa v ENEL (6/64, 1964)","EU law beats conflicting national law, even a later statute. Permanent limit on sovereignty."],
+ ["Directive, vertical direct effect","Ratti (148/78) and Marshall (152/84)","Usable against the state once the deadline has passed. Marshall: employer was part of the state."],
+ ["No horizontal direct effect","Duke v GEC Reliance","Private employer, not an emanation of the state, so the directive could not be used."],
+ ["Indirect effect","Von Colson and Kamann","National courts must interpret national law in line with the directive."],
+ ["Disapply national law, interim relief","Factortame","UK Merchant Shipping Act 1988 set aside for conflicting with EC law."],
+ ["Proportionality","Italy v Watson and Bellman (1976)","Registration of foreigners is fine, the burden must not exceed what is necessary."],
+ ["Measure equivalent to a quota","Dassonville (8/74)","Any measure capable of hindering intra EU trade, directly or indirectly, actually or potentially."],
+ ["Mutual recognition","Cassis de Dijon","Lawfully sold in one state, so allowed in all. German 25 percent alcohol rule failed."],
+ ["Charge equivalent to a customs duty","Commission v Italy (24/68)","Any pecuniary charge, however small, because goods cross a frontier."],
+ ["Discriminatory internal tax","Humblot (112/84)","Car tax that hit only imports breached Art. 90 TFEU."],
+ ["Public morality exception","Conegate (121/85)","No ban at home on the same goods, so the UK could not block imports."],
+ ["Concerted practice, Art. 101","Dyestuffs","Identical price rises at the same time, no formal agreement needed."],
+ ["Vertical agreement, Art. 101","Consten and Grundig","Sole distributor with an export ban breaches Art. 101."],
+ ["Relevant market must be proven","Continental Can (6/72)","Commission lost because it did not define the product market."],
+ ["Dominance below 50 percent","United Brands (27/76)","40 to 45 percent plus other factors was dominance. Different prices per state was abuse."],
+ ["Tying and interoperability","Microsoft (2007)","497 million euro fine upheld."],
+ ["Judicial review","Interbrew v Competition Commission","Merger order quashed for unfair procedure."],
+ ["Literal interpretation","IRC v Hinchy; Adler v George","Hinchy: literal. Adler: literal gave an absurd result, 'vicinity' includes the place itself."],
+ ["Purposive interpretation","Smith v Hughes; Royal College of Nursing v DHSS","Look at the purpose of the Act. In the nursing case the Lords majority went purposive."],
+ ["Mischief rule","DPP v Bull (Heydon's Case, 1584)","Only where the statute is ambiguous."],
+ ["Necessity no defence to murder","R v Dudley and Stephens (1884)","Lifeboat cabin boy case."],
+ ["Airspace limit","Bernstein v Skyviews (1978)","Rights reach only the height reasonably needed for ordinary use."],
+ ["Subsoil rights","Star Energy v Bocardo (2010)","Rights extend indefinitely downward, trespass but nominal damages."],
+ ["Good faith buyer","The stolen TV (US versus Europe)","US returns it to the owner. Europe protects the good faith buyer."],
+ ["Private necessity","Ploof v Putnam; Vincent v Lake Erie","Necessity excuses trespass but you still pay for damage."],
+ ["Negatory action, Art. 99","High Court of Ljubljana 2110/2019","Wall and foundation on the plaintiff's parcel, removal ordered."]
+];
+const LATIN=[
+ ["Vacatio legis","The period between publication of a law and its entry into force. Slovenia: 15 days after publication in the Official Gazette.","Legal systems","A classmate says this exact term came up in the teacher's talk.",1],
+ ["In dubio pro reo","In doubt, for the accused. Presumption of innocence: the prosecution carries the burden, doubt means acquittal.","Legal systems","",1],
+ ["Bona fide, bona fides, bona fidei","In good faith. Honesty and good moral standards. A bona fide possessor does not know he has no right to possess.","Legal systems, Property","Needed for adverse possession.",1],
+ ["Ex post facto","After the fact. A retroactive law. Generally prohibited, with three conditions for an exception.","Legal systems","",1],
+ ["Ius commune","The common law of Europe, formed by spread of Roman law knowledge through scholars (Glossators, Commentators).","Legal systems","",0],
+ ["Status quo","The existing state of affairs. A default rule sets the status quo, the reference point, and any change feels like a loss.","Legal systems","Loss aversion, Kahneman and Tversky.",0],
+ ["Amicus curiae","Friend of the court. Role of the Advocates General at the Court of Justice.","EU law","",1],
+ ["Superficies solo cedit","What is built or planted on land becomes part of the land and belongs to the landowner.","Property","Many exceptions today, such as condominium ownership.",1],
+ ["Cuius est solum, eius est usque ad coelum et ad inferos","Whoever owns the soil owns it up to heaven and down to hell.","Property","Bernstein v Skyviews limits the sky part.",1],
+ ["Numerus clausus","A closed list of property rights. Only the rights the law recognises exist.","Property","",1],
+ ["In rem / in personam","In rem: right against everyone (property). In personam: right against a specific person (contract).","Property","",1],
+ ["Rei vindicatio","The owner demands the thing back from whoever wrongly holds it. Needs ownership, not a contract.","Property","Roman origin, core remedy.",1],
+ ["Nemo dat quod non habet","No one can give what he does not have. A seller cannot pass better title than his own.","Property","Limits what a bill of lading gives.",1],
+ ["Possessio","Possession. In civil law a protected fact, not a right. Evidence of ownership but not proof.","Property","",1],
+ ["Pignus","Pledge. Goods deposited as security for an obligation, usually a loan.","Property","Accessory security. Likely exam question.",1],
+ ["Prima facie","At first sight. A bill of lading gives prima facie title to the named consignee or lawful holder.","Property","",0],
+ ["Actio furti, condictio furtiva, actio legis Aquiliae","Roman personal actions after theft. Actio furti punishes the thief. Condictio furtiva recovers the thing's value. Actio legis Aquiliae claims damages. All personal actions, unlike rei vindicatio.","Property","",0],
+ ["Actio negatoria (negatory action)","Owner demands that a disturbance stops and is prohibited in future, plus damages. Slovenian Art. 99. The deck calls it the negatory action, the Latin name is the standard term.","Property","",1],
+ ["Per se","By itself. Trespass is actionable per se, with no proof of loss needed.","Property","",0],
+ ["De facto","In fact. Google default search deals were called de facto exclusive dealing.","Market","",0],
+ ["Inter alia","Among other things. A concerted practice may inter alia arise from coordination.","Market","",0],
+ ["Ubi iustitia, pax, caritas et amor, ibi Deus est","Where there is justice, peace, charity and love, there is God. A title slide quote in the legal systems deck.","Legal systems","Low priority.",0],
+ ["Stare decisis","To stand by decisions. Courts follow precedent, the core of common law.","Not found in your decks","Common law school term. Learn it only if you have time.",0],
+ ["Ratio decidendi / obiter dictum","Ratio: the reason for the decision, the binding part of a precedent. Obiter: remarks in passing, not binding.","Not found in your decks","Common law school terms. Learn them only if you have time.",0],
+ ["Pacta sunt servanda","Agreements must be kept. The basis of contract law.","Not found in your decks","Contracts come later. Low priority.",0],
+ ["Mens rea","Guilty mind. Criminal intent. Sweet v Parsley turned on guilty knowledge.","Not found in your decks","Low priority.",0]
+];
+let prioTest=false,latTest=false;
+function renderPrio(){
+  const top=[["Van Gend en Loos","Direct effect"],["Costa v ENEL","Supremacy"],["Ratti, Marshall, Duke","Directives: vertical yes, horizontal no (third case is unconfirmed, classmates guess Duke and Ratti)"]];
+  return `<section class="panel"><h2>Priority</h2>
+  <p class="lead">Classmates report the teacher said three cases are very important, and that he can ask which case introduced a concept or ask what happened in a case. Learn these pairs first.</p>
+  <div class="grid">${top.map((x,i)=>`<div class="card k" style="--c:var(--eu)"><span class="lab">Top ${i+1}</span><h3>${x[0]}</h3><p style="margin:6px 0 0">${x[1]}</p></div>`).join("")}</div>
+  <div class="note" style="margin-top:12px">Unconfirmed: this comes from a classmates group chat, not from the teacher or Canvas.</div>
+  <div class="sec-h"><h2>Concept to case drill</h2><button class="btn sm" data-hide="prio">${prioTest?"Show all cases":"Test myself"}</button></div>
+  <p class="small" style="margin:0 0 8px">Read the concept, say the case aloud, then tap the box to reveal it.</p>
+  <div class="stack">${PRIO.map(r=>`<div class="prow"><span class="pc">${r[0]}</span><button class="rv${prioTest?" hid":""}" type="button"><b>${r[1]}</b><small>${r[2]}</small></button></div>`).join("")}</div></section>`;
+}
+function renderLatin(){
+  return `<section class="panel"><h2>Latin terms</h2>
+  <p class="lead">Classmates report that the teacher can ask you to define Latin terms. These are all the Latin terms found in the lecture and practical decks, then a few common ones that are not in your decks.</p>
+  <div class="row"><button class="btn sm" data-hide="latin">${latTest?"Show all meanings":"Test myself"}</button></div>
+  <div class="stack" style="margin-top:12px">${LATIN.map(r=>`<div class="prow"><span class="pc">${r[0]}${r[4]?'<span class="chip past" style="margin-left:6px">Core</span>':""}<br><span class="chip">${r[2]}</span></span><button class="rv${latTest?" hid":""}" type="button"><b>${r[1]}</b>${r[3]?`<small>${r[3]}</small>`:""}</button></div>`).join("")}</div></section>`;
+}
+document.addEventListener("click",e=>{
+  const r=e.target.closest(".rv");if(r){r.classList.toggle("hid");return}
+  const h=e.target.closest("[data-hide]");if(h){if(h.dataset.hide==="prio")prioTest=!prioTest;else latTest=!latTest;show(tab)}
+});
+let tab="plan";
+function show(t){
+  if(!ORDER.includes(t))t="plan";tab=t;
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+  const m=$("#main");
+  if(t==="plan")m.innerHTML=renderPlan();
+  else if(t==="prio")m.innerHTML=renderPrio();
+  else if(t==="latin")m.innerHTML=renderLatin();
+  else if(t==="cases")m.innerHTML=renderCases();
+  else if(t==="quiz"){if(!qOrder.length&&qi===0)buildQ();m.innerHTML=renderQuiz()}
+  else m.innerHTML=renderBlock(t);
+  renderTop();
+  try{history.replaceState(null,"","#"+t)}catch(e){location.hash=t}
+}
+$("#tabs").innerHTML=ORDER.map(t=>`<button role="tab" data-t="${t}" aria-selected="false">${TABNAMES[t]}</button>`).join("");
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){show(b.dataset.t);window.scrollTo({top:0})}});
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]");
+  if(g){if(g.dataset.qb){qb=g.dataset.qb;qMode="all";buildQ()}show(g.dataset.go);window.scrollTo({top:0});return}
+  if(e.target.id==="hideBtn"){S.hide=!S.hide;save();show(tab);return}
+  const cf=e.target.closest("[data-cf]");if(cf){casesFilter=cf.dataset.cf;show("cases");return}
+  const qbb=e.target.closest("button[data-qb]");if(qbb&&tab==="quiz"){qb=qbb.dataset.qb;buildQ();show("quiz");return}
+  const qm=e.target.closest("[data-qm]");if(qm){qMode=qm.dataset.qm;buildQ();show("quiz");return}
+  if(e.target.id==="reveal"){qShown=true;show("quiz");return}
+  if(e.target.id==="again"){buildQ();show("quiz");return}
+  if(e.target.id==="resetQ"){S.quiz={};save();buildQ();show("quiz");return}
+  const gr=e.target.closest("[data-grade]");
+  if(gr){S.quiz[qOrder[qi]]=gr.dataset.grade;save();qi++;qShown=false;show("quiz");return}
+});
+document.addEventListener("change",e=>{
+  const k=e.target.dataset&&e.target.dataset.know;
+  if(k){if(e.target.checked)S.known[k]=1;else delete S.known[k];save();const keep=window.scrollY;show(tab);window.scrollTo({top:keep});return}
+  const td=e.target.dataset&&e.target.dataset.todo;
+  if(td){if(e.target.checked)S.todo[td]=1;else delete S.todo[td];save();show(tab)}
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="cq"){casesQ=e.target.value;const list=CASES.filter(c=>(casesFilter==="all"||c.b===casesFilter)&&(c.n+" "+c.tag).toLowerCase().includes(casesQ.toLowerCase()));
+    $("#caseList").innerHTML=list.map(caseCard).join("")||'<div class="card">No case matches.</div>';e.target.nextElementSibling.textContent=list.length+" shown"}
+});
+window.addEventListener("hashchange",()=>{const h=location.hash.replace("#","");if(h&&h!==tab)show(h)});
+show(location.hash.replace("#","")||"plan");
+</script>
+
+</body></html>
