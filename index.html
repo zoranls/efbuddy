@@ -123,7 +123,9 @@
         .button-group > .btn:nth-child(1) { animation-delay: 0.65s; }
         .button-group > .btn:nth-child(2) { animation-delay: 0.75s; }
         .button-group > .btn:nth-child(3) { animation-delay: 0.85s; }
-        .container > .footer { animation-delay: 0.95s; }
+        .button-group > .btn:nth-child(4) { animation-delay: 0.95s; }
+        .button-group > .btn:nth-child(5) { animation-delay: 1.05s; }
+        .container > .footer { animation-delay: 1.15s; }
         @media (prefers-reduced-motion: reduce) {
             .container,
             .container > h1,
@@ -209,6 +211,9 @@
             outline-offset: 3px;
         }
         .btn-law { --tint: 110, 231, 183; }
+        /* Finished midterm guides: still clickable, but faded. */
+        .btn-done { opacity: 0.45; filter: saturate(0.5); }
+        .btn-done:hover { opacity: 0.8; }
         .btn-disabled,
         .btn-disabled:hover,
         .btn-disabled:active {
@@ -239,6 +244,26 @@
             flex-wrap: wrap;
             font-size: 0.85rem;
             color: #52525b;
+        }
+        .footer-side {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .footer-status {
+            color: #71717a;
+            letter-spacing: 0.02em;
+        }
+        .footer-clock {
+            display: inline-block;
+            margin-right: 4px;
+            font-size: 0.95em;
+            animation: clock-spin 6s linear infinite;
+        }
+        @keyframes clock-spin { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            .footer-clock { animation: none; }
         }
         .footer-brand {
             color: #71717a;
@@ -286,6 +311,7 @@
                 text-align: center;
                 gap: 6px;
             }
+            .footer-side { align-items: center; }
         }
     </style>
 </head>
@@ -297,13 +323,18 @@
         
         <div class="button-group">
             <span class="btn btn-disabled" aria-disabled="true" title="Coming soon">Math</span>
-            <a href="law.html" class="btn btn-law">Law</a>
+            <span class="btn btn-disabled" aria-disabled="true" title="Coming soon">Operations Management</span>
+            <span class="btn btn-disabled" aria-disabled="true" title="Coming soon">Statistical Analysis</span>
             <a href="marketing.html" class="btn btn-law">Marketing</a>
+            <a href="law.html" class="btn btn-law btn-done" title="Midterm done">Law 1</a>
         </div>
 
         <div class="footer">
             <span class="footer-brand">SEB LU <span class="footer-sep">|</span> International Business</span>
-            <span class="footer-note">More courses to come...</span>
+            <span class="footer-side">
+                <span class="footer-status"><span class="footer-clock" aria-hidden="true">&#128336;</span>OM and Stats scheduled</span>
+                <span class="footer-note">More courses to come...</span>
+            </span>
         </div>
     </div>
 
