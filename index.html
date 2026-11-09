@@ -115,6 +115,7 @@
         .container > h1,
         .container > p,
         .button-group > .btn,
+        .container > .status,
         .container > .footer {
             animation: intro-item 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
         }
@@ -125,12 +126,14 @@
         .button-group > .btn:nth-child(3) { animation-delay: 0.85s; }
         .button-group > .btn:nth-child(4) { animation-delay: 0.95s; }
         .button-group > .btn:nth-child(5) { animation-delay: 1.05s; }
-        .container > .footer { animation-delay: 1.15s; }
+        .container > .status { animation-delay: 1.15s; }
+        .container > .footer { animation-delay: 1.25s; }
         @media (prefers-reduced-motion: reduce) {
             .container,
             .container > h1,
             .container > p,
             .button-group > .btn,
+            .container > .status,
             .container > .footer { animation: none; }
         }
         h1 {
@@ -245,25 +248,68 @@
             font-size: 0.85rem;
             color: #52525b;
         }
-        .footer-side {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-        .footer-status {
+        /* Status line under the buttons. */
+        .status {
+            margin-top: 22px;
+            font-size: 0.85rem;
             color: #71717a;
             letter-spacing: 0.02em;
         }
-        .footer-clock {
+        /* Flat clock: light grey ring and hand. The hand ticks a quarter turn
+           (12, 3, 6, 9) and wobbles a little each time it lands. */
+        .status-clock {
+            position: relative;
             display: inline-block;
-            margin-right: 4px;
-            font-size: 0.95em;
-            animation: clock-spin 6s linear infinite;
+            box-sizing: border-box;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            vertical-align: -3px;
+            border: 2px solid #c9c9cf;
+            border-radius: 50%;
         }
-        @keyframes clock-spin { to { transform: rotate(360deg); } }
+        .status-clock::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 50%;
+            width: 2px;
+            height: 4px;
+            margin-left: -1px;
+            border-radius: 1px;
+            background: #c9c9cf;
+            transform-origin: 50% 100%;
+            animation: clock-tick 8s ease-in-out infinite;
+        }
+        @keyframes clock-tick {
+            0% { transform: rotate(0deg); }
+            13% { transform: rotate(0deg); }
+            15.5% { transform: rotate(100deg); }
+            18% { transform: rotate(85deg); }
+            20.5% { transform: rotate(93deg); }
+            23% { transform: rotate(89deg); }
+            25% { transform: rotate(90deg); }
+            38% { transform: rotate(90deg); }
+            40.5% { transform: rotate(190deg); }
+            43% { transform: rotate(175deg); }
+            45.5% { transform: rotate(183deg); }
+            48% { transform: rotate(179deg); }
+            50% { transform: rotate(180deg); }
+            63% { transform: rotate(180deg); }
+            65.5% { transform: rotate(280deg); }
+            68% { transform: rotate(265deg); }
+            70.5% { transform: rotate(273deg); }
+            73% { transform: rotate(269deg); }
+            75% { transform: rotate(270deg); }
+            88% { transform: rotate(270deg); }
+            90.5% { transform: rotate(370deg); }
+            93% { transform: rotate(355deg); }
+            95.5% { transform: rotate(363deg); }
+            98% { transform: rotate(359deg); }
+            100% { transform: rotate(360deg); }
+        }
         @media (prefers-reduced-motion: reduce) {
-            .footer-clock { animation: none; }
+            .status-clock::before { animation: none; }
         }
         .footer-brand {
             color: #71717a;
@@ -311,7 +357,6 @@
                 text-align: center;
                 gap: 6px;
             }
-            .footer-side { align-items: center; }
         }
     </style>
 </head>
@@ -329,12 +374,11 @@
             <a href="law.html" class="btn btn-law btn-done" title="Midterm done">Law 1</a>
         </div>
 
+        <div class="status"><span class="status-clock" aria-hidden="true"></span>OM and Stats scheduled</div>
+
         <div class="footer">
             <span class="footer-brand">SEB LU <span class="footer-sep">|</span> International Business</span>
-            <span class="footer-side">
-                <span class="footer-status"><span class="footer-clock" aria-hidden="true">&#128336;</span>OM and Stats scheduled</span>
-                <span class="footer-note">More courses to come...</span>
-            </span>
+            <span class="footer-note">More courses to come...</span>
         </div>
     </div>
 
