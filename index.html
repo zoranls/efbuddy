@@ -126,6 +126,21 @@
         .button-group > .btn:nth-child(3) { animation-delay: 0.85s; }
         .button-group > .btn:nth-child(4) { animation-delay: 0.95s; }
         .button-group > .btn:nth-child(5) { animation-delay: 1.05s; }
+        /* Finished guides fade in already faded and grey, so they never
+           flash green and then snap to the dimmed look. */
+        @keyframes intro-item-done {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+                filter: blur(6px) saturate(0.5);
+            }
+            to {
+                opacity: 0.45;
+                transform: none;
+                filter: blur(0) saturate(0.5);
+            }
+        }
+        .button-group > .btn.btn-done { animation-name: intro-item-done; }
         .container > .status { animation-delay: 1.15s; }
         .container > .footer { animation-delay: 1.25s; }
         @media (prefers-reduced-motion: reduce) {
