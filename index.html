@@ -6,8 +6,10 @@
     <title>EF Buddy</title>
     <style>
         :root {
-            --u: 2.1s; /* splash starts to lift: panel rises as the blur clears */
-            --o: 3.0s; /* splash fully gone: buttons and content pop in */
+            --u: 2.1s; /* splash starts to lift: title fades, blur and tint ease away */
+            --p: 1.4s; /* panel starts rising a little before the lift */
+            --o: 1.6s; /* content starts popping in half a second before the lift, like icons
+                          appearing while the swipe up is still in progress */
         }
         html {
             height: 100%;
@@ -54,7 +56,7 @@
                 var(--g2x) var(--g2y) var(--g2b) var(--g2s) rgba(196,181,253,var(--g2a)),
                 var(--g3x) var(--g3y) var(--g3b) var(--g3s) rgba(110,231,183,var(--g3a));
             animation:
-                intro-box 1.1s cubic-bezier(0.22, 1, 0.36, 1) var(--u) backwards,
+                intro-box 1.1s cubic-bezier(0.22, 1, 0.36, 1) var(--p) backwards,
                 glow1 11s ease-in-out infinite,
                 glow2 14s ease-in-out infinite,
                 glow3 17s ease-in-out infinite;
@@ -499,7 +501,7 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .splash { display: none; }
-            :root { --o: 0s; --u: 0s; }
+            :root { --o: 0s; --u: 0s; --p: 0s; }
         }
         .footer-brand {
             color: #71717a;
