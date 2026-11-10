@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SA Midterm 1 Practice</title>
+<style>
+:root{
+  --bg:#f6f5f1;--surface:#ffffff;--ink:#1d1f24;--muted:#5d6470;--line:#dedbd2;
+  --accent:#1f4fd8;--accent-ink:#ffffff;--good:#14783c;--good-bg:#e3f4ea;--bad:#b3261e;--bad-bg:#fbe7e5;--warn:#8a5a00;--warn-bg:#fdf0d5;
+  --radius:10px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#14161a;--surface:#1d2026;--ink:#ecebe6;--muted:#a1a7b2;--line:#323741;
+  --accent:#7fa2ff;--accent-ink:#0d1220;--good:#6fd39a;--good-bg:#17382a;--bad:#ff9a93;--bad-bg:#432220;--warn:#f0c36a;--warn-bg:#3b3015}
+}
+*{box-sizing:border-box}
+html{font-size:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 80px}
+header h1{font-size:1.45rem;margin:0 0 2px}
+header p{margin:0;color:var(--muted);font-size:.92rem}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav button{background:none;border:1px solid transparent;border-radius:8px;padding:8px 14px;font:inherit;color:var(--muted);cursor:pointer}
+nav button[aria-selected=true]{background:var(--surface);border-color:var(--line);color:var(--ink);font-weight:600}
+nav button:focus-visible,.btn:focus-visible,.opt:focus-visible,input:focus-visible,select:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.meta{font-size:.82rem;color:var(--muted)}
+.q{font-size:1.05rem;margin:6px 0 14px}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{display:inline-block;width:1.6em;font-weight:700;color:var(--muted)}
+.opt.good{background:var(--good-bg);border-color:var(--good)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad)}
+.opt.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.fb{margin-top:10px;padding:12px;border-radius:8px;background:var(--warn-bg);font-size:.95rem}
+.fb.good{background:var(--good-bg)}.fb.bad{background:var(--bad-bg)}
+.fb b{display:block;margin-bottom:2px}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.stat{padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.stat b{font-size:1.4rem;display:block}
+.part{display:grid;grid-template-columns:1fr 150px 28px;gap:10px;align-items:center;margin-bottom:8px}
+.part input{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-family:var(--mono)}
+.part .m{font-size:1.1rem;text-align:center}
+.part.ok input{border-color:var(--good)}.part.no input{border-color:var(--bad)}
+.steps{margin:8px 0 0;padding-left:20px}
+.steps li{margin-bottom:4px;font-family:var(--mono);font-size:.88rem}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.82rem}
+.f code{font-family:var(--mono);font-size:.9rem}
+select{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
+.timer{font-family:var(--mono);font-size:1.3rem;font-weight:700}
+.timer.low{color:var(--bad)}
+textarea{width:100%;min-height:200px;font-family:var(--mono);font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px}
+.note{font-size:.85rem;color:var(--muted);margin-top:10px}
+.hidden{display:none}
+@media (max-width:560px){.part{grid-template-columns:1fr 110px 24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Statistical Analysis: Midterm 1 practice</h1>
+  <p>Lectures 1 to 5 and Tutorials 1 to 5. Midterm: Fri 13 Nov 2026, 13:00, 70 minutes, 15 multiple choice questions (1 point each) and 1 calculation task (5 points).</p>
+</header>
+<nav role="tablist" id="tabs"></nav>
+<main id="view"></main>
+</div>
+
+<script>
+/* Statistical engine: normal, t, helpers. No dependencies. */
+const Stat = (() => {
+  function erf(x) {
+    const ax = Math.abs(x);
+    if (ax > 6) return x < 0 ? -1 : 1;
+    let sum = 0, term = ax, n = 0;
+    while (Math.abs(term) > 1e-17 && n < 200) {
+      sum += term / (2 * n + 1);
+      n++;
+      term = -term * ax * ax / n;
+    }
+    const r = 2 / Math.sqrt(Math.PI) * sum;
+    return x < 0 ? -r : r;
+  }
+  function erfcLarge(x) { // continued fraction for x>=3
+    let f = 0;
+    for (let k = 60; k >= 1; k--) f = k / 2 / (x + f);
+    return Math.exp(-x * x) / Math.sqrt(Math.PI) / (x + f);
+  }
+  function cdf(z) {
+    if (z < -3.5) return 0.5 * erfcLarge(-z / Math.SQRT2);
+    if (z > 3.5) return 1 - 0.5 * erfcLarge(z / Math.SQRT2);
+    return 0.5 * (1 + erf(z / Math.SQRT2));
+  }
+  function pdf(z) { return Math.exp(-z * z / 2) / Math.sqrt(2 * Math.PI); }
+  function inv(p) { // inverse standard normal, bisection plus Newton
+    if (p <= 0) return -Infinity;
+    if (p >= 1) return Infinity;
+    let lo = -40, hi = 40;
+    for (let i = 0; i < 200; i++) {
+      const mid = (lo + hi) / 2;
+      if (cdf(mid) < p) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+  function lgamma(x) {
+    const c = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+      -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+    let y = x, tmp = x + 5.5;
+    tmp -= (x + 0.5) * Math.log(tmp);
+    let ser = 1.000000000190015;
+    for (let j = 0; j < 6; j++) ser += c[j] / ++y;
+    return -tmp + Math.log(2.5066282746310005 * ser / x);
+  }
+  function betacf(a, b, x) {
+    const MAXIT = 500, EPS = 3e-16, FPMIN = 1e-300;
+    let qab = a + b, qap = a + 1, qam = a - 1, c = 1, d = 1 - qab * x / qap;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    d = 1 / d; let h = d;
+    for (let m = 1; m <= MAXIT; m++) {
+      const m2 = 2 * m;
+      let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+      c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+      d = 1 / d; h *= d * c;
+      aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+      d = 1 + aa * d; if (Math.abs(d) < FPMIN) d = FPMIN;
+      c = 1 + aa / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+      d = 1 / d; const del = d * c; h *= del;
+      if (Math.abs(del - 1) < EPS) break;
+    }
+    return h;
+  }
+  function ibeta(a, b, x) {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    const bt = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+    if (x < (a + 1) / (a + b + 2)) return bt * betacf(a, b, x) / a;
+    return 1 - bt * betacf(b, a, 1 - x) / b;
+  }
+  function tcdf(t, df) {
+    const x = df / (df + t * t);
+    const p = 0.5 * ibeta(df / 2, 0.5, x);
+    return t > 0 ? 1 - p : p;
+  }
+  function tinv(p, df) { // quantile with lower tail area p
+    let lo = -200, hi = 200;
+    for (let i = 0; i < 200; i++) {
+      const mid = (lo + hi) / 2;
+      if (tcdf(mid, df) < p) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+  // Two sided critical value for risk alpha: z when n>=100, else t with df=n-1
+  function crit(alpha, n, oneSided) {
+    const p = oneSided ? 1 - alpha : 1 - alpha / 2;
+    return n >= 100 ? inv(p) : tinv(p, n - 1);
+  }
+  const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
+  const svar = a => { const m = mean(a); return a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1); };
+  function choose(n, k) { let r = 1; for (let i = 1; i <= k; i++) r = r * (n - k + i) / i; return Math.round(r); }
+  return { cdf, pdf, inv, tcdf, tinv, crit, mean, svar, choose };
+})();
+if (typeof module !== 'undefined') module.exports = Stat;
+
+/* Multiple choice bank. Topic keys L01 to L05. a = index of the correct option (0 to 4). */
+const BANK = [
+/* ---------------- L01 ---------------- */
+{ id:'L01a', t:'L01', src:'L01 slide 23, self test',
+  q:'They examine characteristics of persons employed in the civil service. For this purpose, data on gender, level of education, place of residence and the last monthly gross salary were collected for a random sample of employees. What is the statistical unit?',
+  o:['State administration','Place of residence','All employees','Monthly gross salary','An employee'], a:4,
+  e:'The statistical unit is one individual member of the population we study: one employee. Gender, education, residence and salary are variables. "All employees" is the population.' },
+{ id:'L01b', t:'L01', src:'L01 slide 23, self test',
+  q:'Which measurement scale does the variable "level of education" (primary, secondary, bachelor, master) belong to?',
+  o:['Nominal','Interval','Ratio','Ordinal','It is not a variable'], a:3,
+  e:'The categories can be ranked (master above bachelor) but differences between them have no fixed size. That is an ordinal scale. Allowed parameters: median and other quantiles, mode.' },
+{ id:'L01c', t:'L01', src:'L01 slides 8 to 10, scales',
+  q:'Which pair is correct for the variable temperature?',
+  o:['Celsius is ratio, Kelvin is ratio','Celsius is interval, Kelvin is ratio','Celsius is ordinal, Kelvin is interval','Both are interval','Both are nominal'], a:1,
+  e:'Celsius has an arbitrary zero, so differences make sense but ratios do not (20°C is not twice as hot as 10°C): interval. Kelvin has a true zero: ratio.' },
+{ id:'L01d', t:'L01', src:'L01 slide 8',
+  q:'For the nominal variable "gender", which parameter can be calculated?',
+  o:['Arithmetic mean','Median','Mode','Standard deviation','Coefficient of variation'], a:2,
+  e:'For nominal variables only equality or inequality is meaningful. The mode (most frequent value) and frequencies are allowed. The median needs at least an ordinal scale, the mean needs a numeric one.' },
+{ id:'L01e', t:'L01', src:'L01 slides 7 and 18',
+  q:'The average gross salary of all 2,000 employees of a company is 2,450 euros. A researcher also calculates the average salary of 100 randomly selected employees, 2,390 euros. Which statement is correct?',
+  o:['2,450 is a parameter estimate, 2,390 is a parameter','2,450 is a parameter, 2,390 is a parameter estimate (sample statistic)','Both are parameters','Both are parameter estimates','2,450 is a variable, 2,390 is a statistical unit'], a:1,
+  e:'A parameter describes the whole population (μ = 2,450). A value calculated from a sample (ȳ = 2,390) is a parameter estimate, a point estimate of μ.' },
+{ id:'L01f', t:'L01', src:'L01 slide 19',
+  q:'Which formula is the sample variance estimate s²?',
+  o:['Σ(yᵢ − ȳ)² / n','Σ(yᵢ − ȳ)² / (n − 1)','Σ(yᵢ − μ)² / N','Σ(yᵢ − ȳ) / (n − 1)','√(Σ(yᵢ − ȳ)² / n)'], a:1,
+  e:'The estimate from a sample divides the sum of squared deviations from ȳ by n − 1. Dividing by N with deviations from μ is the population variance σ².' },
+{ id:'L01g', t:'L01', src:'L01 slide 14, coefficient of variation',
+  q:'A sample has mean 40 and variance 400. What is the coefficient of variation?',
+  o:['0.5','10','5','0.05','2'], a:0,
+  e:'s = √400 = 20, CV = s / ȳ = 20 / 40 = 0.5 (50%). The coefficient of variation has no unit.' },
+{ id:'L01h', t:'L01', src:'Example midterm, Q6 and Q7 style',
+  q:'In one production run, 10,000 first quality drill bits are made. Their service life is normally distributed with an average of 1,400 drillings. What is the statistical unit and what is the mode?',
+  o:['Unit: a drill bit. Mode: 1,400 drillings','Unit: the production run. Mode: 10,000','Unit: the service life. Mode: 1,400 drillings','Unit: a drill bit. The mode cannot be determined','Unit: first quality. Mode: 1,400 drillings'], a:0,
+  e:'One drill bit is the unit, service life is the variable. For a normal distribution mean = median = mode, so the mode is 1,400.' },
+{ id:'L01i', t:'L01', src:'L01 slides 11 and 12',
+  q:'Which statement is an example of statistical inference?',
+  o:['In our class 14 of 20 students passed the exam','The average height of the 25 students in this room is 176 cm','From a survey of 8,000 randomly selected people we estimate the unemployment rate of the whole country','The median salary in the company payroll file is 2,100 euros','The mode of the shoe size in the school census is 41'], a:2,
+  e:'Inference generalises from a sample to the whole population and assesses how reliable the conclusion is. The other options only describe a complete set of data.' },
+
+/* ---------------- L02 ---------------- */
+{ id:'L02a', t:'L02', src:'Example midterm, Q1',
+  q:'Which statement about a normally distributed random variable is NOT correct?',
+  o:['More than 99 percent of the values lie in the interval (μ − 3σ, μ + 3σ)','The shape and position are determined by the standard deviation and the mean','The distribution is unimodal and symmetric for every μ and σ','The smaller the standard deviation, the more flattened the distribution','The area under the density to the left of the median equals 0.5'], a:3,
+  e:'A smaller σ gives a taller, narrower curve. A larger σ flattens it. The other statements are true (the 3σ interval holds 99.73%).' },
+{ id:'L02b', t:'L02', src:'L02 slide 27',
+  q:'Y is normal with μ = 50 and σ = 8. What is the standardized value of y = 62?',
+  o:['1.5','12','0.67','1.96','−1.5'], a:0,
+  e:'z = (y − μ) / σ = (62 − 50) / 8 = 1.5.' },
+{ id:'L02c', t:'L02', src:'L02 slide 30, table',
+  q:'For the standard normal variable Z, what is P(Z ≤ 1)?',
+  o:['0.1587','0.8413','0.6827','0.9772','0.5'], a:1,
+  e:'F(1) = 0.8413. The area above 1 is 0.1587, and 0.6827 is the area between −1 and 1.' },
+{ id:'L02d', t:'L02', src:'L02 slides 18 and 19',
+  q:'What share of the values of a normally distributed variable lies between μ − 2σ and μ + 2σ?',
+  o:['68.27%','90.00%','95.44%','97.72%','99.73%'], a:2,
+  e:'F(2) − F(−2) = 0.9772 − 0.0228 = 0.9544. Remember 0.6827 for one σ, 0.9544 for two and 0.9973 for three.' },
+{ id:'L02e', t:'L02', src:'Tutorial 2, Exercise 4',
+  q:'Which statement is correct?',
+  o:['Every normal distribution is symmetrical','In the standard normal distribution about 68.3% of the values lie between −3 and +3','The mean of a normal distribution cannot be negative','The larger the standard deviation, the higher and narrower the curve','In the standard normal distribution the variance differs from the standard deviation'], a:0,
+  e:'68.3% lies between −1 and +1 (not ±3, that is 99.7%). The mean can be any real number. A larger σ makes the curve lower and wider. For Z both σ and σ² equal 1.' },
+{ id:'L02f', t:'L02', src:'L02, questions for the assessment',
+  q:'The volume of softener in five litre bottles is normal with an average of 5 litres and a coefficient of variation of 0.01. What is the median?',
+  o:['0.5','2.5 litres','It cannot be determined from the data','5 litres, and it differs from the mode','5 litres, and it equals the second quartile'], a:4,
+  e:'In a normal distribution mean = median = mode, so the median is 5 litres. The median is also the second quartile Q2 and the 50th percentile.' },
+{ id:'L02g', t:'L02', src:'L02, questions for the assessment',
+  q:'Same bottles: mean 5 litres, CV 0.01. What percentage of bottles contains less than 4.95 litres?',
+  o:['15.87%','84.13%','2.28%','31.74%','1.59%'], a:0,
+  e:'σ = CV × mean = 0.01 × 5 = 0.05. z = (4.95 − 5) / 0.05 = −1. F(−1) = 0.1587, so 15.87%.' },
+{ id:'L02h', t:'L02', src:'Tutorial 2, home exercise d',
+  q:'Newborn weight is normal with mean 3.4 kg and σ = 0.3 kg. 60% of the heaviest newborns weigh more than which value, and what do we call it?',
+  o:['3.48 kg, the 6th decile','3.32 kg, the 4th decile (40th percentile)','3.32 kg, the 6th decile','3.48 kg, the 4th decile','3.32 kg, the third quartile'], a:1,
+  e:'60% above means 40% below, so the quantile rank is 0.40. With the table the closest value gives z = −0.25, so y = 3.4 − 0.25 · 0.3 = 3.325 kg. A quantile rank of 0.4 is the 4th decile or 40th percentile.' },
+{ id:'L02i', t:'L02', src:'Example midterm, Q14 style',
+  q:'For a normal variable, how is the third quartile Q3 calculated?',
+  o:['μ − 0.67σ','μ + 0.67σ','μ + 1.96σ','0.67','μ + σ'], a:1,
+  e:'Q3 has quantile rank 0.75. The standard normal quantile is z = 0.6745 (about 0.67), so Q3 = μ + 0.67σ. Q1 = μ − 0.67σ.' },
+{ id:'L02j', t:'L02', src:'L02 slide 12',
+  q:'For a continuous random variable Y, what is P(Y = a) for any single value a?',
+  o:['The density f(a)','0','F(a)','0.5','It depends on μ and σ'], a:1,
+  e:'For continuous variables probability is area, and a single point has no area. This does not mean the value is impossible. Only intervals have positive probability.' },
+{ id:'L02k', t:'L02', src:'Tutorial 2, Exercise 2a',
+  q:'The durability of a tyre is normal with mean 50,000 km and σ = 2,880 km. The warranty is 45,000 km. About what percentage of tyres wears out before the warranty ends?',
+  o:['4.1%','95.9%','0.4%','8.2%','17.4%'], a:0,
+  e:'z = (45,000 − 50,000) / 2,880 = −1.74. F(−1.74) = 0.0409, about 4.1%. The warranty is below the mean, so the share must be well under 50%.' },
+{ id:'L02l', t:'L02', src:'Tutorial 2, Exercise 2b',
+  q:'The warranty period lies below the mean durability. If the coefficient of variation increases and the mean stays the same, the percentage of tyres failing within the warranty will:',
+  o:['Increase','Decrease','Stay the same','Depend on the mean only','Be impossible to tell'], a:0,
+  e:'A larger σ moves the warranty limit closer to the mean in z units (z gets less negative), so more area lies to its left.' },
+{ id:'L02m', t:'L02', src:'L02 slide 14',
+  q:'For a normal variable Y, which expression gives P(a < Y ≤ b)?',
+  o:['F(a) − F(b)','F(b) − F(a)','1 − F(b)','F(a) + F(b)','F(b) / F(a)'], a:1,
+  e:'The probability between two values is the cumulative probability at the upper value minus the cumulative probability at the lower value.' },
+{ id:'L02n', t:'L02', src:'Example midterm, Q5 style',
+  q:'What proportion of the values of a normal variable is at most 1.7 standard deviations below the mean and at the same time not above the mean?',
+  o:['0.1700','0.5446','0.0446','0.9554','0.4554'], a:4,
+  e:'P(μ − 1.7σ ≤ Y ≤ μ) = F(0) − F(−1.7) = 0.5 − 0.0446 = 0.4554.' },
+{ id:'L02o', t:'L02', src:'Example midterm, Q10 style',
+  q:'Drill bit life is normal with mean 1,400 and σ = 175 drillings. At least how many drillings do the best 25% of the bits survive, and what is this value called?',
+  o:['About 1,282, the third quartile','About 1,518, the first quartile','About 1,518, the third quartile','About 1,518, the third quantile rank','About 1,282, the first quartile'], a:2,
+  e:'The best 25% are above the 75th percentile, so the value is Q3 = 1,400 + 0.67 × 175 ≈ 1,517 to 1,518. Careful: the name of the value is a quartile, not a quantile rank.' },
+
+/* ---------------- L03 ---------------- */
+{ id:'L03a', t:'L03', src:'Example midterm, Q4 style',
+  q:'A tourist board randomly selects 8 towns. In each selected town it randomly selects 4 hotels, and in each hotel it randomly selects 20 guests to fill in a questionnaire. Which sampling method is this?',
+  o:['Simple random sampling','Quota sampling','Stratified sampling','Multi stage sampling','Systematic sampling'], a:3,
+  e:'Units are selected in several steps down a hierarchy (town, hotel, guest) with random selection at each step. That is multi stage sampling.' },
+{ id:'L03b', t:'L03', src:'Example midterm, Q15',
+  q:'Which statement about multi stage sampling is NOT correct?',
+  o:['The sampling unit is not the same as the statistical unit','Random selection is possible even without a list of all statistical units','For a given sample size it achieves the maximum precision of all sampling methods','Sampling costs are generally lower than with other random methods','It suits hierarchically organised populations'], a:2,
+  e:'Multi stage sampling is cheaper and needs simpler frames, but with the same sample size it is usually LESS accurate than the other probability methods.' },
+{ id:'L03c', t:'L03', src:'L03 slide 15',
+  q:'Cluster sampling is effective when:',
+  o:['Differences between clusters are large and differences within clusters are small','Differences between clusters are small and differences within clusters are large','Both are large','Both are small','Clusters have different sizes'], a:1,
+  e:'Each cluster should look like a small copy of the population: clusters similar to each other, with plenty of variety inside each. Then observing a few whole clusters loses little precision.' },
+{ id:'L03d', t:'L03', src:'L03 slides 18 and 29',
+  q:'When does stratified sampling give a more precise estimate than simple random sampling?',
+  o:['When units within strata are as similar as possible and the strata differ from each other','When units within strata differ a lot','When the strata are chosen using a variable unrelated to the studied variable','When each stratum has exactly one unit','Only when quotas are used'], a:0,
+  e:'The factorial variable must be related to the studied variable so that strata are homogeneous inside. Then the standard error for the same n is smaller.' },
+{ id:'L03e', t:'L03', src:'L03 slide 22',
+  q:'What is the main difference between stratified sampling and quota sampling?',
+  o:['Stratified uses subgroups, quota does not','Stratified selects units at random within each subgroup, quota selects them non randomly (for example by the interviewer)','Quota sampling always needs a larger sample','Stratified sampling is a non probability method','There is no difference'], a:1,
+  e:'Both split the population into subgroups. Only stratified sampling draws the units randomly inside them, so only it is a probability method with estimable precision.' },
+{ id:'L03f', t:'L03', src:'L03 slide 22',
+  q:'What is the main disadvantage of quota sampling?',
+  o:['It needs a complete sampling frame','The precision of the estimate cannot be assessed, because selection probabilities are unknown','It is expensive','It cannot be used in opinion polls','It always has a larger standard error than SRS'], a:1,
+  e:'It is cheap and needs no frame, but being non random it gives no distribution of estimates, so no standard error or confidence interval.' },
+{ id:'L03g', t:'L03', src:'L03 slide 13',
+  q:'A 5% systematic sample is drawn from a list of 12,000 units. What is the step s?',
+  o:['5','20','600','0.05','60'], a:1,
+  e:'s = N / n = 1 / f = 1 / 0.05 = 20. Pick a random start in the first 20 places, then take every 20th unit. Danger: a hidden pattern in the list that repeats with the same period.' },
+{ id:'L03h', t:'L03', src:'L04 slide 4 and Tutorial 4, Exercise 4',
+  q:'How many different samples of size 3 can be selected without replacement from a population of 10 units (order ignored)?',
+  o:['30','120','720','1,000','10'], a:1,
+  e:'C(10, 3) = 10! / (3! · 7!) = 120. Using 10 × 3 = 30 is a typical mistake.' },
+{ id:'L03i', t:'L03', src:'L03 slides 28 and 29, Ljubljana plots',
+  q:'Building plots in Ljubljana are split into urban, suburban and rural, and 10% of the plots are randomly selected from each group. What is the sampling frame?',
+  o:['One list of all residents of Ljubljana','A separate list of all plots for each location group','The 10% of plots that are selected','The price per square metre','The three location groups only'], a:1,
+  e:'A sampling frame is a numbered list of all sampling units. In stratified sampling you need one frame per stratum.' },
+{ id:'L03j', t:'L03', src:'L03 slide 25, Literary Digest 1936',
+  q:'The Literary Digest poll of 1936 used millions of replies but predicted the wrong winner. Why did it fail?',
+  o:['The sample was too small','A biased sampling frame and non response bias','It used stratified sampling','It used systematic sampling with a bad step','The population was too small'], a:1,
+  e:'A very large sample does not fix a bad frame or non response. Gallup used a much smaller, more representative quota sample and got it right.' },
+{ id:'L03k', t:'L03', src:'L03 slide 19, proportional allocation',
+  q:'A population has two strata, A with 600 units and B with 400 units. A proportional stratified sample of 100 units is drawn. How many units come from stratum A?',
+  o:['50','60','40','100','600'], a:1,
+  e:'Sample fraction f = 100 / 1,000 = 0.1 in every stratum, so nA = 0.1 × 600 = 60 and nB = 40.' },
+{ id:'L03l', t:'L03', src:'Tutorial 4, Exercise 4',
+  q:'Which statement is correct?',
+  o:['The sampling frame is a numbered list of all units included in the sample','In probability sampling the sampling unit is always the statistical unit','The sampling frame is a numbered list of all sampling units from which the sample is drawn','Quota sampling requires a numbered frame','SRS needs no frame'], a:2,
+  e:'The frame lists all sampling units in the population, not only the selected ones. In cluster sampling the sampling unit is a cluster, not a statistical unit.' },
+{ id:'L03m', t:'L03', src:'Tutorial 4, Exercise 2',
+  q:'A student selects 30 random volunteer fire departments and collects data on all their members. What is the primary sampling unit?',
+  o:['A volunteer firefighter','A fire department','All firefighters in Slovenia','Hours spent on interventions','The group of 30 departments'], a:1,
+  e:'Statistical (elementary) unit: a firefighter. Primary sampling unit: the cluster, a fire department. All firefighters in the selected departments are the sample units, so this is cluster sampling.' },
+{ id:'L03n', t:'L03', src:'Tutorial 4, Exercise 2d',
+  q:'What separates cluster sampling from two stage sampling?',
+  o:['Nothing, they are the same','In cluster sampling all units in selected clusters are observed, in two stage sampling only a random part of them','Cluster sampling is a non probability method','Two stage sampling needs no frame','Cluster sampling has no sampling unit'], a:1,
+  e:'Cluster sampling is one stage: select clusters, observe everyone inside. Two stage sampling adds a second random selection of units inside the selected primary units.' },
+
+/* ---------------- L04 ---------------- */
+{ id:'L04a', t:'L04', src:'L04 slide 37, questions for the assessment',
+  q:'A random sample of 500 of 35,000 students is used to estimate the average cost of study materials. Which statement is NOT correct?',
+  o:['The sample means for all samples of 500 students form the sampling distribution','The distribution of sample estimates is also called the estimator distribution','An estimator is unbiased if its expected value equals the true parameter','The average cost is estimated by the unbiased estimator ȳ = Σyᵢ / n','A variable whose values are the point estimates of all samples of size 500 is called a parameter'], a:4,
+  e:'That variable is the estimator. A parameter is a fixed number describing the whole population.' },
+{ id:'L04b', t:'L04', src:'L04 slide 37 and Example midterm, Q3',
+  q:'What does the standard error of the average cost of study materials measure?',
+  o:['The difference between one student\'s spending and the sample average','Differences in spending between the students in the sample','Variation of spending among individual students','Variation of the point estimates of the average across samples of equal size','The difference between this sample\'s average and the true average'], a:3,
+  e:'The standard error is the standard deviation of the estimator ȳ over all samples of the same size. Spread among students is σ or s. The distance from the true mean in one sample is the actual error.' },
+{ id:'L04c', t:'L04', src:'L04 slide 16',
+  q:'An estimator g of the parameter Γ is unbiased if:',
+  o:['g = Γ in every sample','E(g) = Γ','SE(g) = 0','g gets closer to Γ as n grows','It has the smallest variance of all estimators'], a:1,
+  e:'Unbiased means the expected value of the estimator (mean of the estimates over all samples of the same size) equals the parameter. The other items describe consistency and efficiency.' },
+{ id:'L04d', t:'L04', src:'L04, Example 4.1',
+  q:'A population has N = 6 units. How many different samples of size n = 4 can be drawn without replacement?',
+  o:['15','24','360','6','4'], a:0,
+  e:'C(6, 4) = 6! / (4! · 2!) = 15, the number of rows in the Example 4.1 table.' },
+{ id:'L04e', t:'L04', src:'L04 slide 14',
+  q:'All else equal, what happens to the standard error of the sample mean when the sample size n increases?',
+  o:['It increases','It decreases (roughly in proportion to 1/√n)','It does not change','It equals σ','It becomes exactly 0'], a:1,
+  e:'SE(ȳ) = σ/√n · √((N − n)/(N − 1)). A larger n shrinks both factors. To halve the standard error you need about four times the sample.' },
+{ id:'L04f', t:'L04', src:'L04 slide 29, estimated standard error',
+  q:'A random sample of n = 100 from N = 400 customers has standard deviation s = 20. What is the estimated standard error of the mean, se(ȳ)?',
+  o:['1.73','2.00','1.50','2.31','0.87'], a:0,
+  e:'se = s/√n · √(1 − n/N) = 20/10 · √(1 − 100/400) = 2 · 0.866 = 1.73. Forgetting the population correction gives 2.00.' },
+{ id:'L04g', t:'L04', src:'L04 slide 24',
+  q:'The standard error is estimated from a small sample. Which distribution replaces the normal distribution in the confidence interval for the mean?',
+  o:['Student t','χ²','F','Uniform','Binomial'], a:0,
+  e:'The t distribution is used when the true standard error is replaced by its sample estimate. χ² is used for variances and goodness of fit, F for equality of variances and ANOVA.' },
+{ id:'L04h', t:'L04', src:'L04 slide 22',
+  q:'The variable itself is not normal in the population. Why can we still use the normal distribution for ȳ with a large sample?',
+  o:['Because every variable becomes normal if it is measured accurately','Because of the central limit theorem, the sample means are approximately normal for large n','Because the standard error is always zero','Because the t distribution is symmetric','Because SRS makes the variable normal'], a:1,
+  e:'The central limit theorem says the distribution of sample means approaches a normal distribution as n grows. How large is large enough depends on the shape of the variable.' },
+{ id:'L04i', t:'L04', src:'L04, Example 4.1',
+  q:'In Example 4.1 the population mean is μ = 5 and the average of the 15 sample means is also 5. What does this show?',
+  o:['The sample mean is a consistent estimator','The sample mean is an unbiased estimator of μ','The standard error is 0','The population is normally distributed','The sample variance is biased'], a:1,
+  e:'E(ȳ) = μ is exactly the definition of unbiasedness.' },
+{ id:'L04j', t:'L04', src:'Tutorial 4, Exercise 5',
+  q:'Fill in: the arithmetic mean of the point estimates across all samples of the same size is the ______ of the estimator, and the standard deviation of those point estimates is the ______.',
+  o:['standard error, expected value','expected value, standard error','variance, mean','parameter, standard deviation','bias, standard error'], a:1,
+  e:'Mean of estimates: expected value E(g). Standard deviation of estimates: standard error SE(g).' },
+{ id:'L04k', t:'L04', src:'L04 slide 16',
+  q:'Two unbiased estimators of the same parameter are available. Which one is more efficient?',
+  o:['The one with the larger expected value','The one with the lower variance of its sample estimates','The one that uses a larger sample','The one with the larger standard error','The one that is consistent'], a:1,
+  e:'Efficiency compares variances of estimators: the lower the variance (standard error), the more efficient.' },
+
+/* ---------------- L05 ---------------- */
+{ id:'L05a', t:'L05', src:'L05 slides 6 and 11',
+  q:'What does a confidence level of 0.95 mean?',
+  o:['95% of the population values lie in the interval','For 95% of all samples of the same size the calculated interval contains the true parameter','The sample mean is in the interval with probability 0.95','5% of the sample units are measurement errors','The estimate is correct for 95% of the units'], a:1,
+  e:'Confidence level is the share of samples whose interval "catches" the parameter. The risk level α = 0.05 is the share of samples whose interval misses it.' },
+{ id:'L05b', t:'L05', src:'Tutorial 5, Exercise 1b to 1d',
+  q:'Which change makes the confidence interval for the mean WIDER, all else equal?',
+  o:['A larger sample size','A smaller standard deviation s','Raising the confidence level from 0.95 to 0.99','Lowering the confidence level to 0.90','A larger sample mean'], a:2,
+  e:'Margin D = z · se. A higher confidence level needs a larger z, so D grows. A bigger n or smaller s shrinks se. The position of the sample mean moves the interval but does not change its width.' },
+{ id:'L05c', t:'L05', src:'L05 slide 36, questions for the assessment',
+  q:'Which statement is NOT correct?',
+  o:['The standard error measures the differences between sample estimates','The confidence level does not depend on the sample size','The width of the interval for the mean does not depend on the point estimate','If the sample size is doubled from 125 to 250, the width of the interval is halved','In sampling without replacement each unit appears at most once'], a:3,
+  e:'Width is proportional to 1/√n (apart from the population correction). Doubling n divides the width by √2, about 1.41, not by 2.' },
+{ id:'L05d', t:'L05', src:'L05 slide 8',
+  q:'How should the limits of a confidence interval be rounded so that the risk level is not exceeded?',
+  o:['Both limits to the nearest value','Both limits down','Both limits up','Outward: the lower limit down and the upper limit up','Inward: the lower limit up and the upper limit down'], a:3,
+  e:'Rounding outward can only widen the interval, so the confidence level is at least as high as required.' },
+{ id:'L05e', t:'L05', src:'L05 slide 12 and 13',
+  q:'Which critical value gives the lower limit of a one sided 95% confidence interval (large sample)?',
+  o:['1.645','1.96','2.33','2.58','1.28'], a:0,
+  e:'One sided intervals use z with the whole risk α = 0.05 in one tail: z = 1.645. Two sided 95% uses z at α/2 = 0.025, which is 1.96.' },
+{ id:'L05f', t:'L05', src:'L05 slide 23, total, and Example 5.6',
+  q:'A 95% confidence interval for the average consumption per household is 14.5116 to 15.4884 litres (limits not rounded). There are N = 60,000 households. What is the interval for the total consumption?',
+  o:['14.5116 to 15.4884 litres','870,696 to 929,304 litres','8,707 to 9,293 litres','60,000 litres exactly','1.45 to 1.55 million litres'], a:1,
+  e:'Multiply BOTH limits of the interval for the mean by N: 14.5116 × 60,000 = 870,696 and 15.4884 × 60,000 = 929,304. As in Example 5.6, multiply the unrounded limits, then round outward.' },
+{ id:'L05g', t:'L05', src:'L05 slide 19',
+  q:'The standard error is estimated from a simple random sample of 20 units. Which critical value is used for the confidence interval of the mean?',
+  o:['z','t with 20 degrees of freedom','t with 19 degrees of freedom','χ² with 19 degrees of freedom','F with 19 degrees of freedom'], a:2,
+  e:'With an estimated standard error use the t distribution with df = n − 1 = 19. For large samples z and t are almost equal, so z is acceptable.' },
+{ id:'L05h', t:'L05', src:'Example midterm Q11 and Tutorial 5, Exercise 4',
+  q:'A proportion is assumed to be 0.66. The estimate must not deviate from it by more than 3%. Which absolute margin of error D goes into the sample size formula?',
+  o:['0.03','0.0198','0.66','0.34','0.0030'], a:1,
+  e:'"3%" of the assumed value is a relative margin: D = 0.03 × 0.66 = 0.0198. If the task said "3 percentage points" then D = 0.03. In Tutorial 5 the same wording gave 11,571 (relative) versus 796 (absolute).' },
+{ id:'L05i', t:'L05', src:'L05 slide 33',
+  q:'The formula gives a required sample size of 301.4. What do you report?',
+  o:['301','301.4','302','300','Round to the nearest 10, which is 300'], a:2,
+  e:'Always round the sample size UP, so the margin of error is at most the required value.' },
+{ id:'L05j', t:'L05', src:'L05 slides 31 and 33',
+  q:'Compared with the sample size n_r for sampling with replacement, the sample size n for sampling without replacement from a finite population is:',
+  o:['Larger','Smaller or equal','Always exactly the same','Twice as large','Unrelated'], a:1,
+  e:'n = n_r / (1 + n_r / N). The finite population correction reduces the needed sample. For huge N the difference is negligible.' },
+{ id:'L05k', t:'L05', src:'L05 slide 39',
+  q:'A stratified sample has strata of sizes 100 and 300 with stratum means 10 and 20. What is the stratified estimate of the population mean?',
+  o:['15','17.5','20','12.5','16'], a:1,
+  e:'ȳ_str = (1/N) Σ N_j ȳ_j = (100 · 10 + 300 · 20) / 400 = 7,000 / 400 = 17.5. It is a weighted mean, weights are stratum sizes.' },
+{ id:'L05l', t:'L05', src:'L05 slide 26',
+  q:'In a large population a sample of n = 400 gives p = 0.2. What is the standard error of the sample proportion (ignore the finite population correction)?',
+  o:['0.02','0.04','0.2','0.0004','0.01'], a:0,
+  e:'se(p) = √(p(1 − p)/n) = √(0.2 · 0.8 / 400) = √0.0004 = 0.02.' },
+{ id:'L05m', t:'L05', src:'Example midterm, Q12 and Q13 style',
+  q:'A random sample of 1,000 of 500,000 households shows 35% have a streaming subscription. What is the margin of error of the 95% confidence interval for the proportion?',
+  o:['0.0150','0.0295','0.0580','0.3500','0.0248'], a:1,
+  e:'se = √(0.35 · 0.65 / 1000 · (1 − 1000/500000)) = 0.01507. D = 1.96 · 0.01507 = 0.0295. 0.0150 is the standard error, 0.0248 would use z = 1.645.' },
+{ id:'L05n', t:'L05', src:'L05 slide 40 and Example 5.6a',
+  q:'Why might a stratified sample give a narrower confidence interval than a simple random sample of the same size?',
+  o:['Because it uses a larger z value','Because units within strata are more alike, so the standard error is smaller','Because the sample is selected without a frame','Because it ignores the population size','It never does'], a:1,
+  e:'If the factorial variable (for example location) explains the studied variable, the variation inside strata is small. That reduces se(ȳ_str) for the same n.' },
+{ id:'L05o', t:'L05', src:'Tutorial 5, Exercise 2',
+  q:'You need the lowest plausible share of damaged houses at risk level 0.01 (one sided). Which interval do you build?',
+  o:['p − z₀.₀₀₅ · se < Π < p + z₀.₀₀₅ · se','p − z₀.₀₁ · se < Π','Π < p + z₀.₀₁ · se','p ± 1.96 · se','p − 1.96 · se < Π'], a:1,
+  e:'A lower bound uses a one sided interval with the whole risk in one tail: p − z_α · se < Π, with z₀.₀₁ = 2.33.' }
+];
+
+/* ---------------- Added from the Practice Solutions folder (Tutorials 1, 2, 4, 5 and lecture notes) ---------------- */
+BANK.push(
+{ id:'L01j', t:'L01', src:'Tutorial 1, Exercise 1b',
+  q:'The faculty collected data on EF students: phone number, place of residence and distance from the college. What is the measurement scale of the variable "place of residence"?',
+  o:['Nominal (categorical)','Ordinal','Interval','Ratio','Discrete numerical'], a:0,
+  e:'Place of residence is the name of a category, so the variable is categorical, nominal scale. Only frequencies and the mode make sense. Distance from the college is numerical, ratio scale.' },
+{ id:'L01k', t:'L01', src:'Tutorial 1, Exercise 1c',
+  q:'In a 2% sample of an incoming shipment of light bulbs, 10% were defective. Which statement is correct?',
+  o:['Variable: defectiveness (categorical). The 10% is a sample proportion p, an estimate of the parameter Π','Variable: defectiveness (numerical, ratio). The 10% is a parameter','The population is the 2% sample','The statistical unit is the shipment','The 10% is the sampling frame'], a:0,
+  e:'The sample unit is a light bulb, the population is all bulbs in the shipment, the variable (defective or not) is categorical and the 10% from the sample is the statistic p.' },
+{ id:'L01l', t:'L01', src:'Tutorial 1, Exercise 1e',
+  q:'From a simple random sample of 5% of the population, the estimate of the third quartile of the value of stocks and bonds was 350 euros. What is the 350?',
+  o:['A sample estimate (statistic) of the parameter Q3','The parameter Q3 itself','The arithmetic mean','The population size','The sampling frame'], a:0,
+  e:'Anything calculated from a sample is an estimate (statistic). The parameter is the third quartile of the whole population, which we do not know.' },
+{ id:'L02p', t:'L02', src:'Lecture 2 Example 2.3 f, note on notation',
+  q:'The height below which the shortest 25% of women fall is called:',
+  o:['The first quartile Q1, a quantile of rank 0.25','The quantile Q with rank 1','The 25th decile','The second quartile Q2','The quantile rank of 166 cm'], a:0,
+  e:'The symbol is Q1 (first quartile). The number 0.25 is the quantile RANK, the area to the left, so do not write it as an index of Q. The value in cm is the quantile.' },
+{ id:'L02q', t:'L02', src:'Lecture 2 Example 2.3 g',
+  q:'Heights are normal with μ = 166 and σ = 6. In the table the number closest to 0.60 belongs to z = 0.25. What is the 60th percentile?',
+  o:['167.5','173','166.25','160','172.5'], a:0,
+  e:'P60 = μ + z · σ = 166 + 0.25 · 6 = 167.5. Say it precisely: 60% of the women are at most 167.5 cm tall.' },
+{ id:'L02r', t:'L02', src:'Tutorial 2, Exercise 2b',
+  q:'The share of tyres failing within the warranty rises from 4.09% to 12.30%. How large is the change in ABSOLUTE terms?',
+  o:['8.21 percentage points','200.7 percentage points','8.21%','3.0 percentage points','0.0821 percent'], a:0,
+  e:'Absolute change = 12.30 − 4.09 = 8.21 percentage points. The relative change is 12.30 / 4.09 − 1, about +200.7%, or about 300.7% of the original share.' },
+{ id:'L02s', t:'L02', src:'Lecture 2, tables (SAH pages 64 to 66)',
+  q:'You need the value that the highest 10% of a normal variable exceed. What is the first step in the lecturer\'s method?',
+  o:['Turn it into a quantile rank: F(z_a) = 0.90, then find z_a in the table','Compute z = (y − μ) / σ with y = 10','Read F(0.10) in the table','Multiply σ by 0.10','Add 10% to the mean'], a:0,
+  e:'Highest 10% means 90% lie below, so F(z_a) = 0.90. Find the table number closest to 0.90 (z about 1.28), then a = μ + z_a · σ.' },
+{ id:'L03o', t:'L03', src:'Tutorial 4, Exercise 1b',
+  q:'A simple random sample of 100 students is drawn from N = 2,000 students. What is the probability that a given student is included?',
+  o:['0.05','0.5','100','0.02','2,000'], a:0,
+  e:'Probability of inclusion = n / N = 100 / 2,000 = 0.05. The sampling frame is the ordered list of all 2,000 sampling units.' },
+{ id:'L03p', t:'L03', src:'Tutorial 4, Exercise 1c',
+  q:'Separate lists are made for female (450) and male (280) students and simple random sampling with a 20% sample proportion is done in each group. What type of sampling is this and how many males are selected?',
+  o:['Stratified sampling, 56 males','Cluster sampling, 56 males','Stratified sampling, 146 males','Quota sampling, 56 males','Systematic sampling, 28 males'], a:0,
+  e:'Random selection inside each group means stratified sampling. 0.2 × 450 = 90 females and 0.2 × 280 = 56 males, so n = 146 of N = 730.' },
+{ id:'L03q', t:'L03', src:'Tutorial 4, Exercise 3e',
+  q:'Why is quota sampling called a non random sampling method?',
+  o:['Units are not selected by random selection, the interviewer decides who fills the quota','It needs a numbered sampling frame','It always uses clusters','All units have equal selection probability','It uses a systematic step'], a:0,
+  e:'The quotas (numbers of units with defined characteristics) copy the structure of the population, but who is picked is left to the interviewer. That is why the quality of the estimate cannot be judged.' },
+{ id:'L05p', t:'L05', src:'L05 slide 20, t table',
+  q:'The table of t values has no row for your number of degrees of freedom. Which row do you use?',
+  o:['The first lower df in the table','The first higher df','Always the z value','df = n','The average of the two neighbouring rows'], a:0,
+  e:'Taking the first lower df gives a slightly larger t, so the preselected risk level is not exceeded.' },
+{ id:'L05q', t:'L05', src:'L05 slide 26, Example 5.3',
+  q:'You have a 95% interval for a proportion, 0.0283 < Π < 0.1217. How do you get the interval for the NUMBER of units with the property among N = 6,000?',
+  o:['Multiply both limits by N and round outward','Divide both limits by N','Multiply both limits by 100','Add N to both limits','Use the percentage limits unchanged'], a:0,
+  e:'N_a = Π · N, so 0.0283 · 6,000 = 170 and 0.1217 · 6,000 = 730 (outward). For percentages multiply by 100.' },
+{ id:'L05r', t:'L05', src:'L05 slide 12, Example 5.3 c',
+  q:'The task asks: "At least what percentage of employees use the bike rental?" Which interval do you calculate?',
+  o:['One sided, lower limit, with z_α','Two sided with z_α/2','One sided, upper limit','No interval, only the point estimate','Only the margin of error'], a:0,
+  e:'"At least" or "minimum" asks for a lower limit: p − z_α · se < Π. The whole risk α is in one tail, so z_α (for example 1.6449 at α = 0.05).' },
+{ id:'L05s', t:'L05', src:'L05 slide 40, Example 5.6 a',
+  q:'Why is stratified sampling by location expected to be better than simple random sampling for estimating plant milk consumption?',
+  o:['Consumption is related to location, so units within a location are more alike, which lowers the standard error for the same n','It needs no sampling frame','It uses a larger z value','It removes the need for a population size','It makes the variable normal'], a:0,
+  e:'Using a factorial variable related to the studied variable makes strata more homogeneous. A smaller standard error gives a narrower interval.' }
+);
+if (typeof module !== 'undefined') module.exports = BANK;
+
+/* Calculation tasks in the format of the lecturer's solutions (Tutorials 1 to 5, Lectures 2 and 5).
+   Each generator gen(o): o undefined means random numbers, o is an object means "tutorial original".
+   Uses Stat from engine.js. */
+const MINUS = '−';
+const fm = (x, d) => { const s = Number(x).toFixed(d); return s.replace('-', MINUS); };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const lvlTxt = l => (l * 100).toFixed(0) + '%';
+const sq = x => x * x;
+/* Table helpers: the Handbook (SAH, pages 64 to 66) gives F(z) for z with two decimals */
+const z2 = z => Math.round(z * 100) / 100;
+const F4 = z => Math.round(Stat.cdf(z2(z)) * 1e4) / 1e4;
+function tz(p){ /* z whose table value is closest to the quantile rank p */
+  const z0 = z2(Stat.inv(p)); let best = z0, bd = 1e9;
+  [-0.01, 0, 0.01].forEach(d => { const z = z0 + d; const dd = Math.abs(Stat.cdf(z) - p); if (dd < bd - 1e-12){ bd = dd; best = z; } });
+  return Math.round(best * 100) / 100;
+}
+const ord = n => n + (n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th');
+function qname(p){
+  const pc = Math.round(p * 100);
+  if (pc === 50) return 'the median Me (second quartile Q2, 5th decile D5, 50th percentile P50)';
+  if (pc === 25) return 'the first quartile Q1 (25th percentile P25)';
+  if (pc === 75) return 'the third quartile Q3 (75th percentile P75)';
+  if (pc % 10 === 0) return `the ${ord(pc / 10)} decile D${pc / 10} (also the ${ord(pc)} percentile P${pc})`;
+  return `the ${ord(pc)} percentile P${pc}`;
+}
+/* critical value rule used on this page: z for n of 100 or more, t (n minus 1 degrees of freedom) below that */
+function crit(alpha, n, oneSided){ return Stat.crit(alpha, n, oneSided); }
+const critName = (n, a, one) => n >= 100 ? `z${one ? '' : ''}` : `t(df = ${n - 1})`;
+const ambiguous = n => n >= 30 && n < 100; /* professor uses t when se is estimated, z for large samples: accept both */
+const alpha2 = L => (1 - L) / 2;
+
+const CALC = {};
+
+/* ---------------- L01: descriptive statistics (Tutorial 1, Exercise 2) ---------------- */
+const T1DATA = [23.5,32.8,38.3,41.3,40.6,25.6,55.4,29.5,33.3,46.0,26.9,30.3,23.4,24.2,42.1,20.6,31.9,44.1,23.6,80.7,19.2,23.5,19.5,21.4,24.5,20.4,20.8,20.0,17.9,65.1,46.6,33.2,23.6,22.8,18.7,31.4,23.6,27.3,20.4,36.6,21.5,26.3,23.7,31.7,23.2,24.5];
+CALC.desc = { name: 'Descriptive statistics and frequency table', src: 'Tutorial 1, Exercise 2', lec: 'L01',
+  origs: [{ label: 'Tutorial 1, Exercise 2 (46 employees, annual net income)', o: { data: T1DATA, unit: 'an employee', variable: 'annual net income in thousands of euros (numerical, ratio)', grouped: true } }],
+  gen(o) {
+    let data, unit = 'a unit', variable = 'the observed variable (numerical)', grouped = false;
+    if (o){ data = o.data; unit = o.unit; variable = o.variable; grouped = o.grouped; }
+    else { const n = pick([6, 7, 8]); data = Array.from({ length: n }, () => pick([4, 5, 6, 7, 8, 9, 10, 12, 14, 15])); }
+    const n = data.length, m = Stat.mean(data), v = Stat.svar(data), s = Math.sqrt(v);
+    const mx = Math.max(...data), mn = Math.min(...data);
+    const parts = [
+      { label: 'Arithmetic mean ȳ', ans: m, kind: 'rel', tol: 0.004, dec: 2 },
+      { label: 'Sample variance s² (divide by n − 1)', ans: v, kind: 'rel', tol: 0.012, dec: 2 },
+      { label: 'Sample standard deviation s', ans: s, kind: 'rel', tol: 0.008, dec: 2 },
+      { label: 'Range of variation r = max − min', ans: mx - mn, kind: 'abs', tol: 0.06, dec: 1 },
+      { label: 'Coefficient of variation CV = s / ȳ', ans: s / m, kind: 'rel', tol: 0.04, dec: 3 }
+    ];
+    const steps = [
+      `Sample unit: ${unit}. Variable: ${variable}. n = ${n}.`,
+      `Estimate of the arithmetic mean: ȳ = Σyᵢ / n = ${fm(data.reduce((a, b) => a + b, 0), 1)} / ${n} = ${fm(m, 3)}.`,
+      `Estimate of the variance: s² = Σ(yᵢ − ȳ)² / (n − 1) = ${fm(v * (n - 1), 2)} / ${n - 1} = ${fm(v, 2)}.`,
+      `Estimate of the standard deviation: s = √${fm(v, 2)} = ${fm(s, 3)}.`,
+      `Estimate of the range: r = max − min = ${mx} − ${mn} = ${fm(mx - mn, 1)}.`,
+      `Estimate of the coefficient of variation: CV = s / ȳ = ${fm(s, 3)} / ${fm(m, 3)} = ${fm(s / m, 2)}.`
+    ];
+    const r = [`stat.desc(data$Annual.net.income) from library(pastecs), then round(descriptives, 2)`];
+    let intro = `A sample of ${n} observations${o ? ' (annual net income in thousands of euros of 46 randomly selected employees in the financial industry)' : ''}: ${data.join(', ')}. Define the unit and the variable, then estimate the mean, variance, standard deviation, range and coefficient of variation.`;
+    if (grouped){
+      const bounds = [[0.5, 20.5], [20.5, 40.5], [40.5, 60.5], [60.5, 80.5], [80.5, 100.5]];
+      const f = bounds.map(b => data.filter(y => y > b[0] && y <= b[1]).length);
+      const F3 = f[0] + f[1] + f[2];
+      parts.push(
+        { label: 'Frequency distribution, class 3 (41 to 60): midpoint y₃', ans: 50.5, kind: 'abs', tol: 0.06, dec: 1 },
+        { label: 'Cumulative frequency F₃', ans: F3, kind: 'abs', tol: 0.5, dec: 0 },
+        { label: 'Relative frequency f°₃', ans: f[2] / n, kind: 'abs', tol: 0.0012, dec: 3 },
+        { label: 'Cumulative relative frequency F°₃', ans: F3 / n, kind: 'abs', tol: 0.0012, dec: 3 });
+      intro += ' Then form a frequency distribution with five classes (1 to 20, 21 to 40, 41 to 60, 61 to 80, 81 to 100) and find, for the third class, the midpoint, cumulative frequency, relative frequency and cumulative relative frequency.';
+      steps.push(
+        `Classes (boundaries 0.5 to 20.5, 20.5 to 40.5, ...): frequencies f = ${f.join(', ')}, total ${n}.`,
+        `Midpoint of the third class: y₃ = (40.5 + 60.5) / 2 = 50.5.`,
+        `Cumulative frequency: F₃ = f₁ + f₂ + f₃ = ${f[0]} + ${f[1]} + ${f[2]} = ${F3}.`,
+        `Relative frequency: f°₃ = f₃ / n = ${f[2]} / ${n} = ${fm(f[2] / n, 3)}.`,
+        `Cumulative relative frequency: F°₃ = F₃ / n = ${F3} / ${n} = ${fm(F3 / n, 3)}.`,
+        `Interpretation: ${fm(100 * F3 / n, 1)}% of the sampled employees earn at most 60 thousand euros a year (boundary 60.5).`);
+      r.push(`data$mid <− recode(data$Annual.net.income, "0.5:20.5 = 10.5; ...") then frq(data$mid); quantile(data$Annual.net.income, p = 0.25)`);
+    }
+    return { intro, parts, steps, r };
+  } };
+
+/* ---------------- L02: normal distribution (Tutorial 2, Lecture 2 Examples 2.3 and 2.4) ---------------- */
+CALC.normal = { name: 'Normal distribution: probabilities and quantiles', src: 'Tutorial 2 Exercise 1, Lecture 2 Examples 2.3 and 2.4', lec: 'L02',
+  origs: [
+    { label: 'Tutorial 2, Exercise 1 (IQ, variance 289)', o: { m: 100, s: 17, x: 117, a: 91.5, b: 108.5, c: 154, q: 10, what: 'IQ', note: 'The variance is 289, so σ = √289 = 17.' } },
+    { label: 'Lecture 2, Example 2.3 (heights of women, N(166, 6))', o: { m: 166, s: 6, x: 180, a: 160, b: 172, c: 188, q: 40, what: 'height in cm', note: '' } }
+  ],
+  gen(o) {
+    if (!o){
+      const m = pick([100, 166, 500, 1400]);
+      const s = +(m * pick([0.04, 0.06, 0.1])).toFixed(1);
+      const r1 = v => +v.toFixed(1);
+      o = { m, s, x: r1(m + pick([-1, 0.5, 1, 1.5]) * s), a: r1(m + pick([-1.5, -1, -0.5]) * s), b: r1(m + pick([0.5, 1, 1.5]) * s), c: r1(m + pick([2, 2.5, 3]) * s), q: pick([10, 20, 25, 30, 40]), what: 'the variable', note: '' };
+    }
+    const { m, s, x, a, b, c, q } = o;
+    const zx = z2((x - m) / s), za = z2((a - m) / s), zb = z2((b - m) / s), zc = z2((c - m) / s);
+    const p = 1 - q / 100, zq = tz(p), val = m + zq * s;
+    const rank = (100 - q) / 100;
+    const probs = [F4(zx), F4(zb) - F4(za), 1 - F4(zc)];
+    return {
+      intro: `${o.what === 'the variable' ? 'A variable' : o.what} is normally distributed with mean μ = ${m} and standard deviation σ = ${s}${o.note ? ' (' + o.note + ')' : ''}. Give probabilities as proportions with four decimals and use the table values of the Handbook.`,
+      parts: [
+        { label: `Standardized value of ${x}`, ans: (x - m) / s, kind: 'abs', tol: 0.011, dec: 2 },
+        { label: `P(Y ≤ ${x})`, ans: probs[0], kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: `P(${a} ≤ Y ≤ ${b})`, ans: probs[1], kind: 'abs', tol: 0.0008, dec: 4 },
+        { label: `P(Y ≥ ${c})`, ans: probs[2], kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: `The value that the highest ${q}% of the units exceed`, ans: val, kind: 'abs', tol: Math.max(0.012 * s, 0.01), dec: 2 }
+      ],
+      steps: [
+        `Population: all units, variable: ${o.what}. Y ~ N(μ, σ) = N(${m}, ${s}).`,
+        `a) ① Standardize: z_a = (a − μ) / σ = (${x} − ${m}) / ${s} = ${fm(zx, 2)}. ② Table: F(z_a) = F(${fm(zx, 2)}) = ${fm(probs[0], 4)}. ③ Interpretation: the probability that Y does not exceed ${x} is ${fm(100 * probs[0], 2)}%.`,
+        `b) Two limits a = ${a}, b = ${b}. ① z_a = (${a} − ${m}) / ${s} = ${fm(za, 2)}, z_b = (${b} − ${m}) / ${s} = ${fm(zb, 2)}. ② F(z_a) = ${fm(F4(za), 4)}, F(z_b) = ${fm(F4(zb), 4)}, P = F(z_b) − F(z_a) = ${fm(probs[1], 4)}. ③ Interpretation: ${fm(100 * probs[1], 2)}% of the units lie between ${a} and ${b}.`,
+        `c) Right side: ① z = (${c} − ${m}) / ${s} = ${fm(zc, 2)}. ② P(Y ≥ ${c}) = 1 − F(${fm(zc, 2)}) = 1 − ${fm(F4(zc), 4)} = ${fm(probs[2], 4)}. ③ Interpretation: ${fm(100 * probs[2], 2)}% of the units are at ${c} or above.`,
+        `d) ① The highest ${q}% lie above a, so ${100 - q}% lie below: F(z_a) = ${fm(rank, 2)}. ② In the table find the number closest to ${fm(rank, 2)}, read its z: z_a = ${fm(zq, 2)}. ③ a = μ + z_a · σ = ${m} + ${fm(zq, 2)} · ${s} = ${fm(val, 2)}.`,
+        `Interpretation: ${q}% of the units are above ${fm(val, 2)}. This value is ${qname(rank)}. Be precise: it is a quantile of rank ${fm(rank, 2)}.`
+      ],
+      r: [`pnorm(q = ${x}, mean = ${m}, sd = ${s}, lower.tail = TRUE)`, `qnorm(p = ${q / 100}, mean = ${m}, sd = ${s}, lower.tail = FALSE)`]
+    };
+  } };
+
+/* Tutorial 2, Exercise 2: tyres and the change of the coefficient of variation */
+CALC.tyres = { name: 'Warranty share and a change of the coefficient of variation', src: 'Tutorial 2, Exercise 2', lec: 'L02',
+  origs: [{ label: 'Tutorial 2, Exercise 2 (tyres XYZ)', o: { mu: 50000, sigma: 2880, a: 45000, inc: 0.5, unit: 'km', what: 'tyre durability' } }],
+  gen(o) {
+    if (!o){
+      const mu = pick([50000, 30000, 1200, 400]); const cv = pick([0.04, 0.05, 0.06, 0.08]);
+      const sigma = +(mu * cv).toFixed(1); const a = +(mu - pick([1, 1.5, 2]) * sigma).toFixed(1);
+      o = { mu, sigma, a, inc: 0.5, unit: 'units', what: 'the durability of an item' };
+    }
+    const { mu, sigma, a, inc } = o; const s2 = sigma * (1 + inc);
+    const za = z2((a - mu) / sigma), zb = z2((a - mu) / s2); const f1 = F4(za), f2 = F4(zb);
+    return {
+      intro: `${o.what[0].toUpperCase() + o.what.slice(1)} is normally distributed with arithmetic mean ${mu} ${o.unit} and standard deviation ${sigma} ${o.unit}. The warranty period is ${a} ${o.unit}. (a) What share fails before the warranty expires? (b) The coefficient of variation increases by ${inc * 100}% while the mean stays the same. Give the new share, the change in percentage points (absolute) and the relative change in percent. Proportions with four decimals.`,
+      parts: [
+        { label: 'Share failing before the warranty ends (a)', ans: f1, kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: 'New share after the CV increase (b)', ans: f2, kind: 'abs', tol: 0.0008, dec: 4 },
+        { label: 'Absolute change in percentage points', ans: (f2 - f1) * 100, kind: 'abs', tol: 0.12, dec: 2 },
+        { label: 'Relative change in percent', ans: (f2 / f1 - 1) * 100, kind: 'rel', tol: 0.012, dec: 1 }
+      ],
+      steps: [
+        `Population: all items, variable: ${o.what}. Y ~ N(μ, σ) = N(${mu}, ${sigma}), warranty a = ${a}.`,
+        `a) ① z_a = (a − μ) / σ = (${a} − ${mu}) / ${sigma} = ${fm(za, 2)}. ② Table: F(${fm(za, 2)}) = ${fm(f1, 4)}. ③ ${fm(f1 * 100, 2)}% of the items fail before the warranty expires.`,
+        `b) CV = σ / μ = ${fm(sigma / mu, 4)}. It increases by ${inc * 100}%: CV₂ = ${1 + inc} · CV = ${fm((1 + inc) * sigma / mu, 4)}, so σ₂ = ${1 + inc} · ${sigma} = ${fm(s2, 2)} (mean unchanged).`,
+        `① z₂ = (${a} − ${mu}) / ${fm(s2, 2)} = ${fm(zb, 2)}. ② F(${fm(zb, 2)}) = ${fm(f2, 4)}. ③ The share rises to ${fm(f2 * 100, 2)}%.`,
+        `Absolute change (two options, here percentage points): ${fm(f2, 4)} − ${fm(f1, 4)} = ${fm(f2 - f1, 4)}, that is ${fm((f2 - f1) * 100, 2)} percentage points.`,
+        `Relative change: (${fm(f2, 4)} / ${fm(f1, 4)} − 1) · 100% = ${fm((f2 / f1 - 1) * 100, 1)}%, or ${fm(f2 / f1 * 100, 1)}% of the original share.`
+      ],
+      r: [`pnorm(q = ${a}, mean = ${mu}, sd = ${sigma})`]
+    };
+  } };
+
+/* Tutorial 2, Exercise 3: FotoExpert, warranty from a budget */
+CALC.budget = { name: 'Warranty length from a budget (FotoExpert)', src: 'Tutorial 2, Exercise 3', lec: 'L02',
+  origs: [{ label: 'Tutorial 2, Exercise 3 (FotoExpert light meters)', o: { units: 5000, price: 240, budget: 120000, mu: 5, sigma: 1.56, T2: 2, budget2: 12000 } }],
+  gen(o) {
+    if (!o){
+      const mu = pick([4, 5, 6]); const sigma = +(mu * pick([0.25, 0.3, 0.35])).toFixed(2);
+      const units = pick([2000, 5000, 8000]), price = pick([120, 240, 300]);
+      const sh = pick([0.05, 0.1, 0.15]);
+      o = { units, price, budget: sh * units * price, mu, sigma, T2: mu - pick([2, 3]), budget2: pick([0.01, 0.02, 0.05]) * units * price };
+    }
+    const { units, price, budget, mu, sigma, T2, budget2 } = o;
+    const sh = budget / (units * price), z1 = tz(sh), T = mu + z1 * sigma;
+    const sh2 = budget2 / (units * price), zz = tz(sh2), sNew = (T2 - mu) / zz;
+    const rel = (z2(sNew) / sigma - 1) * 100;
+    return {
+      intro: `A company expects to sell ${units} products at ${price} euros each. The time until failure is normally distributed with mean ${mu} years and standard deviation ${sigma} years. (a) The company has ${budget} euros to replace products that fail within the warranty. How many years of warranty can it offer? (b) With a ${T2} year warranty, by what percentage must the standard deviation change (mean unchanged) so that the company needs only ${budget2} euros for warranty replacements?`,
+      parts: [
+        { label: 'Share of products that may fail in the warranty period (a)', ans: sh, kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: 'Warranty period in years (a)', ans: T, kind: 'abs', tol: 0.02, dec: 2 },
+        { label: 'Share allowed in (b)', ans: sh2, kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: 'Required standard deviation in (b)', ans: sNew, kind: 'rel', tol: 0.012, dec: 3 },
+        { label: 'Relative change of the standard deviation in percent', ans: rel, kind: 'abs', tol: 0.35, dec: 1 }
+      ],
+      steps: [
+        `Population: all light meters sold (${units}), unit: one meter, variable: time until failure. Y ~ N(${mu}, ${sigma}).`,
+        `a) Share allowed to fail: budget / (units · price) = ${budget} / (${units} · ${price}) = ${fm(sh, 4)}.`,
+        `① F(z_a) = ${fm(sh, 2)}. ② Closest table value gives z_a = ${fm(z1, 2)}. ③ T = μ + z_a · σ = ${mu} + (${fm(z1, 2)}) · ${sigma} = ${fm(T, 2)} years.`,
+        `Interpretation: with a warranty of about ${fm(T, 1)} years the replacement cost does not exceed ${budget} euros.`,
+        `b) Allowed share = ${budget2} / (${units} · ${price}) = ${fm(sh2, 4)}. F(z) = ${fm(sh2, 2)} gives z = ${fm(zz, 2)}.`,
+        `Solve z = (T − μ) / σ_new for the standard deviation: σ_new = (T − μ) / z = (${T2} − ${mu}) / ${fm(zz, 2)} = ${fm(sNew, 3)}.`,
+        `Relative change: σ_new / σ − 1 = ${fm(z2(sNew), 2)} / ${sigma} − 1 = ${fm(rel / 100, 4)}, that is ${fm(rel, 1)}%. The standard deviation must ${rel < 0 ? 'decrease' : 'increase'} by about ${fm(Math.abs(rel), 1)}%.`
+      ],
+      r: [`qnorm(p = ${fm(sh, 2)}, mean = ${mu}, sd = ${sigma})`]
+    };
+  } };
+
+/* ---------------- L03: sampling ---------------- */
+CALC.sampling = { name: 'Sampling plan: step, inclusion probability, number of samples', src: 'Lecture 3, Tutorial 4', lec: 'L03',
+  gen() {
+    const N = pick([2000, 5000, 12000]);
+    const f = pick([0.02, 0.05, 0.1]);
+    const n = Math.round(N * f);
+    const Ns = [0.5, 0.3, 0.2].map(x => Math.round(N * x));
+    const ns = Ns.map(x => Math.round(n * x / N));
+    const N0 = pick([8, 10, 12]), n0 = pick([2, 3, 4]);
+    return {
+      intro: `A population has N = ${N} units and a ${(f * 100).toFixed(0)}% simple random sample (n = ${n}) is wanted. (a) What is the probability that a given unit is included in the sample? (b) For a systematic sample from the numbered list, what is the step s? (c) The population is split into strata of sizes ${Ns.join(', ')} and the sample is allocated proportionally: how many units come from each stratum? (d) In a separate small population of ${N0} units, how many different samples of size ${n0} exist without replacement?`,
+      parts: [
+        { label: 'Inclusion probability n / N', ans: n / N, kind: 'abs', tol: 0.0006, dec: 3 },
+        { label: 'Systematic step s', ans: N / n, kind: 'abs', tol: 0.5, dec: 0 },
+        { label: 'Sample from stratum 1', ans: ns[0], kind: 'abs', tol: 0.5, dec: 0 },
+        { label: 'Sample from stratum 2', ans: ns[1], kind: 'abs', tol: 0.5, dec: 0 },
+        { label: 'Sample from stratum 3', ans: ns[2], kind: 'abs', tol: 0.5, dec: 0 },
+        { label: `Number of samples C(${N0}, ${n0})`, ans: Stat.choose(N0, n0), kind: 'abs', tol: 0.5, dec: 0 }
+      ],
+      steps: [
+        `Sampling frame: an ordered (numbered) list of all sampling units. Here N = ${N}.`,
+        `a) Probability of inclusion = n / N = ${n} / ${N} = ${fm(n / N, 3)}.`,
+        `b) Step s = N / n = ${N} / ${n} = ${N / n}. Pick a random start among the first ${N / n} units, then take every ${N / n}th.`,
+        `c) Proportional allocation: n_j = n · N_j / N. Stratum 1: ${n} · ${Ns[0]} / ${N} = ${ns[0]}. Stratum 2: ${ns[1]}. Stratum 3: ${ns[2]}.`,
+        `d) C(${N0}, ${n0}) = ${N0}! / (${n0}! · ${N0 - n0}!) = ${Stat.choose(N0, n0)}. Trap: ${N0} · ${n0} is not the answer.`
+      ]
+    };
+  } };
+
+/* Tutorial 4, Exercise 3: quota sampling */
+CALC.quota = { name: 'Quota sampling: quotas from ratios', src: 'Tutorial 4, Exercise 3', lec: 'L03',
+  origs: [{ label: 'Tutorial 4, Exercise 3 (n = 120, years 3:2:1, male to female 4:6)', o: { n: 120, y: [3, 2, 1], g: [4, 6] } }],
+  gen(o) {
+    if (!o) o = pick([{ n: 90, y: [3, 2, 1], g: [4, 6] }, { n: 200, y: [2, 2, 1], g: [3, 7] }, { n: 150, y: [3, 1, 1], g: [2, 3] }, { n: 120, y: [3, 2, 1], g: [4, 6] }]);
+    const { n, y, g } = o; const sy = y.reduce((a, b) => a + b, 0), sg = g[0] + g[1];
+    const unit = n / sy; const yq = y.map(v => v * unit);
+    const parts = [], lines = [];
+    yq.forEach((q, i) => {
+      const m = q * g[0] / sg, f = q * g[1] / sg;
+      parts.push({ label: `Year ${i + 1}, male`, ans: m, kind: 'abs', tol: 0.5, dec: 0 }, { label: `Year ${i + 1}, female`, ans: f, kind: 'abs', tol: 0.5, dec: 0 });
+      lines.push(`Year ${i + 1}: ${y[i]} · ${unit} = ${q} students. Male ${q} · ${g[0]}/${sg} = ${m}, female ${q} · ${g[1]}/${sg} = ${f}.`);
+    });
+    return {
+      intro: `Quota sampling with n = ${n}. The ratio of 1st, 2nd and 3rd year students is ${y.join(':')} and the ratio of male to female students in each year is ${g.join(':')}. Determine the six quotas.`,
+      parts,
+      steps: [
+        `A quota is the number of units with precisely defined characteristics that must be in the sample. The characteristics used: year of study and gender.`,
+        `The year ratio ${y.join(':')} has ${sy} parts, one part = ${n} / ${sy} = ${unit} students.`,
+        ...lines,
+        `Check: the six quotas add up to ${n}. Quota sampling is non random, so the precision of the estimates cannot be assessed.`
+      ]
+    };
+  } };
+
+/* ---------------- L04: standard error ---------------- */
+CALC.se = { name: 'Standard error and sample size effect', src: 'Lecture 4, Example 4.1', lec: 'L04',
+  gen() {
+    const N = pick([400, 1000, 5000]);
+    const n = pick([25, 50, 100]);
+    const s = pick([10, 20, 40]);
+    const se0 = s / Math.sqrt(n);
+    const fp = Math.sqrt(1 - n / N);
+    return {
+      intro: `A simple random sample of n = ${n} units is drawn without replacement from a population of N = ${N} units. The sample standard deviation is s = ${s}. Calculate the estimated standard error of the sample mean. Then state the sample size (ignoring the population correction) needed to HALVE the standard error.`,
+      parts: [
+        { label: 'se without the population correction, s / √n', ans: se0, kind: 'rel', tol: 0.006, dec: 3 },
+        { label: 'Population correction factor √(1 − n/N)', ans: fp, kind: 'rel', tol: 0.006, dec: 4 },
+        { label: 'Estimated standard error se(ȳ)', ans: se0 * fp, kind: 'rel', tol: 0.008, dec: 3 },
+        { label: 'Sample size that halves the standard error', ans: 4 * n, kind: 'abs', tol: 0.5, dec: 0 }
+      ],
+      steps: [
+        `The true SE(ȳ) = σ / √n · √((N − n)/(N − 1)) needs σ. As σ is unknown we use the estimate se(ȳ) = s / √n · √(1 − n/N), where f = n/N = ${fm(n / N, 4)}.`,
+        `s / √n = ${s} / √${n} = ${fm(se0, 4)}.`,
+        `√(1 − ${n}/${N}) = ${fm(fp, 5)}.`,
+        `se(ȳ) = ${fm(se0, 4)} · ${fm(fp, 5)} = ${fm(se0 * fp, 4)}.`,
+        `se is proportional to 1/√n, so halving it needs 4 times the sample: 4 · ${n} = ${4 * n}.`
+      ]
+    };
+  } };
+
+/* ---------------- L05: confidence intervals ---------------- */
+function ciParts(yb, se, c, alt, dec, L, extra){ /* mean part builder */
+  const D = c * se; const p = [];
+  p.push({ label: 'Estimated standard error se(ȳ)', ans: se, kind: 'rel', tol: 0.006, dec: 4 });
+  p.push({ label: `Critical value (${alt ? 't or z' : (c === Stat.inv(1 - (1 - L) / 2) ? 'z' : 't')})`, ans: c, kind: 'rel', tol: 0.005, dec: 4, alt: alt ? alt.c : undefined });
+  p.push({ label: 'Margin of error D', ans: D, kind: 'rel', tol: 0.008, dec, alt: alt ? alt.D : undefined });
+  p.push({ label: 'Lower limit', ans: yb - D, kind: 'rel', tol: 0.004, dec, alt: alt ? alt.lo : undefined });
+  p.push({ label: 'Upper limit', ans: yb + D, kind: 'rel', tol: 0.004, dec, alt: alt ? alt.hi : undefined });
+  return p;
+}
+CALC.cimean = { name: 'Confidence interval for a mean', src: 'Lecture 5, Examples 5.1 and 5.2', lec: 'L05',
+  origs: [{ label: 'Lecture 5, Example 5.1 (46 employees, t distribution)', o: { N: null, n: 46, yb: 30.47, s: 12.77, L: 0.95, dec: 2, unit: 'thousand euros', what: 'annual net income per employee' } }],
+  gen(o) {
+    if (!o){
+      const N = pick([500, 800, 1200, 2500, 5000]);
+      const n = pick([16, 20, 25, 150, 200, 400]);
+      const yb = +(pick([20, 45, 120, 300, 1500]) * pick([0.9, 1, 1.1])).toFixed(1);
+      o = { N, n, yb, s: +(yb * pick([0.2, 0.3, 0.4])).toFixed(1), L: pick([0.9, 0.95, 0.99]), dec: 3, unit: 'units', what: 'the variable' };
+    }
+    const { N, n, yb, s, L } = o; const a = 1 - L;
+    const se = N ? s / Math.sqrt(n) * Math.sqrt(1 - n / N) : s / Math.sqrt(n);
+    const c = crit(a, n, false); const D = c * se;
+    let alt;
+    if (ambiguous(n)){ const zc = Stat.inv(1 - a / 2); alt = { c: zc, D: zc * se, lo: yb - zc * se, hi: yb + zc * se }; }
+    const useT = n < 100;
+    return {
+      intro: `${N ? `From a population of N = ${N} units a simple random sample of n = ${n} units was drawn without replacement.` : `A simple random sample of n = ${n} units was drawn.`} The sample mean of ${o.what} is ȳ = ${yb} and the sample standard deviation is s = ${s}. Build the ${lvlTxt(L)} confidence interval for the population mean μ. ${ambiguous(n) ? 'Either the t or the z value is accepted for a sample of this size.' : (useT ? 'Use the t distribution.' : 'The sample is large, so z may be used.')}`,
+      parts: ciParts(yb, se, c, alt, o.dec, L),
+      steps: [
+        `Statistical unit: one unit of the population. Variable Y: ${o.what}. Parameter: the arithmetic mean μ_Y.`,
+        `Point estimate: ȳ = ${yb}. The true standard error cannot be calculated, so use its estimate: se(ȳ) = s / √n ${N ? `· √(1 − n/N) = ${s} / √${n} · √(1 − ${n}/${N})` : `= ${s} / √${n}`} = ${fm(se, 4)}.`,
+        `Risk level α = ${fm(a, 2)}, two sided: α/2 = ${fm(a / 2, 3)}. ${useT ? `se is estimated, so use the t distribution, df = n − 1 = ${n - 1}: t(${n - 1}; ${fm(a / 2, 3)}) = ${fm(c, 4)} (R: qt(${fm(1 - a / 2, 3)}, ${n - 1}). If the table lacks this df, take the first lower df.)` : `Large sample: z(${fm(a / 2, 3)}) = ${fm(c, 4)} (SAH page 64).`}`,
+        `Margin of error: D = ${useT ? 't' : 'z'} · se = ${fm(c, 4)} · ${fm(se, 4)} = ${fm(D, 4)}.`,
+        `Interval: ȳ − D < μ < ȳ + D; α = ${fm(a, 2)}  →  ${yb} − ${fm(D, 3)} < μ < ${yb} + ${fm(D, 3)}  →  ${fm(yb - D, 3)} < μ < ${fm(yb + D, 3)}. Round OUTWARD (lower limit down, upper limit up).`,
+        `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that the average of ${o.what} is between ${fm(Math.floor((yb - D) * 10) / 10, 1)} and ${fm(Math.ceil((yb + D) * 10) / 10, 1)} ${o.unit}.`
+      ]
+    };
+  } };
+
+CALC.citotal = { name: 'Confidence interval for mean and total', src: 'Lecture 5, Example 5.2, Tutorial 5 Exercise 1a', lec: 'L05',
+  origs: [
+    { label: 'Lecture 5, Example 5.2 (milk, 400 of 60,000 households)', o: { N: 60000, n: 400, yb: 15, s: 5, L: 0.95, what: 'milk consumption per household', unit: 'litres' } },
+    { label: 'Tutorial 5, Exercise 1a (storm damage, 150 of 1,500 buildings)', o: { N: 1500, n: 150, yb: 3800, s: 450, L: 0.95, what: 'damage per building', unit: 'euros' } }
+  ],
+  gen(o) {
+    if (!o){
+      const yb = +(pick([8, 15, 40, 220]) * pick([0.9, 1, 1.1])).toFixed(1);
+      o = { N: pick([1200, 4000, 9000, 60000]), n: pick([100, 150, 250, 400]), yb, s: +(yb * pick([0.25, 0.35])).toFixed(1), L: pick([0.9, 0.95, 0.99]), what: 'consumption per household', unit: 'units' };
+    }
+    const { N, n, yb, s, L } = o;
+    const se = s / Math.sqrt(n) * Math.sqrt(1 - n / N); const c = crit(1 - L, n, false); const D = c * se;
+    return {
+      intro: `A simple random sample of n = ${n} of N = ${N} units gave an average ${o.what} of ȳ = ${yb} ${o.unit} with s = ${s}. Estimate the average and the TOTAL for all units with a ${lvlTxt(L)} confidence interval. Do not round the limits of the mean before multiplying by N.`,
+      parts: [
+        { label: 'se(ȳ)', ans: se, kind: 'rel', tol: 0.006, dec: 4 },
+        { label: 'Margin of error D for the mean', ans: D, kind: 'rel', tol: 0.008, dec: 4 },
+        { label: 'Lower limit of the mean', ans: yb - D, kind: 'rel', tol: 0.003, dec: 3 },
+        { label: 'Upper limit of the mean', ans: yb + D, kind: 'rel', tol: 0.003, dec: 3 },
+        { label: 'Lower limit of the total', ans: N * (yb - D), kind: 'rel', tol: 0.004, dec: 0 },
+        { label: 'Upper limit of the total', ans: N * (yb + D), kind: 'rel', tol: 0.004, dec: 0 }
+      ],
+      steps: [
+        `Unit: one unit. Variable: ${o.what}. Parameters: mean μ_Y and total Y_tot = N · μ_Y.`,
+        `se(ȳ) = s / √n · √(1 − n/N) = ${s} / √${n} · √(1 − ${n}/${N}) = ${fm(se, 5)}.`,
+        `α = ${fm(1 - L, 2)}, ${n >= 100 ? 'large sample' : 't distribution'}: critical value = ${fm(c, 4)}. D = ${fm(c, 4)} · ${fm(se, 5)} = ${fm(D, 5)}.`,
+        `Mean: ${yb} − ${fm(D, 4)} < μ < ${yb} + ${fm(D, 4)}  →  ${fm(yb - D, 4)} < μ < ${fm(yb + D, 4)}.`,
+        `Total: multiply BOTH limits of the unrounded mean interval by N = ${N}:  ${fm(N * (yb - D), 1)} < Y_tot < ${fm(N * (yb + D), 1)}. Round outward: ${fm(Math.floor(N * (yb - D)), 0)} to ${fm(Math.ceil(N * (yb + D)), 0)}.`,
+        `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that the average is between ${fm(yb - D, 2)} and ${fm(yb + D, 2)} ${o.unit} per unit and the total is between ${fm(Math.floor(N * (yb - D)), 0)} and ${fm(Math.ceil(N * (yb + D)), 0)} ${o.unit}.`
+      ]
+    };
+  } };
+
+/* Tutorial 5, Exercise 1 b to d: what influences the width */
+CALC.ciwidth = { name: 'What changes the width of the interval', src: 'Tutorial 5, Exercise 1 b to d, Illustrative example 4.3', lec: 'L05',
+  origs: [{ label: 'Tutorial 5, Exercise 1 (1,500 buildings, n = 150, 3,800 euros, s = 450)', o: { N: 1500, n: 150, yb: 3800, s: 450, L: 0.95, n2: 90, s2: 250 } }],
+  gen(o) {
+    if (!o){
+      const N = pick([1500, 3000, 8000]); const n = pick([150, 200, 250]);
+      const yb = pick([1200, 3800, 9000]); o = { N, n, yb, s: pick([250, 400, 450, 600]), L: 0.95, n2: pick([90, 100]), s2: pick([100, 150, 250]) };
+    }
+    const { N, n, yb, s, L, n2, s2 } = o;
+    const W = (nn, ss, l) => 2 * Stat.inv(1 - (1 - l) / 2) * ss / Math.sqrt(nn) * Math.sqrt(1 - nn / N);
+    const w0 = W(n, s, L), w1 = W(n, s, 0.99), w2 = W(n2, s, L), w3 = W(n, s2, L);
+    const tw = (nn, ss, l) => 2 * crit(1 - l, nn, false) * ss / Math.sqrt(nn) * Math.sqrt(1 - nn / N);
+    return {
+      intro: `From N = ${N} buildings a simple random sample of n = ${n} gave mean ${yb} euros and s = ${s}. Use z values. Calculate the WIDTH (2D) of the 95% confidence interval for the mean, then the width if (b) the risk level were 0.01, (c) only n = ${n2} buildings were visited, (d) the standard deviation were s = ${s2}. Only one value changes at a time.`,
+      parts: [
+        { label: 'Width of the interval in the original case (a)', ans: w0, kind: 'rel', tol: 0.01, dec: 2 },
+        { label: 'Width at risk level 0.01 (b)', ans: w1, kind: 'rel', tol: 0.01, dec: 2 },
+        { label: `Width with n = ${n2} (c)`, ans: w2, kind: 'rel', tol: 0.01, dec: 2, alt: tw(n2, s, L) },
+        { label: `Width with s = ${s2} (d)`, ans: w3, kind: 'rel', tol: 0.01, dec: 2 }
+      ],
+      steps: [
+        `Width = upper limit − lower limit = 2 · D = 2 · z · se(ȳ).`,
+        `a) se = ${s} / √${n} · √(1 − ${n}/${N}) = ${fm(s / Math.sqrt(n) * Math.sqrt(1 - n / N), 3)}; z(0.025) = 1.96; width = 2 · 1.96 · se = ${fm(w0, 2)}.`,
+        `b) Higher confidence (risk 0.01): z(0.005) = 2.5758, width = ${fm(w1, 2)}. The interval is WIDER: to be more sure of catching the parameter we accept a less precise statement.`,
+        `c) Fewer units (n = ${n2}): se grows, width = ${fm(w2, 2)}. A smaller sample gives a wider interval. (${ambiguous(n2) ? 'With a t value the width would be ' + fm(tw(n2, s, L), 2) + '.' : ''})`,
+        `d) Smaller variability (s = ${s2}): se shrinks proportionally, width = ${fm(w3, 2)}. Less variable data give a narrower interval.`
+      ]
+    };
+  } };
+
+CALC.ciprop = { name: 'Confidence interval for a proportion and a number', src: 'Lecture 5 Example 5.3, Tutorial 5 Exercises 2 and 3c', lec: 'L05',
+  origs: [
+    { label: 'Lecture 5, Example 5.3 a and c (bike rental, 9 of 120 employees)', o: { N: 6000, n: 120, x: 9, L: 0.95, mode: 'two', what: 'employees who use the city bike rental to get to work' } },
+    { label: 'Tutorial 5, Exercise 2 (damaged houses, lower limit, risk 0.01)', o: { N: 1385, n: 100, x: 44, L: 0.99, mode: 'lower', what: 'damaged houses' } }
+  ],
+  gen(o) {
+    if (!o){
+      const N = pick([5000, 20000, 50000, 120000]); const n = pick([100, 200, 400, 1000]);
+      o = { N, n, x: Math.round(n * pick([0.12, 0.25, 0.35, 0.48])), L: pick([0.9, 0.95, 0.99]), mode: pick(['two', 'lower']), what: 'units with the property' };
+    }
+    const { N, n, x, L, mode } = o; const p = x / n; const se = Math.sqrt(p * (1 - p) / n * (1 - n / N));
+    const a = 1 - L; const z = mode === 'two' ? Stat.inv(1 - a / 2) : Stat.inv(1 - a); const D = z * se;
+    const parts = [{ label: 'Sample proportion p', ans: p, kind: 'abs', tol: 0.0006, dec: 4 }, { label: 'se(p)', ans: se, kind: 'abs', tol: 0.0007, dec: 4 }];
+    const steps = [
+      `Unit: one unit of the population. Variable: has the property or not (categorical). Parameter: the proportion Π of ${o.what}.`,
+      `p = n_a / n = ${x} / ${n} = ${fm(p, 4)}.`,
+      `se(p) = √( p(1 − p)/n · (1 − n/N) ) = √(${fm(p, 4)} · ${fm(1 - p, 4)} / ${n} · (1 − ${n}/${N})) = ${fm(se, 5)}.`
+    ];
+    let intro;
+    if (mode === 'two'){
+      parts.push({ label: 'Lower limit of the percentage Π%', ans: 100 * (p - D), kind: 'abs', tol: 0.12, dec: 2 }, { label: 'Upper limit of the percentage Π%', ans: 100 * (p + D), kind: 'abs', tol: 0.12, dec: 2 },
+        { label: 'Lower limit of the number N_a', ans: N * (p - D), kind: 'abs', tol: Math.max(N * 0.0012, 1), dec: 0 }, { label: 'Upper limit of the number N_a', ans: N * (p + D), kind: 'abs', tol: Math.max(N * 0.0012, 1), dec: 0 });
+      intro = `A simple random sample of n = ${n} of N = ${N} units contains ${x} units with the property (${o.what}). Estimate the ${lvlTxt(L)} two sided confidence interval for the percentage and for the number of such units in the whole population.`;
+      steps.push(`α = ${fm(a, 2)}, α/2 = ${fm(a / 2, 3)}: z = ${fm(z, 4)} (SAH page 64). D = z · se = ${fm(D, 5)}.`,
+        `Interval for the proportion: ${fm(p, 4)} − ${fm(D, 4)} < Π < ${fm(p, 4)} + ${fm(D, 4)}  →  ${fm(p - D, 4)} < Π < ${fm(p + D, 4)}.`,
+        `Percentage: multiply by 100: ${fm(100 * (p - D), 2)}% < Π% < ${fm(100 * (p + D), 2)}%. Number: multiply by N = ${N}: ${fm(N * (p - D), 1)} < N_a < ${fm(N * (p + D), 1)}. Round outward.`,
+        `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that between ${fm(Math.floor((p - D) * 1000) / 10, 1)}% and ${fm(Math.ceil((p + D) * 1000) / 10, 1)}% of the units have the property, which is between ${fm(Math.floor(N * (p - D)), 0)} and ${fm(Math.ceil(N * (p + D)), 0)} units.`);
+    } else {
+      parts.push({ label: `One sided critical value z (risk ${fm(a, 2)})`, ans: z, kind: 'rel', tol: 0.004, dec: 4 },
+        { label: 'Lower limit of the proportion Π', ans: p - D, kind: 'abs', tol: 0.0012, dec: 4 },
+        { label: 'Lower limit of the number N_a', ans: N * (p - D), kind: 'abs', tol: Math.max(N * 0.0012, 1), dec: 0 });
+      intro = `A simple random sample of n = ${n} of N = ${N} units contains ${x} units with the property (${o.what}). At risk level ${fm(a, 2)} estimate the LOWER limit of the one sided confidence interval for the proportion and for the number of such units.`;
+      steps.push(`"At least" or "minimum" means a one sided interval, lower limit only: p − z_α · se < Π; α = ${fm(a, 2)}. The whole risk sits in one tail: z_α = ${fm(z, 4)} (SAH page 64), D = ${fm(D, 5)}.`,
+        `Lower limit: ${fm(p, 4)} − ${fm(D, 4)} = ${fm(p - D, 4)} < Π. Number: ${fm(p - D, 4)} · ${N} = ${fm(N * (p - D), 1)} < N_a. Round outward (down).`,
+        `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that at least ${fm(Math.floor((p - D) * 1000) / 10, 1)}% of the units, that is at least ${fm(Math.floor(N * (p - D)), 0)} units, have the property.`);
+    }
+    return { intro, parts, steps };
+  } };
+
+CALC.sizeprop = { name: 'Sample size for a proportion (relative and absolute margin)', src: 'Lecture 5 Example 5.5, Tutorial 5 Exercise 4', lec: 'L05',
+  origs: [
+    { label: 'Tutorial 5, Exercise 4 (pilot 50 of 200, N = 120,000, 3%)', o: { p0: 0.25, rel: 0.03, abs: 0.03, N: 120000, L: 0.95 } },
+    { label: 'Lecture 5, Example 5.5 (7.5% damaged, 5% relative, risk 0.01, N = 400,000)', o: { p0: 0.075, rel: 0.05, abs: null, N: 400000, L: 0.99 } }
+  ],
+  gen(o) {
+    if (!o) o = { p0: pick([0.2, 0.35, 0.5, 0.66]), rel: pick([0.03, 0.05, 0.1]), abs: pick([0.02, 0.03, 0.05]), N: pick([3000, 10000, 50000, 120000]), L: pick([0.9, 0.95, 0.99]) };
+    const { p0, rel, N, L } = o; const z = Stat.inv(1 - (1 - L) / 2); const pq = p0 * (1 - p0);
+    const calc = D => { const nr = z * z * pq / (D * D); return { nr, n: Math.ceil(nr / (1 + nr / N)) }; };
+    const Dr = rel * p0, A = calc(Dr);
+    const parts = [
+      { label: 'Absolute margin D for the relative requirement', ans: Dr, kind: 'rel', tol: 0.03, dec: 4 },
+      { label: 'n_r (with replacement), relative requirement', ans: A.nr, kind: 'rel', tol: 0.012, dec: 1 },
+      { label: 'Required sample size n, relative requirement (round up)', ans: A.n, kind: 'rel', tol: 0.012, dec: 0 }
+    ];
+    const steps = [
+      `Parameter: the proportion Π. Assumed value Π = ${p0}. Risk α = ${fm(1 - L, 2)}, so z = ${fm(z, 4)}. Margin of error refers to the two sided interval.`,
+      `Relative requirement: D° = ${rel}, absolute D = D° · Π = ${rel} · ${p0} = ${fm(Dr, 4)}.`,
+      `Step 1, with replacement: n_r = z² · Π(1 − Π) / D² = ${fm(z * z, 4)} · ${fm(pq, 4)} / ${fm(Dr * Dr, 6)} = ${fm(A.nr, 1)}. (Equivalent relative form: n_r = z²/D°² · (1 − Π)/Π.)`,
+      `Step 2, without replacement: n = n_r / (1 + n_r/N) = ${fm(A.nr, 1)} / (1 + ${fm(A.nr, 1)}/${N}) = ${fm(A.nr / (1 + A.nr / N), 2)}, round UP: n = ${A.n}.`
+    ];
+    let intro = `A proportion is assumed to be ${p0}. The estimate must not deviate from it by more than ${rel * 100}% of the assumed value (RELATIVE margin of error) at the ${lvlTxt(L)} confidence level. The population has N = ${N} units, sampling is without replacement.`;
+    if (o.abs){
+      const B = calc(o.abs);
+      parts.push({ label: 'n_r, absolute requirement', ans: B.nr, kind: 'rel', tol: 0.012, dec: 1 }, { label: 'Required sample size n, absolute requirement (round up)', ans: B.n, kind: 'rel', tol: 0.012, dec: 0 });
+      intro += ` Then find n if the margin must not exceed ${o.abs * 100} percentage points (ABSOLUTE margin).`;
+      steps.push(`Absolute requirement (${o.abs * 100} percentage points): D = ${o.abs}. n_r = ${fm(z * z, 4)} · ${fm(pq, 4)} / ${fm(o.abs * o.abs, 6)} = ${fm(B.nr, 1)}; n = ${fm(B.nr, 1)} / (1 + ${fm(B.nr, 1)}/${N}) = ${fm(B.nr / (1 + B.nr / N), 2)} → ${B.n}.`);
+    }
+    steps.push(`Always round the sample size UP. Compare the two answers: the same wording "3%" versus "3 percentage points" changes the result a lot. In Tutorial 5 the R function sample.size.prop gave 11,571 (relative) and 796 (absolute) for the original numbers, tiny differences come from rounding.`);
+    return { intro, parts, steps, r: [`library(samplingbook); sample.size.prop(e = ${fm(Dr, 4)}, P = ${p0}, N = ${N}, level = ${L})`] };
+  } };
+
+CALC.sizemean = { name: 'Sample size for a mean', src: 'Lecture 5, Example 5.4', lec: 'L05',
+  origs: [{ label: 'Lecture 5, Example 5.4 (1,400 products, margin 1.5 dag, variance 225)', o: { sg: 15, D: 1.5, N: 1400, L: 0.95, varGiven: 225 } }],
+  gen(o) {
+    if (!o) o = { sg: pick([8, 12, 15, 40]), D: pick([0.5, 1, 2]), N: pick([2000, 8000, 30000]), L: pick([0.9, 0.95, 0.99]) };
+    const { sg, D, N, L } = o; const z = Stat.inv(1 - (1 - L) / 2);
+    const nr = z * z * sg * sg / (D * D), n = Math.ceil(nr / (1 + nr / N));
+    return {
+      intro: `We want to estimate the mean of a variable ${o.varGiven ? `whose variance is ${o.varGiven}` : `whose standard deviation is about σ = ${sg}`}. The estimate must not deviate from the true value by more than ${D} (absolute) at the ${lvlTxt(L)} confidence level. The population has N = ${N} units, sampling without replacement. What sample size is needed? Round up.`,
+      parts: [
+        { label: 'n_r (with replacement)', ans: nr, kind: 'rel', tol: 0.012, dec: 1 },
+        { label: 'Required sample size n (rounded up)', ans: n, kind: 'rel', tol: 0.012, dec: 0 }
+      ],
+      steps: [
+        `Parameter: the mean μ_Y, absolute margin of error D = ${D}. ${o.varGiven ? `σ² = ${o.varGiven}, so σ = ${sg}.` : ''} z = z(${fm((1 - L) / 2, 3)}) = ${fm(z, 4)}.`,
+        `Step 1: n_r = (z · σ / D)² = (${fm(z, 4)} · ${sg} / ${D})² = ${fm(nr, 2)}.`,
+        `Step 2: n = n_r / (1 + n_r/N) = ${fm(nr, 2)} / (1 + ${fm(nr, 2)}/${N}) = ${fm(nr / (1 + nr / N), 2)}.`,
+        `Always round UP: n = ${n}. (A relative margin D° would use n_r = (z · CV / D°)².)`
+      ]
+    };
+  } };
+
+/* Stratified sample, Tutorial 4 Ex 1c, Tutorial 5 Ex 5, Example 5.6 */
+CALC.strat = { name: 'Stratified sample: estimate and interval', src: 'Lecture 5 Example 5.6, Tutorial 4 Exercise 1c, Tutorial 5 Exercise 5', lec: 'L05',
+  origs: [
+    { label: 'Tutorial 4 Ex 1c and Tutorial 5 Ex 5 (party visits, female and male students, 20% sample)', o: { st: [{ N: 450, n: 90, m: 7.0, s2: 5.29, name: 'Female' }, { N: 280, n: 56, m: 11.8, s2: 15.21, name: 'Male' }], what: 'party visits per student', unit: 'visits', f: 0.2 } },
+    { label: 'Lecture 5, Example 5.6 (plant milk, three locations)', o: { st: [{ N: 13800, n: 46, m: 26, s2: 25, name: 'Urban' }, { N: 24300, n: 81, m: 15, s2: 9, name: 'Rural flat' }, { N: 21900, n: 73, m: 8, s2: 4, name: 'Rural mountain' }], what: 'plant milk consumption per household', unit: 'litres' } }
+  ],
+  gen(o) {
+    if (!o){
+      const N1 = pick([600, 900, 1500]), N2 = pick([400, 700, 1000]); const f = pick([0.1, 0.2]);
+      const m1 = pick([10, 14, 20]);
+      o = { st: [{ N: N1, n: Math.round(N1 * f), m: m1, s2: sq(pick([2, 3, 4])), name: 'Stratum 1' }, { N: N2, n: Math.round(N2 * f), m: m1 + pick([4, 6, 8]), s2: sq(pick([3, 5, 6])), name: 'Stratum 2' }], what: 'the variable', unit: 'units', f };
+    }
+    const st = o.st; const N = st.reduce((a, b) => a + b.N, 0), n = st.reduce((a, b) => a + b.n, 0);
+    const est = st.reduce((a, b) => a + b.N * b.m, 0) / N;
+    const v = st.reduce((a, b) => a + sq(b.N) * (1 - b.n / b.N) * b.s2 / b.n, 0) / sq(N); const se = Math.sqrt(v);
+    const z = Stat.inv(0.975), D = z * se;
+    const table = st.map(s => `${s.name}: N = ${s.N}, n = ${s.n}, mean ${s.m}, variance ${fm(s.s2, 2)}`).join('; ');
+    return {
+      intro: `A stratified random sample was drawn. ${table}. Estimate the mean ${o.what} (point estimate) and the 95% confidence interval for it (large sample, use z).`,
+      parts: [
+        { label: 'Total sample size n', ans: n, kind: 'abs', tol: 0.5, dec: 0 },
+        { label: 'Stratified estimate of the mean ȳ_str', ans: est, kind: 'rel', tol: 0.004, dec: 4 },
+        { label: 'Standard error se(ȳ_str)', ans: se, kind: 'rel', tol: 0.02, dec: 5 },
+        { label: 'Lower limit', ans: est - D, kind: 'rel', tol: 0.006, dec: 3 },
+        { label: 'Upper limit', ans: est + D, kind: 'rel', tol: 0.006, dec: 3 }
+      ],
+      steps: [
+        `Sampling type: stratified random sampling. We expect the variable to be related to the grouping (factorial) variable, so units inside a stratum are more alike. That lowers the standard error for the same n compared with simple random sampling.`,
+        `N = ${st.map(s => s.N).join(' + ')} = ${N}, n = ${st.map(s => s.n).join(' + ')} = ${n}${o.f ? ` (sample proportion ${o.f * 100}% in each stratum)` : ''}.`,
+        `Point estimate: ȳ_str = (1/N) Σ N_j · ȳ_j = (${st.map(s => s.N + ' · ' + s.m).join(' + ')}) / ${N} = ${fm(est, 4)}.`,
+        `Variance of the estimator: var(ȳ_str) = (1/N²) Σ N_j² · (s_j² / n_j) · (1 − n_j/N_j) = ${fm(v, 6)}. Standard error se(ȳ_str) = √var = ${fm(se, 5)}.`,
+        `α = 0.05, α/2 = 0.025, z = 1.96. Margin of error = z · se = 1.96 · ${fm(se, 5)} = ${fm(D, 5)}.`,
+        `${fm(est, 4)} − ${fm(D, 4)} < μ < ${fm(est, 4)} + ${fm(D, 4)}; α = 0.05  →  ${fm(est - D, 3)} < μ < ${fm(est + D, 3)}. Total (if asked): multiply both limits by N.`,
+        `INTERPRETATION: Based on the stratified sample, we estimate with a confidence level of 0.95 that the average ${o.what} is between ${fm(Math.floor((est - D) * 10) / 10, 1)} and ${fm(Math.ceil((est + D) * 10) / 10, 1)} ${o.unit}.`
+      ]
+    };
+  } };
+
+/* Tutorial 5, Exercise 3: grouped data, one sided limit, proportion in a class */
+CALC.grouped = { name: 'Grouped data: mean, one sided limit, share of games', src: 'Tutorial 5, Exercise 3', lec: 'L05',
+  origs: [{ label: 'Tutorial 5, Exercise 3 (goals per game, 7.5% of 1,360 matches)', o: { rows: [[0, 8], [1, 18], [2, 27], [3, 24], [4, 10], [5, 8], [6, 5], [7, 2]], N: 1360, k: 5, a: 0.05, what: 'goals per game' } }],
+  gen(o) {
+    if (!o){
+      const rows = []; for (let y = 0; y <= 6; y++) rows.push([y, Math.max(1, Math.round(pick([30, 40, 50]) * Math.exp(-0.5 * sq(y - 2.5) / 2.2) / 3))]);
+      const nn = rows.reduce((a, r) => a + r[1], 0); const fs = pick([0.05, 0.075, 0.1]);
+      o = { rows, N: Math.round(nn / fs / 10) * 10, k: pick([4, 5]), a: pick([0.05, 0.01]), what: 'goals per game' };
+    }
+    const { rows, N, k, a } = o; const n = rows.reduce((s, r) => s + r[1], 0);
+    const m = rows.reduce((s, r) => s + r[0] * r[1], 0) / n;
+    const ss = rows.reduce((s, r) => s + r[1] * sq(r[0] - m), 0); const v = ss / (n - 1);
+    const se = Math.sqrt(v / n * (1 - n / N));
+    const cT = crit(a, n, true), cZ = Stat.inv(1 - a); const lowT = m - cT * se, lowZ = m - cZ * se;
+    const cnt = rows.filter(r => r[0] >= k).reduce((s, r) => s + r[1], 0); const p = cnt / n;
+    const sep = Math.sqrt(p * (1 - p) / n * (1 - n / N)); const z = Stat.inv(0.975); const Dp = z * sep;
+    return {
+      intro: `Of N = ${N} matches a simple random sample of n = ${n} matches was selected. Goals per game (value: number of matches): ${rows.map(r => r[0] + ': ' + r[1]).join(', ')}. (a) Estimate the mean number of goals and the variance. (b) At risk level ${a} find the minimum value (lower limit of a one sided interval) of the average number of goals per game. (c) Find the 95% confidence interval for the percentage and for the number of games with at least ${k} goals.`,
+      parts: [
+        { label: 'Mean ȳ = Σ f · y / n', ans: m, kind: 'rel', tol: 0.004, dec: 3 },
+        { label: 'Variance s² = Σ f (y − ȳ)² / (n − 1)', ans: v, kind: 'rel', tol: 0.012, dec: 3 },
+        { label: 'se(ȳ)', ans: se, kind: 'rel', tol: 0.012, dec: 4 },
+        { label: `Lower limit of the mean (one sided, risk ${a})`, ans: lowT, kind: 'rel', tol: 0.006, dec: 3, alt: lowZ },
+        { label: `Share of games with at least ${k} goals, p`, ans: p, kind: 'abs', tol: 0.0006, dec: 4 },
+        { label: 'Lower limit of the percentage (two sided 95%)', ans: 100 * (p - Dp), kind: 'abs', tol: 0.15, dec: 2 },
+        { label: 'Upper limit of the percentage (two sided 95%)', ans: 100 * (p + Dp), kind: 'abs', tol: 0.15, dec: 2 },
+        { label: 'Lower limit of the number of games', ans: N * (p - Dp), kind: 'abs', tol: Math.max(N * 0.0015, 1), dec: 0 },
+        { label: 'Upper limit of the number of games', ans: N * (p + Dp), kind: 'abs', tol: Math.max(N * 0.0015, 1), dec: 0 }
+      ],
+      steps: [
+        `Population: all ${N} matches, sample: ${n} matches (${fm(100 * n / N, 1)}%). Unit: one match. Variable: ${o.what} (numerical, ratio).`,
+        `a) Add the columns: Σ f = ${n}, Σ f · y = ${fm(m * n, 0)}, Σ f (y − ȳ)² = ${fm(ss, 2)}. ȳ = ${fm(m * n, 0)} / ${n} = ${fm(m, 4)}. s² = ${fm(ss, 2)} / ${n - 1} = ${fm(v, 4)}.`,
+        `se(ȳ) = √( s²/n · (1 − n/N) ) = √(${fm(v, 4)} / ${n} · (1 − ${fm(n / N, 4)})) = ${fm(se, 5)}.`,
+        `b) "Estimate the minimum" = one sided interval, lower limit: ȳ − t · se < μ; α = ${a}. t(${n - 1}; ${a}) = ${fm(cT, 4)} (z = ${fm(cZ, 4)} is also acceptable for this size). Lower limit = ${fm(m, 4)} − ${fm(cT, 4)} · ${fm(se, 5)} = ${fm(lowT, 4)}. Round outward (down): ${fm(Math.floor(lowT * 10) / 10, 1)}.`,
+        `INTERPRETATION b: Based on the sample, we estimate with a confidence level of ${fm(1 - a, 2)} that the average number of goals per game is at least ${fm(Math.floor(lowT * 10) / 10, 1)}.`,
+        `c) p = ${cnt} / ${n} = ${fm(p, 4)}. se(p) = √(p(1 − p)/n · (1 − n/N)) = ${fm(sep, 5)}. z = 1.96, D = ${fm(Dp, 5)}.`,
+        `${fm(p - Dp, 4)} < Π < ${fm(p + Dp, 4)}  →  ${fm(100 * (p - Dp), 2)}% < Π% < ${fm(100 * (p + Dp), 2)}%; number: ${fm(N * (p - Dp), 1)} < N_a < ${fm(N * (p + Dp), 1)}. Round outward.`
+      ]
+    };
+  } };
+
+const CALC_ORDER = ['desc', 'normal', 'tyres', 'budget', 'sampling', 'quota', 'se', 'cimean', 'citotal', 'ciwidth', 'ciprop', 'sizeprop', 'sizemean', 'strat', 'grouped'];
+const MOCK_CALC = ['cimean', 'citotal', 'ciprop', 'sizeprop', 'sizemean', 'strat'];
+if (typeof module !== 'undefined') module.exports = { CALC, MOCK_CALC, CALC_ORDER };
+
+</script>
+<script>
+const TOPICS = {
+  L01:'L01 Terms and scales', L02:'L02 Normal distribution', L03:'L03 Sampling methods',
+  L04:'L04 Estimators and standard error', L05:'L05 Confidence intervals and sample size'
+};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY = 'sa_me1_practice_v1';
+let store = { mc:{}, calc:{}, mocks:[] };
+try { const r = localStorage.getItem(KEY); if (r) store = Object.assign(store, JSON.parse(r)); } catch (e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function rec(id, ok){ const r = store.mc[id] || { r:0, w:0 }; ok ? r.r++ : r.w++; r.last = ok ? 1 : 0; store.mc[id] = r; save(); }
+
+const TABS = [['practice','Practice'],['calc','Calculation lab'],['mock','Mock midterm'],['sheet','Method sheet'],['progress','Progress']];
+let tab = 'practice';
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(([k, n]) => `<button role="tab" aria-selected="${k === tab}" data-k="${k}">${n}</button>`).join('');
+  $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.k; renderTabs(); show(); });
+}
+function show(){ ({practice, calc, mock, sheet, progress})[tab](); }
+
+/* ---------- Practice ---------- */
+let P = { topic:'ALL', weakFirst:true, queue:[], i:0, done:false, sel:null, score:0, seen:0 };
+function buildQueue(){
+  let pool = BANK.filter(q => P.topic === 'ALL' || q.t === P.topic);
+  pool = shuffle(pool);
+  if (P.weakFirst) pool.sort((a, b) => weight(a) - weight(b));
+  P.queue = pool; P.i = 0; P.sel = null; P.score = 0; P.seen = 0;
+}
+function weight(q){ const r = store.mc[q.id]; if (!r) return 1; if (r.last === 0) return 0; return 2 + r.r - r.w; }
+function practice(){
+  if (!P.queue.length) buildQueue();
+  const chips = ['ALL', ...Object.keys(TOPICS)].map(k => `<button class="chip" aria-pressed="${P.topic === k}" data-t="${k}">${k === 'ALL' ? 'All topics' : k}</button>`).join('');
+  let body;
+  if (P.i >= P.queue.length){
+    body = `<div class="card"><h2 style="margin-top:0">Round finished</h2><p>You answered ${P.score} of ${P.seen} correctly.</p><button class="btn" id="again">Start another round</button></div>`;
+  } else {
+    const q = P.queue[P.i];
+    if (!q._o){ q._o = shuffle(q.o.map((t, i) => ({ t, i }))); }
+    const answered = P.sel !== null;
+    const opts = q._o.map((x, k) => {
+      let cls = 'opt';
+      if (answered){ if (x.i === q.a) cls += ' good'; else if (x.i === P.sel) cls += ' bad'; }
+      return `<button class="${cls}" data-i="${x.i}" ${answered ? 'disabled' : ''}><span class="k">${'ABCDE'[k]}</span>${esc(x.t)}</button>`;
+    }).join('');
+    const ok = answered && P.sel === q.a;
+    const fb = answered ? `<div class="fb ${ok ? 'good' : 'bad'}"><b>${ok ? 'Correct.' : 'Not quite.'}</b>${esc(q.e)}</div><div class="row" style="margin-top:12px"><button class="btn" id="next">${P.i + 1 < P.queue.length ? 'Next question' : 'Finish round'}</button></div>` : '';
+    body = `<div class="card"><div class="meta">${esc(TOPICS[q.t])} · Source: ${esc(q.src)} · Question ${P.i + 1} of ${P.queue.length}</div><div class="q">${esc(q.q)}</div>${opts}${fb}</div>`;
+  }
+  $('#view').innerHTML = `<div class="chips">${chips}</div><div class="row meta" style="margin-bottom:10px"><label><input type="checkbox" id="wf" ${P.weakFirst ? 'checked' : ''}> Missed questions first</label></div>${body}<p class="note">Try the question first, then read the explanation. Each source label tells you where to find the original material.</p>`;
+  $('#view').querySelectorAll('.chip').forEach(b => b.onclick = () => { P.topic = b.dataset.t; buildQueue(); practice(); });
+  $('#wf').onchange = e => { P.weakFirst = e.target.checked; buildQueue(); practice(); };
+  const ag = $('#again'); if (ag) ag.onclick = () => { buildQueue(); practice(); };
+  $('#view').querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const q = P.queue[P.i]; P.sel = +b.dataset.i; P.seen++;
+    const ok = P.sel === q.a; if (ok) P.score++; rec(q.id, ok); practice();
+  });
+  const nx = $('#next'); if (nx) nx.onclick = () => { P.i++; P.sel = null; practice(); };
+}
+
+/* ---------- Calculation tasks ---------- */
+function parseNum(s){ if (s == null) return NaN; s = String(s).trim().replace(/−/g, '-').replace(/\s/g, '').replace(',', '.'); if (s === '' || !/^-?\d*\.?\d+(e-?\d+)?$/i.test(s)) return NaN; return parseFloat(s); }
+function okPart(p, v){ if (isNaN(v)) return false; const f = a => p.kind === 'rel' ? Math.abs(v - a) <= p.tol * Math.abs(a) : Math.abs(v - a) <= p.tol; return f(p.ans) || (p.alt !== undefined && f(p.alt)); }
+let C = { key:'cimean', lec:'ALL', orig:-1, task:null, checked:false };
+function newTask(){ const k = CALC[C.key]; C.task = k.gen(C.orig >= 0 && k.origs ? k.origs[C.orig].o : undefined); C.checked = false; }
+function partsHtml(t, prefix, checked){
+  return t.parts.map((p, i) => `<div class="part" id="${prefix}row${i}"><label for="${prefix}${i}">${esc(p.label)}</label><input id="${prefix}${i}" inputmode="decimal" autocomplete="off" ${checked ? 'disabled' : ''}><span class="m" id="${prefix}m${i}"></span></div>`).join('');
+}
+function calcKeys(){ return CALC_ORDER.filter(k => C.lec === 'ALL' || CALC[k].lec === C.lec); }
+function calc(){
+  if (!C.task) newTask();
+  const chips = ['ALL', ...Object.keys(TOPICS)].map(k => { const n = k === 'ALL' ? CALC_ORDER.length : CALC_ORDER.filter(x => CALC[x].lec === k).length; return `<button class="chip" aria-pressed="${C.lec === k}" data-l="${k}">${k === 'ALL' ? 'All lectures' : k} (${n})</button>`; }).join('');
+  const opts = calcKeys().map(k => `<option value="${k}" ${k === C.key ? 'selected' : ''}>${esc(CALC[k].lec + ' ' + CALC[k].name)}</option>`).join('');
+  const ob = CALC[C.key].origs;
+  const og = ob ? `<select id="og" aria-label="Numbers"><option value="-1">Random numbers</option>${ob.map((x, i) => `<option value="${i}" ${C.orig === i ? 'selected' : ''}>Original: ${esc(x.label)}</option>`).join('')}</select>` : '';
+  const t = C.task;
+  $('#view').innerHTML = `<div class="chips">${chips}</div><div class="card"><div class="row"><select id="ck" aria-label="Task type">${opts}</select><button class="btn ghost" id="nv">New variant</button><button class="btn ghost" id="rnd">Random type</button></div>
+  ${og ? `<div class="row" style="margin-top:8px">${og}</div>` : ''}
+  <p class="meta" style="margin:10px 0 0">${esc(CALC[C.key].lec)} · Based on: ${esc(CALC[C.key].src)}${C.orig >= 0 ? ' · original numbers' : ''}</p>
+  <p class="q">${esc(t.intro)}</p><div id="parts">${partsHtml(t, 'c', false)}</div>
+  <div class="row"><button class="btn" id="chk">Check my answers</button><button class="btn ghost" id="show">Show worked solution</button></div>
+  <div id="sol"></div>
+  <p class="note">Solve it on paper in the lecturer's layout first (see the Method sheet tab), then type the results. Answers are accepted within a small rounding tolerance. Press Enter to check.</p></div>`;
+  $('#view').querySelectorAll('.chip').forEach(b => b.onclick = () => { C.lec = b.dataset.l; const ks = calcKeys(); if (!ks.includes(C.key)) C.key = ks[0]; C.orig = -1; newTask(); calc(); });
+  $('#ck').onchange = e => { C.key = e.target.value; C.orig = -1; newTask(); calc(); };
+  if ($('#og')) $('#og').onchange = e => { C.orig = +e.target.value; newTask(); calc(); };
+  $('#nv').onclick = () => { C.orig = -1; newTask(); calc(); };
+  $('#rnd').onclick = () => { const ks = calcKeys(); C.key = pick(ks); C.orig = -1; newTask(); calc(); };
+  $('#chk').onclick = () => checkCalc();
+  $('#parts').onkeydown = e => { if (e.key === 'Enter') checkCalc(); };
+  $('#show').onclick = () => { $('#sol').innerHTML = solHtml(t); };
+}
+function solHtml(t){ return `<div class="fb"><b>Worked solution (lecturer's layout)</b><ol class="steps">${t.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>${t.r && t.r.length ? `<div class="meta" style="margin-top:8px">R check: ${t.r.map(esc).join(' ; ')}</div>` : ''}<div class="meta" style="margin-top:8px">Expected: ${t.parts.map(p => esc(p.label) + ' = ' + fm(p.ans, p.dec)).join('; ')}</div></div>`; }
+function checkCalc(){
+  const t = C.task; let good = 0;
+  t.parts.forEach((p, i) => {
+    const v = parseNum($('#c' + i).value); const ok = okPart(p, v); if (ok) good++;
+    $('#crow' + i).className = 'part ' + (ok ? 'ok' : 'no'); $('#cm' + i).textContent = ok ? '✓' : '✗';
+  });
+  const r = store.calc[C.key] || { parts:0, good:0, tasks:0 }; r.parts += t.parts.length; r.good += good; r.tasks++; store.calc[C.key] = r; save();
+  $('#sol').innerHTML = `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b>${good === t.parts.length ? 'Well done. Try a new variant.' : 'Compare with the worked solution and find the first step where you differ.'}</div>` + solHtml(t);
+}
+
+/* ---------- Mock midterm ---------- */
+let M = { state:'idle', qs:[], ans:[], calc:null, left:4200, timer:null, result:null };
+function mock(){
+  const v = $('#view');
+  if (M.state === 'idle'){
+    const last = store.mocks.slice(-3).reverse().map(m => `<tr><td>${esc(m.date)}</td><td>${m.mc} / 15</td><td>${m.calc} / 5</td><td><b>${m.total} / 20</b></td></tr>`).join('');
+    v.innerHTML = `<div class="card"><h2 style="margin-top:0">Mock midterm</h2>
+    <p>15 multiple choice questions (3 from each lecture, shuffled) and 1 calculation task. 70 minutes. Allowed in the real exam: calculator, pen and your original Statistical Analysis Handbook. Do not open the Method sheet tab until you finish.</p>
+    <button class="btn" id="go">Start the mock</button></div>
+    ${last ? `<div class="card"><b>Recent mocks</b><table><tr><th>Date</th><th>Multiple choice</th><th>Calculation</th><th>Total</th></tr>${last}</table></div>` : ''}
+    <p class="note">Calculation points here are 5 times the share of correct parts, rounded to half points. A real marker may give partial credit differently.</p>`;
+    $('#go').onclick = startMock; return;
+  }
+  if (M.state === 'run'){
+    const mm = String(Math.floor(M.left / 60)).padStart(2, '0'), ss = String(M.left % 60).padStart(2, '0');
+    const qs = M.qs.map((q, i) => `<div class="card"><div class="meta">Question ${i + 1}</div><div class="q">${esc(q.q)}</div>${q._o.map((x, k) => `<button class="opt ${M.ans[i] === x.i ? 'sel' : ''}" data-q="${i}" data-i="${x.i}"><span class="k">${'ABCDE'[k]}</span>${esc(x.t)}</button>`).join('')}</div>`).join('');
+    v.innerHTML = `<div class="card row" style="position:sticky;top:8px;z-index:5;justify-content:space-between"><span>Time left <span class="timer ${M.left < 600 ? 'low' : ''}" id="tm">${mm}:${ss}</span></span><span class="meta">Answered ${M.ans.filter(a => a != null).length} of 15</span><button class="btn" id="fin">Submit</button></div>
+    ${qs}<div class="card"><div class="meta">Calculation task (5 points)</div><p class="q">${esc(M.calc.t.intro)}</p><div>${partsHtml(M.calc.t, 'm', false)}</div></div>`;
+    v.querySelectorAll('.opt').forEach(b => b.onclick = () => { M.ans[+b.dataset.q] = +b.dataset.i; const sy = window.scrollY; mock(); window.scrollTo(0, sy); });
+    $('#fin').onclick = () => { const b = $('#fin'); if (b.dataset.arm){ finishMock(); } else { b.dataset.arm = 1; b.textContent = 'Click again to submit'; setTimeout(() => { if (b.isConnected){ delete b.dataset.arm; b.textContent = 'Submit'; } }, 4000); } };
+    return;
+  }
+  if (M.state === 'done'){
+    const r = M.result;
+    const rows = M.qs.map((q, i) => { const ok = M.ans[i] === q.a; return `<tr><td>${i + 1}</td><td>${ok ? '✓' : '✗'}</td><td>${esc(TOPICS[q.t])}</td><td>${ok ? '' : 'Correct: ' + esc(q.o[q.a]) + '<br><span class="meta">' + esc(q.e) + '</span>'}</td></tr>`; }).join('');
+    v.innerHTML = `<div class="card"><h2 style="margin-top:0">Result: ${r.total} / 20</h2><p>Multiple choice ${r.mc} / 15. Calculation ${r.calc} / 5.</p><button class="btn" id="re">Back to start</button></div>
+    <div class="card"><b>Calculation task</b><p>${esc(M.calc.t.intro)}</p>${solHtml(M.calc.t)}</div>
+    <div class="card"><b>Multiple choice review</b><table><tr><th>#</th><th></th><th>Topic</th><th>Feedback</th></tr>${rows}</table></div>`;
+    $('#re').onclick = () => { M.state = 'idle'; mock(); };
+  }
+}
+function startMock(){
+  let qs = [];
+  Object.keys(TOPICS).forEach(k => { qs = qs.concat(shuffle(BANK.filter(q => q.t === k)).slice(0, 3)); });
+  qs = shuffle(qs); qs.forEach(q => q._o = shuffle(q.o.map((t, i) => ({ t, i }))));
+  const key = MOCK_CALC[Math.floor(Math.random() * MOCK_CALC.length)];
+  M = { state:'run', qs, ans:Array(15).fill(null), calc:{ key, t:CALC[key].gen() }, left:4200, timer:null, result:null };
+  M.timer = setInterval(() => { M.left--; const el = $('#tm'); if (el){ const mm = String(Math.floor(M.left / 60)).padStart(2, '0'), ss = String(M.left % 60).padStart(2, '0'); el.textContent = mm + ':' + ss; if (M.left < 600) el.classList.add('low'); } if (M.left <= 0) finishMock(); }, 1000);
+  mock();
+}
+function finishMock(){
+  clearInterval(M.timer);
+  let mc = 0; M.qs.forEach((q, i) => { const ok = M.ans[i] === q.a; if (ok) mc++; rec(q.id, ok); });
+  const t = M.calc.t; let good = 0;
+  t.parts.forEach((p, i) => { const el = document.getElementById('m' + i); if (el && okPart(p, parseNum(el.value))) good++; });
+  const cp = Math.round(5 * good / t.parts.length * 2) / 2;
+  M.result = { mc, calc:cp, total:mc + cp };
+  const c = store.calc[M.calc.key] || { parts:0, good:0, tasks:0 }; c.parts += t.parts.length; c.good += good; c.tasks++; store.calc[M.calc.key] = c;
+  store.mocks.push({ date:new Date().toISOString().slice(0, 10), mc, calc:cp, total:mc + cp }); save();
+  M.state = 'done'; if (tab === 'mock') mock();
+}
+
+/* ---------- Formula sheet ---------- */
+function sheet(){
+  const steps = (title, lines) => `<div class="card"><b>${title}</b><ol class="steps" style="font-family:inherit">${lines.map(l => `<li style="font-family:inherit;font-size:.95rem">${l}</li>`).join('')}</ol></div>`;
+  const methods =
+    steps('Always start with the basic terms', ['Population (all units we are interested in) and, for a sample, the sample.', 'Statistical unit (one unit) or sample unit.', 'Variable with its scale (categorical nominal or ordinal, numerical interval or ratio).', 'Parameter (and its estimate from the sample, for example μ and ȳ, Π and p).']) +
+    steps('Normal distribution: three numbered steps (Tutorial 2)', [
+      'Write Y ~ N(μ, σ). The second number is the standard deviation (if the variance is given, take the square root).',
+      '① Standardize: z_a = (a − μ) / σ. Round z to two decimals.',
+      '② Table of the standard normal distribution (Statistical Analysis Handbook, pages 64 to 66): F(z_a). Left side: F(z). Right side: 1 − F(z). Between two limits: F(z_b) − F(z_a). For negative z read the negative rows carefully.',
+      '③ Interpretation in words, for example "The probability that the IQ of a randomly selected person does not exceed 117 is 84.13%".',
+      'Quantile (the value for a given share): ① write the quantile rank P = F(z_a), so "highest 10%" becomes 0.90. ② In the table find the number closest to P and read z_a. ③ a = μ + z_a · σ. Then NAME it: quartile Q1, Q2 (median), Q3, decile D1 to D9, or percentile P1 to P99, and say that it is a quantile of that rank.',
+      'R: pnorm(q, mean, sd, lower.tail = TRUE) gives the area on the left, lower.tail = FALSE the right side. qnorm(p, mean, sd, lower.tail = TRUE) gives the value.']) +
+    steps('Confidence interval for the mean, a total, a proportion or a number (Lecture 5)', [
+      'Parameter and point estimate: ȳ, or total N · ȳ, or p, or N · p.',
+      'Estimate the standard error. Mean: se(ȳ) = s / √n · √(1 − n/N). Proportion: se(p) = √( p(1 − p)/n · (1 − n/N) ). Do not forget the population correction when N is given.',
+      'Critical value from the risk level α. Two sided: z_α/2 (1.96 for α = 0.05, 2.5758 for 0.01). One sided ("at least", "at most", "minimum", "maximum"): z_α (1.6449 for 0.05, 2.3263 for 0.01). When the standard error is estimated from a small sample use t with df = n − 1, for large samples z is acceptable. In a t table without your df take the first lower df. (SAH page 64.)',
+      'Margin of error D = critical value · se. Write the interval as an inequality: ȳ − D < μ < ȳ + D; α = 0.05.',
+      'Round OUTWARD: lower limit down, upper limit up. For totals and numbers multiply both unrounded limits by N. For percentages multiply by 100.',
+      'End with "INTERPRETATION: Based on the sample, we estimate with a confidence level of 0.95 that ...".']) +
+    steps('Sample size (Lecture 5, Examples 5.4 and 5.5, Tutorial 5 Exercise 4)', [
+      'Decide the parameter and whether the margin of error is absolute (D, or "percentage points") or relative (D° as a share of the value, "3%").',
+      'Step 1, with replacement: mean n_r = (z · σ / D)² or (z · CV / D°)². Proportion n_r = z² Π(1 − Π) / D² or z² (1 − Π) / (D°² Π).',
+      'Step 2, without replacement: n = n_r / (1 + n_r / N).',
+      'Always round UP to the next whole number. Then state the answer in a sentence.']) +
+    steps('Stratified sample (Tutorial 4 Exercise 1c, Example 5.6)', [
+      'Name the sampling type (stratified random sampling) and justify it: the variable differs between the groups, so units within a group are more alike, which lowers the standard error.',
+      'Sample sizes with a sample proportion f: n_j = f · N_j. Proportional allocation: n_j = n · N_j / N.',
+      'ȳ_str = (1/N) Σ N_j · ȳ_j. var(ȳ_str) = (1/N²) Σ N_j² · (s_j² / n_j) · (1 − n_j/N_j). se = √var.',
+      'Interval ȳ_str ± z · se for large samples, then the same interpretation sentence.']);
+  const rows = [
+    ['L01','Sample mean','ȳ = Σyᵢ / n, grouped: ȳ = Σ f_k · y_k / n'],
+    ['L01','Sample variance estimate','s² = Σ(yᵢ − ȳ)² / (n − 1), grouped: Σ f_k (y_k − ȳ)² / (n − 1)'],
+    ['L01','Coefficient of variation, range','CV = s / ȳ (no unit), r = max − min'],
+    ['L01','Frequency table','midpoint y_k, frequency f_k, cumulative F_k, relative f°_k = f_k / n, cumulative relative F°_k = F_k / n'],
+    ['L01','Symbols','Population: μ, σ², Π. Sample estimates: ȳ, s², p'],
+    ['L02','Standardization','z = (y − μ) / σ, and y = μ + zσ'],
+    ['L02','Shares within kσ','k = 1: 68.27%, k = 2: 95.44%, k = 3: 99.73%'],
+    ['L02','Interval probability','P(a < Y ≤ b) = F(b) − F(a), P(Y > b) = 1 − F(b)'],
+    ['L02','Quartiles of a normal variable','Q1 = μ − 0.67σ, Q2 = μ, Q3 = μ + 0.67σ'],
+    ['L02','Absolute and relative change of a share','absolute: difference in percentage points, relative: (new / old − 1) · 100%'],
+    ['L03','Inclusion probability, step','n / N, and s = N / n'],
+    ['L03','Allocation','n_j = n · N_j / N; quotas from ratios (parts of n)'],
+    ['L03','Number of samples without replacement','C(N, n) = N! / (n! (N − n)!)'],
+    ['L04','Standard error of the mean','SE(ȳ) = σ/√n · √((N − n)/(N − 1))'],
+    ['L04','Estimated standard error','se(ȳ) = s/√n · √(1 − n/N)'],
+    ['L04','Unbiased estimator','E(g) = Γ'],
+    ['L05','Two sided interval','g − z_α/2 · se < Γ < g + z_α/2 · se; α'],
+    ['L05','One sided interval','lower: g − z_α · se < Γ, upper: Γ < g + z_α · se'],
+    ['L05','z values (SAH p. 64)','α: 0.10: 1.2816, 0.05: 1.6449, 0.025: 1.96, 0.01: 2.3263, 0.005: 2.5758, 0.001: 3.0902'],
+    ['L05','Sample size, mean','n_r = z²σ² / D²,  n = n_r / (1 + n_r/N), round up'],
+    ['L05','Sample size, proportion','n_r = z² Π(1 − Π) / D²,  same finite correction'],
+    ['L05','Relative margin','D = D° · assumed value']
+  ].map(r => `<tr><td>${r[0]}</td><td>${esc(r[1])}</td><td class="f"><code>${esc(r[2])}</code></td></tr>`).join('');
+  $('#view').innerHTML = `<p class="note" style="margin-top:0">Built from your annotated Practice Solutions folder (Tutorials 1, 2, 4, 5 and Lectures 1, 2, 5), so the layout matches how the lecturer solves tasks. Check every formula and table value against your original Statistical Analysis Handbook.</p>${methods}<div class="card"><b>Formulas</b><table><tr><th>Lecture</th><th>What</th><th>Formula</th></tr>${rows}</table></div>`;
+}
+
+/* ---------- Progress ---------- */
+function progress(){
+  const rows = Object.keys(TOPICS).map(k => {
+    const qs = BANK.filter(q => q.t === k);
+    let tried = 0, right = 0, att = 0;
+    qs.forEach(q => { const r = store.mc[q.id]; if (r){ tried++; att += r.r + r.w; if (r.last === 1) right++; } });
+    const pct = qs.length ? Math.round(100 * right / qs.length) : 0;
+    return `<div class="stat"><div class="meta">${esc(TOPICS[k])}</div><b>${pct}%</b><div class="bar"><i style="width:${pct}%"></i></div><div class="meta">${right} of ${qs.length} last answered right, ${tried} tried, ${att} attempts</div></div>`;
+  }).join('');
+  const ck = CALC_ORDER.map(k => { const r = store.calc[k]; return `<tr><td>${esc(CALC[k].name)}</td><td>${r ? r.tasks : 0}</td><td>${r ? Math.round(100 * r.good / r.parts) + '%' : 'not tried'}</td></tr>`; }).join('');
+  const weak = BANK.filter(q => store.mc[q.id] && store.mc[q.id].last === 0).length;
+  $('#view').innerHTML = `<div class="grid">${rows}</div>
+  <div class="card" style="margin-top:14px"><b>Calculation tasks</b><table><tr><th>Type</th><th>Tasks</th><th>Parts correct</th></tr>${ck}</table></div>
+  <div class="card"><b>${weak}</b> questions currently marked as missed. <button class="btn ghost" id="wk" style="margin-left:8px">Practise them</button></div>
+  <div class="card"><b>Session summary for your study record</b><p class="meta">Copy this into your progress notes so the next session can resume from it.</p><textarea id="sum" readonly></textarea><div class="row"><button class="btn" id="cp">Copy</button><button class="btn ghost" id="rs">Reset all progress</button></div></div>
+  <p class="note">Progress is kept in this browser when storage is available. If it resets, the summary above is your backup.</p>`;
+  $('#sum').value = summaryText();
+  $('#cp').onclick = () => { const t = $('#sum'); t.select(); const done = ok => { $('#cp').textContent = ok ? 'Copied' : 'Text selected, press Ctrl C or Cmd C'; }; try { navigator.clipboard.writeText(t.value).then(() => done(true), () => done(false)); } catch (e) { done(false); } };
+  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm){ store = { mc:{}, calc:{}, mocks:[] }; save(); P.queue = []; progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
+  $('#wk').onclick = () => { P.topic = 'ALL'; P.weakFirst = true; buildQueue(); P.queue = P.queue.filter(q => store.mc[q.id] && store.mc[q.id].last === 0); tab = 'practice'; renderTabs(); practice(); };
+}
+function summaryText(){
+  const d = new Date().toISOString().slice(0, 10);
+  let s = `Statistical Analysis, Midterm 1 practice, ${d}\n`;
+  Object.keys(TOPICS).forEach(k => {
+    const qs = BANK.filter(q => q.t === k); let right = 0, tried = 0, miss = [];
+    qs.forEach(q => { const r = store.mc[q.id]; if (r){ tried++; if (r.last === 1) right++; else miss.push(q.src); } });
+    s += `${TOPICS[k]}: ${right}/${qs.length} last right, ${tried} tried` + (miss.length ? `. To revisit: ${miss.slice(0, 5).join('; ')}` : '') + '\n';
+  });
+  CALC_ORDER.forEach(k => { const r = store.calc[k]; if (r) s += `Calc ${CALC[k].name}: ${r.tasks} tasks, ${Math.round(100 * r.good / r.parts)}% parts correct\n`; });
+  if (store.mocks.length){ const m = store.mocks[store.mocks.length - 1]; s += `Last mock: ${m.total}/20 (MC ${m.mc}/15, calc ${m.calc}/5) on ${m.date}\n`; }
+  return s;
+}
+renderTabs(); show();
+</script>
+</body>
+</html>
