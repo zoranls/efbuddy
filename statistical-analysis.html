@@ -65,6 +65,26 @@ textarea{width:100%;min-height:200px;font-family:var(--mono);font-size:.85rem;ba
 .note{font-size:.85rem;color:var(--muted);margin-top:10px}
 .hidden{display:none}
 @media (max-width:560px){.part{grid-template-columns:1fr 110px 24px}}
+.paper{background:#fbf8ee;color:#1b2a4a;border:1px solid #d9d2bd;border-radius:8px;padding:10px 16px;margin-top:8px;font-family:"Cambria Math",Cambria,"STIX Two Math","Times New Roman",serif;font-size:1.08rem}
+.ps{display:flex;gap:12px;padding:8px 0;border-bottom:1px dashed #d9d2bd}.ps:last-child{border-bottom:0}
+.pn{flex:none;width:1.6em;height:1.6em;border-radius:50%;border:1px solid #1b2a4a;font:600 .78rem system-ui,sans-serif;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.pb{flex:1;min-width:0}
+.lb{font:600 .8rem system-ui,sans-serif;color:#6b5f3a;margin-bottom:2px;text-transform:none}
+.tx{font:.95rem system-ui,sans-serif;line-height:1.5}
+.eq{display:block;line-height:1.2;padding:3px 0;white-space:pre-wrap}
+.eq.cont{padding-left:1em}.eqs{margin-right:.35em}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .15em;text-align:center}
+.fr .nu{padding:0 .25em;border-bottom:1.5px solid #1b2a4a;line-height:1.25}.fr .de{padding:0 .25em;line-height:1.25}
+.rad{display:inline-flex;align-items:stretch;vertical-align:middle}.rs{font-size:1.2em;line-height:1}
+.ri{border-top:1.5px solid #1b2a4a;padding:0 .15em;margin-top:.12em;align-self:flex-start}
+.cm{font:700 .85rem system-ui,sans-serif;border:1px solid #1b2a4a;border-radius:50%;display:inline-block;width:1.5em;height:1.5em;text-align:center;line-height:1.4em;margin-right:.4em}
+.paper sub{font-size:.7em;vertical-align:sub;line-height:0}
+.ans{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.ans span{border:2px solid #1b2a4a;border-radius:4px;padding:4px 10px;background:#fffdf5;color:#1b2a4a;font:600 .95rem "Cambria Math",Cambria,serif}
+.skw{background:#fbf8ee;border:1px solid #d9d2bd;border-radius:8px;padding:10px 12px;margin-top:8px;color:#1b2a4a}
+.skg{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.sk{margin:0;flex:1 1 300px;max-width:340px}
+.sk figcaption{font:.82rem/1.35 system-ui,sans-serif;color:#3b4561;margin-top:2px}
 </style>
 </head>
 <body>
@@ -546,6 +566,7 @@ CALC.desc = { name: 'Descriptive statistics and frequency table', src: 'Tutorial
     else { const n = pick([6, 7, 8]); data = Array.from({ length: n }, () => pick([4, 5, 6, 7, 8, 9, 10, 12, 14, 15])); }
     const n = data.length, m = Stat.mean(data), v = Stat.svar(data), s = Math.sqrt(v);
     const mx = Math.max(...data), mn = Math.min(...data);
+    let sk;
     const parts = [
       { label: 'Arithmetic mean ȳ', ans: m, kind: 'rel', tol: 0.004, dec: 2 },
       { label: 'Sample variance s² (divide by n − 1)', ans: v, kind: 'rel', tol: 0.012, dec: 2 },
@@ -566,7 +587,7 @@ CALC.desc = { name: 'Descriptive statistics and frequency table', src: 'Tutorial
     if (grouped){
       const bounds = [[0.5, 20.5], [20.5, 40.5], [40.5, 60.5], [60.5, 80.5], [80.5, 100.5]];
       const f = bounds.map(b => data.filter(y => y > b[0] && y <= b[1]).length);
-      const F3 = f[0] + f[1] + f[2];
+      const F3 = f[0] + f[1] + f[2]; sk = [{ t:'bars', cap:'Histogram of the five classes. The third class (41 to 60) is the one asked for. Heights are the frequencies f.', edges:[0.5, 20.5, 40.5, 60.5, 80.5, 100.5], f, hi:2 }];
       parts.push(
         { label: 'Frequency distribution, class 3 (41 to 60): midpoint y₃', ans: 50.5, kind: 'abs', tol: 0.06, dec: 1 },
         { label: 'Cumulative frequency F₃', ans: F3, kind: 'abs', tol: 0.5, dec: 0 },
@@ -582,7 +603,7 @@ CALC.desc = { name: 'Descriptive statistics and frequency table', src: 'Tutorial
         `Interpretation: ${fm(100 * F3 / n, 1)}% of the sampled employees earn at most 60 thousand euros a year (boundary 60.5).`);
       r.push(`data$mid <− recode(data$Annual.net.income, "0.5:20.5 = 10.5; ...") then frq(data$mid); quantile(data$Annual.net.income, p = 0.25)`);
     }
-    return { intro, parts, steps, r };
+    return { intro, parts, steps, r, sk };
   } };
 
 /* ---------------- L02: normal distribution (Tutorial 2, Lecture 2 Examples 2.3 and 2.4) ---------------- */
@@ -605,6 +626,12 @@ CALC.normal = { name: 'Normal distribution: probabilities and quantiles', src: '
     const probs = [F4(zx), F4(zb) - F4(za), 1 - F4(zc)];
     return {
       intro: `${o.what === 'the variable' ? 'A variable' : o.what} is normally distributed with mean μ = ${m} and standard deviation σ = ${s}${o.note ? ' (' + o.note + ')' : ''}. Give probabilities as proportions with four decimals and use the table values of the Handbook.`,
+      sk: [
+        { t:'bell', cap:`a) P(Y ≤ ${x}): the shaded part is on the LEFT of ${x}, so read F(z) straight from the table.`, mu:m, sd:s, areas:[{ lo:-1e9, hi:x, txt:fm(probs[0], 4) }], marks:[{ x, txt:String(x) }] },
+        { t:'bell', cap:`b) P(${a} ≤ Y ≤ ${b}): the middle is shaded, so subtract: F(z_b) − F(z_a).`, mu:m, sd:s, areas:[{ lo:a, hi:b, txt:fm(probs[1], 4) }], marks:[{ x:a, txt:String(a) }, { x:b, txt:String(b) }] },
+        { t:'bell', cap:`c) P(Y ≥ ${c}): the shaded part is on the RIGHT, the table gives the left side, so use 1 − F(z).`, mu:m, sd:s, areas:[{ lo:c, hi:1e9, txt:fm(probs[2], 4) }], marks:[{ x:c, txt:String(c) }] },
+        { t:'bell', cap:`d) The highest ${q}% are shaded on the RIGHT. The table works from the left, so the left part is ${100 - q}%: F(z_a) = ${fm(rank, 2)}. Then a = μ + z_a · σ.`, mu:m, sd:s, areas:[{ lo:val, hi:1e9, txt:q + '%' }], marks:[{ x:val, txt:'a = ' + fm(val, 2) }] }
+      ],
       parts: [
         { label: `Standardized value of ${x}`, ans: (x - m) / s, kind: 'abs', tol: 0.011, dec: 2 },
         { label: `P(Y ≤ ${x})`, ans: probs[0], kind: 'abs', tol: 0.0006, dec: 4 },
@@ -637,6 +664,10 @@ CALC.tyres = { name: 'Warranty share and a change of the coefficient of variatio
     const za = z2((a - mu) / sigma), zb = z2((a - mu) / s2); const f1 = F4(za), f2 = F4(zb);
     return {
       intro: `${o.what[0].toUpperCase() + o.what.slice(1)} is normally distributed with arithmetic mean ${mu} ${o.unit} and standard deviation ${sigma} ${o.unit}. The warranty period is ${a} ${o.unit}. (a) What share fails before the warranty expires? (b) The coefficient of variation increases by ${inc * 100}% while the mean stays the same. Give the new share, the change in percentage points (absolute) and the relative change in percent. Proportions with four decimals.`,
+      sk: [
+        { t:'bell', cap:`a) Share failing before the warranty a = ${a}: left tail, F(z) directly.`, mu, sd:sigma, areas:[{ lo:-1e9, hi:a, txt:fm(f1, 4) }], marks:[{ x:a, txt:String(a) }] },
+        { t:'bell', cap:`b) After the CV increase σ₂ = ${fm(s2, 1)}: the bell is wider, so the left tail below ${a} is larger.`, mu, sd:s2, areas:[{ lo:-1e9, hi:a, txt:fm(f2, 4) }], marks:[{ x:a, txt:String(a) }] }
+      ],
       parts: [
         { label: 'Share failing before the warranty ends (a)', ans: f1, kind: 'abs', tol: 0.0006, dec: 4 },
         { label: 'New share after the CV increase (b)', ans: f2, kind: 'abs', tol: 0.0008, dec: 4 },
@@ -671,6 +702,10 @@ CALC.budget = { name: 'Warranty length from a budget (FotoExpert)', src: 'Tutori
     const rel = (z2(sNew) / sigma - 1) * 100;
     return {
       intro: `A company expects to sell ${units} products at ${price} euros each. The time until failure is normally distributed with mean ${mu} years and standard deviation ${sigma} years. (a) The company has ${budget} euros to replace products that fail within the warranty. How many years of warranty can it offer? (b) With a ${T2} year warranty, by what percentage must the standard deviation change (mean unchanged) so that the company needs only ${budget2} euros for warranty replacements?`,
+      sk: [
+        { t:'bell', cap:`a) Only ${fm(sh, 4)} of the products may fail: a small left tail. Find z for F(z) = ${fm(sh, 2)}, then T = μ + z · σ.`, mu, sd:sigma, areas:[{ lo:-1e9, hi:T, txt:fm(sh, 4) }], marks:[{ x:T, txt:'T = ' + fm(T, 2) }] },
+        { t:'bell', cap:`b) The warranty ${T2} stays and the tail must shrink to ${fm(sh2, 4)}: the bell must be narrower, σ_new = ${fm(sNew, 3)}.`, mu, sd:sNew, areas:[{ lo:-1e9, hi:T2, txt:fm(sh2, 4) }], marks:[{ x:T2, txt:String(T2) }] }
+      ],
       parts: [
         { label: 'Share of products that may fail in the warranty period (a)', ans: sh, kind: 'abs', tol: 0.0006, dec: 4 },
         { label: 'Warranty period in years (a)', ans: T, kind: 'abs', tol: 0.02, dec: 2 },
@@ -798,6 +833,7 @@ CALC.cimean = { name: 'Confidence interval for a mean', src: 'Lecture 5, Example
     const useT = n < 100;
     return {
       intro: `${N ? `From a population of N = ${N} units a simple random sample of n = ${n} units was drawn without replacement.` : `A simple random sample of n = ${n} units was drawn.`} The sample mean of ${o.what} is ȳ = ${yb} and the sample standard deviation is s = ${s}. Build the ${lvlTxt(L)} confidence interval for the population mean μ. ${ambiguous(n) ? 'Either the t or the z value is accepted for a sample of this size.' : (useT ? 'Use the t distribution.' : 'The sample is large, so z may be used.')}`,
+      sk: [{ t:'ci', cap:`The middle ${fm(L, 2)} of the estimates lies within ± ${useT ? 't' : 'z'} · se of ȳ. Each tail holds α/2 = ${fm(a / 2, 3)}. The limits are ȳ ± D.`, ctr:yb, se, c, D, lvl:L, two:true }],
       parts: ciParts(yb, se, c, alt, o.dec, L),
       steps: [
         `Statistical unit: one unit of the population. Variable Y: ${o.what}. Parameter: the arithmetic mean μ_Y.`,
@@ -810,35 +846,47 @@ CALC.cimean = { name: 'Confidence interval for a mean', src: 'Lecture 5, Example
     };
   } };
 
-CALC.citotal = { name: 'Confidence interval for mean and total', src: 'Lecture 5, Example 5.2, Tutorial 5 Exercise 1a', lec: 'L05',
+const T_ROWS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,40,50,60,80,100,120,200];
+const lowerRow = df => { let r = T_ROWS[0]; T_ROWS.forEach(x => { if (x <= df) r = x; }); return r; };
+CALC.citotal = { name: 'Confidence interval for mean and total', src: 'Example midterm calculation task, Lecture 5 Example 5.2, Tutorial 5 Exercise 1a', lec: 'L05',
   origs: [
+    { label: 'Example midterm, calculation task (ski equipment fair, CV given)', o: { N: 6450, n: 256, yb: 48.6, cv: 0.455, L: 0.99, what: 'purchase value', unit: 'euros' } },
     { label: 'Lecture 5, Example 5.2 (milk, 400 of 60,000 households)', o: { N: 60000, n: 400, yb: 15, s: 5, L: 0.95, what: 'milk consumption per household', unit: 'litres' } },
     { label: 'Tutorial 5, Exercise 1a (storm damage, 150 of 1,500 buildings)', o: { N: 1500, n: 150, yb: 3800, s: 450, L: 0.95, what: 'damage per building', unit: 'euros' } }
   ],
   gen(o) {
     if (!o){
       const yb = +(pick([8, 15, 40, 220]) * pick([0.9, 1, 1.1])).toFixed(1);
-      o = { N: pick([1200, 4000, 9000, 60000]), n: pick([100, 150, 250, 400]), yb, s: +(yb * pick([0.25, 0.35])).toFixed(1), L: pick([0.9, 0.95, 0.99]), what: 'consumption per household', unit: 'units' };
+      const useCv = Math.random() < 0.5;
+      o = { N: pick([1200, 4000, 9000, 60000]), n: pick([100, 150, 256, 400]), yb, L: pick([0.9, 0.95, 0.99]), what: 'purchase value', unit: 'euros' };
+      if (useCv) o.cv = pick([0.25, 0.35, 0.455]); else o.s = +(yb * pick([0.25, 0.35])).toFixed(1);
     }
-    const { N, n, yb, s, L } = o;
+    const { N, n, yb, L } = o; const s = o.cv ? o.cv * yb : o.s;
     const se = s / Math.sqrt(n) * Math.sqrt(1 - n / N); const c = crit(1 - L, n, false); const D = c * se;
+    let alt;
+    if (n >= 30){ const tr = Stat.tinv(1 - (1 - L) / 2, lowerRow(n - 1)); alt = { D: tr * se, lo: yb - tr * se, hi: yb + tr * se, c: tr }; }
+    const tot = (m) => N * m;
     return {
-      intro: `A simple random sample of n = ${n} of N = ${N} units gave an average ${o.what} of ȳ = ${yb} ${o.unit} with s = ${s}. Estimate the average and the TOTAL for all units with a ${lvlTxt(L)} confidence interval. Do not round the limits of the mean before multiplying by N.`,
+      intro: `A simple random sample of n = ${n} of N = ${N} units gave an average ${o.what} of ȳ = ${yb} ${o.unit} ${o.cv ? `with a coefficient of variation of ${(o.cv * 100).toFixed(1)}%` : `with s = ${s}`}. At a risk level of ${fm(1 - L, 2)} estimate the average and the TOTAL for all units. Do not round the limits of the mean before multiplying by N. (For a large sample both the z and the t value are accepted.)`,
+      sk: [{ t:'ci', cap:`The middle ${fm(L, 2)} of the estimates lies within ± c · se of ȳ. Each tail holds α/2 = ${fm((1 - L) / 2, 3)}. For the total, multiply both limits by N = ${N}.`, ctr:yb, se, c, D, lvl:L, two:true }],
       parts: [
+        ...(o.cv ? [{ label: 'Standard deviation s = CV · ȳ', ans: s, kind: 'rel', tol: 0.003, dec: 3 }] : []),
         { label: 'se(ȳ)', ans: se, kind: 'rel', tol: 0.006, dec: 4 },
-        { label: 'Margin of error D for the mean', ans: D, kind: 'rel', tol: 0.008, dec: 4 },
-        { label: 'Lower limit of the mean', ans: yb - D, kind: 'rel', tol: 0.003, dec: 3 },
-        { label: 'Upper limit of the mean', ans: yb + D, kind: 'rel', tol: 0.003, dec: 3 },
-        { label: 'Lower limit of the total', ans: N * (yb - D), kind: 'rel', tol: 0.004, dec: 0 },
-        { label: 'Upper limit of the total', ans: N * (yb + D), kind: 'rel', tol: 0.004, dec: 0 }
+        { label: 'Margin of error D for the mean', ans: D, kind: 'rel', tol: 0.008, dec: 4, alt: alt && alt.D },
+        { label: 'Lower limit of the mean', ans: yb - D, kind: 'rel', tol: 0.003, dec: 3, alt: alt && alt.lo },
+        { label: 'Upper limit of the mean', ans: yb + D, kind: 'rel', tol: 0.003, dec: 3, alt: alt && alt.hi },
+        { label: 'Lower limit of the total', ans: tot(yb - D), kind: 'rel', tol: 0.004, dec: 0, alt: alt && tot(alt.lo) },
+        { label: 'Upper limit of the total', ans: tot(yb + D), kind: 'rel', tol: 0.004, dec: 0, alt: alt && tot(alt.hi) }
       ],
       steps: [
-        `Unit: one unit. Variable: ${o.what}. Parameters: mean μ_Y and total Y_tot = N · μ_Y.`,
-        `se(ȳ) = s / √n · √(1 − n/N) = ${s} / √${n} · √(1 − ${n}/${N}) = ${fm(se, 5)}.`,
-        `α = ${fm(1 - L, 2)}, ${n >= 100 ? 'large sample' : 't distribution'}: critical value = ${fm(c, 4)}. D = ${fm(c, 4)} · ${fm(se, 5)} = ${fm(D, 5)}.`,
-        `Mean: ${yb} − ${fm(D, 4)} < μ < ${yb} + ${fm(D, 4)}  →  ${fm(yb - D, 4)} < μ < ${fm(yb + D, 4)}.`,
-        `Total: multiply BOTH limits of the unrounded mean interval by N = ${N}:  ${fm(N * (yb - D), 1)} < Y_tot < ${fm(N * (yb + D), 1)}. Round outward: ${fm(Math.floor(N * (yb - D)), 0)} to ${fm(Math.ceil(N * (yb + D)), 0)}.`,
-        `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that the average is between ${fm(yb - D, 2)} and ${fm(yb + D, 2)} ${o.unit} per unit and the total is between ${fm(Math.floor(N * (yb - D)), 0)} and ${fm(Math.ceil(N * (yb + D)), 0)} ${o.unit}.`
+        `Population: all ${N} units. Statistical unit: one unit. Variable Y: ${o.what}. Parameters of interest: Γ = μ_Y and Γ = Y_tot.`,
+        o.cv ? `Data: n = ${n}, ȳ = ${yb}, CV = ${o.cv} → s_Y = CV · ȳ = ${o.cv} · ${yb} = ${fm(s, 3)}.` : `Data: n = ${n}, ȳ = ${yb}, s_Y = ${s}.`,
+        `se(ȳ) = s / √n · √((N − n)/N) = ${fm(s, 3)} / √${n} · √((${N} − ${n}) / ${N}) = ${fm(se, 4)}.`,
+        `m = n − 1 = ${n - 1}. Risk level α = ${fm(1 - L, 2)}, α/2 = ${fm((1 - L) / 2, 3)}. ${n >= 100 ? `Large sample: z = ${fm(c, 4)} is allowed. (With the t table take the first lower df, ${lowerRow(n - 1)}: t = ${fm(alt.c, 4)}, also correct.)` : `t(${n - 1}; ${fm((1 - L) / 2, 3)}) = ${fm(c, 4)}.`}`,
+        `Interval: ȳ − c · se < μ_Y < ȳ + c · se; α = ${fm(1 - L, 2)}  →  ${yb} − ${fm(c, 4)} · ${fm(se, 4)} < μ_Y < ${yb} + ${fm(c, 4)} · ${fm(se, 4)}  →  ${fm(yb - D, 3)} < μ_Y < ${fm(yb + D, 3)} (rounding!)  →  ${fm(Math.floor((yb - D) * 10) / 10, 1)} < μ_Y < ${fm(Math.ceil((yb + D) * 10) / 10, 1)}.`,
+        `Based on sample data, we estimate that at a risk level of α = ${fm(1 - L, 2)}, the average ${o.what} is between ${fm(Math.floor((yb - D) * 10) / 10, 1)} and ${fm(Math.ceil((yb + D) * 10) / 10, 1)} ${o.unit}.`,
+        `Total: multiply the UNROUNDED limits by N = ${N}:  ${fm(tot(yb - D), 1)} < Y_tot < ${fm(tot(yb + D), 1)}; α = ${fm(1 - L, 2)}. Round outward: ${fm(Math.floor(tot(yb - D)), 0)} < Y_tot < ${fm(Math.ceil(tot(yb + D)), 0)}.`,
+        `Based on sample data, we estimate that at a risk level of α = ${fm(1 - L, 2)}, the total ${o.what} is between ${fm(Math.floor(tot(yb - D)), 0)} and ${fm(Math.ceil(tot(yb + D)), 0)} ${o.unit}.`
       ]
     };
   } };
@@ -909,7 +957,7 @@ CALC.ciprop = { name: 'Confidence interval for a proportion and a number', src: 
         `Lower limit: ${fm(p, 4)} − ${fm(D, 4)} = ${fm(p - D, 4)} < Π. Number: ${fm(p - D, 4)} · ${N} = ${fm(N * (p - D), 1)} < N_a. Round outward (down).`,
         `INTERPRETATION: Based on the sample, we estimate with a confidence level of ${fm(L, 2)} that at least ${fm(Math.floor((p - D) * 1000) / 10, 1)}% of the units, that is at least ${fm(Math.floor(N * (p - D)), 0)} units, have the property.`);
     }
-    return { intro, parts, steps };
+    return { intro, parts, steps, sk: [{ t:'ci', cap: mode === 'two' ? `The middle ${fm(L, 2)} lies within ± z · se of p. Each tail holds α/2 = ${fm(a / 2, 3)}.` : `One sided: the whole risk α = ${fm(a, 2)} sits in ONE tail. We only want the lower limit p − z · se.`, ctr:p, se, c:z, D, lvl:L, two: mode === 'two' }] };
   } };
 
 CALC.sizeprop = { name: 'Sample size for a proportion (relative and absolute margin)', src: 'Lecture 5 Example 5.5, Tutorial 5 Exercise 4', lec: 'L05',
@@ -1044,8 +1092,71 @@ CALC.grouped = { name: 'Grouped data: mean, one sided limit, share of games', sr
     };
   } };
 
-const CALC_ORDER = ['desc', 'normal', 'tyres', 'budget', 'sampling', 'quota', 'se', 'cimean', 'citotal', 'ciwidth', 'ciprop', 'sizeprop', 'sizemean', 'strat', 'grouped'];
-const MOCK_CALC = ['cimean', 'citotal', 'ciprop', 'sizeprop', 'sizemean', 'strat'];
+
+/* Example midterm Q6 to Q10: normal variable given with a coefficient of variation, counting units */
+CALC.normalcv = { name: 'Normal with CV: percentages, counts of units, top share', src: 'Example midterm Q6 to Q10', lec: 'L02',
+  origs: [{ label: 'Example midterm Q6 to Q10 (10,000 drill bits, mean 1,400, CV 12.5%)', o: { mu: 1400, cv: 0.125, N: 10000, a: 1300, b: 1600, q: 25, what: 'service life of a drill bit (drillings)' } }],
+  gen(o) {
+    if (!o){
+      const mu = pick([1400, 500, 60, 2000]); const cv = pick([0.05, 0.08, 0.1, 0.125]);
+      o = { mu, cv, N: pick([5000, 10000, 20000]), a: +(mu * (1 - pick([0.05, 0.1, 0.15]))).toFixed(1), b: +(mu * (1 + pick([0.1, 0.15, 0.2]))).toFixed(1), q: pick([10, 25, 30]), what: 'the measured value of an item' };
+    }
+    const { mu, cv, N, a, b, q } = o; const s = mu * cv;
+    const za = z2((a - mu) / s), zb = z2((b - mu) / s), P1 = F4(za), P2 = 1 - F4(zb), p = 1 - q / 100, zq = tz(p), val = mu + zq * s;
+    return {
+      intro: `${o.what[0].toUpperCase() + o.what.slice(1)} is normally distributed with mean ${mu} and a coefficient of variation of ${(cv * 100).toFixed(1)}%. There are ${N} units. (a) What percentage of the units are below ${a}? (b) How many units are at least ${b}? (c) At least how much do the best ${q}% of the units reach, and what is this parameter called? Use table values.`,
+      sk: [
+        { t:'bell', cap:`a) Percentage below ${a}: left side, F(z) directly.`, mu, sd:s, areas:[{ lo:-1e9, hi:a, txt:fm(P1, 4) }], marks:[{ x:a, txt:String(a) }] },
+        { t:'bell', cap:`b) Units that are at least ${b}: right side, 1 − F(z), then multiply by N.`, mu, sd:s, areas:[{ lo:b, hi:1e9, txt:fm(P2, 4) }], marks:[{ x:b, txt:String(b) }] },
+        { t:'bell', cap:`c) The best ${q}% on the right, so F(z_a) = ${fm(p, 2)} on the left.`, mu, sd:s, areas:[{ lo:val, hi:1e9, txt:q + '%' }], marks:[{ x:val, txt:'a = ' + fm(val, 1) }] }
+      ],
+      parts: [
+        { label: 'Standard deviation σ = CV · mean', ans: s, kind: 'rel', tol: 0.003, dec: 3 },
+        { label: `Percentage of units below ${a}`, ans: P1 * 100, kind: 'abs', tol: 0.06, dec: 2 },
+        { label: `Number of units that are at least ${b}`, ans: N * P2, kind: 'abs', tol: Math.max(3, N * 0.0004), dec: 0 },
+        { label: `Value reached by the best ${q}%`, ans: val, kind: 'abs', tol: Math.max(0.012 * s, 0.01), dec: 2 }
+      ],
+      steps: [
+        `Y ~ N(μ, σ). The CV is given, so σ = CV · μ = ${cv} · ${mu} = ${fm(s, 3)}. Y ~ N(${mu}, ${fm(s, 3)}).`,
+        `a) ① z = (${a} − ${mu}) / ${fm(s, 3)} = ${fm(za, 2)}. ② F(${fm(za, 2)}) = ${fm(P1, 4)}. ③ ${fm(P1 * 100, 2)}% of the units are used up before ${a}.`,
+        `b) ① z = (${b} − ${mu}) / ${fm(s, 3)} = ${fm(zb, 2)}. ② P(Y ≥ ${b}) = 1 − F(${fm(zb, 2)}) = 1 − ${fm(F4(zb), 4)} = ${fm(P2, 4)}. ③ Number of units = N · P = ${N} · ${fm(P2, 4)} = ${fm(N * P2, 1)}, about ${Math.round(N * P2)} units.`,
+        `c) The best ${q}% lie above a, so F(z_a) = ${fm(p, 2)}. Table: z_a = ${fm(zq, 2)}. a = μ + z_a · σ = ${mu} + ${fm(zq, 2)} · ${fm(s, 3)} = ${fm(val, 2)}. Name: ${qname(p)}. Careful, it is not "the quantile rank", the rank is ${fm(p, 2)}.`
+      ]
+    };
+  } };
+
+/* Example midterm Q2 and Q3: stat.desc computer printout */
+CALC.printout = { name: 'Read a computer printout (stat.desc)', src: 'Example midterm, computer printout 1, Questions 2 and 3', lec: 'L01',
+  origs: [{ label: 'Example midterm, computer printout 1 (27 houses, price)', o: { n: 27, sum: 1039.53, se: 2.754, ci: 5.66, v: 204.739, what: 'price in thousand dollars' } }],
+  gen(o) {
+    if (!o){
+      const n = pick([20, 25, 30, 40]); const mean = pick([30, 50, 120, 250]) * pick([0.9, 1, 1.1]); const sd = mean * pick([0.2, 0.3, 0.4]);
+      const se = sd / Math.sqrt(n);
+      o = { n, sum: +(mean * n).toFixed(2), se: +se.toFixed(3), ci: +(Stat.tinv(0.975, n - 1) * se).toFixed(3), v: +(sd * sd).toFixed(3), what: 'the variable' };
+    }
+    const { n, sum, se, ci, v } = o; const m = sum / n, s = Math.sqrt(v);
+    return {
+      intro: `Printout of round(stat.desc(data), 3) for ${o.what} of a random sample: nbr.val = ${n}, sum = ${sum}, mean = ?????, SE.mean = ${se}, CI.mean.0.95 = ${ci}, var = ${v}. (a) What is the missing mean? (b) What is the standard deviation? (c) What coefficient of variation (coef.var) would be printed? (d) Give the 95% confidence interval for the mean from the printout.`,
+      parts: [
+        { label: 'Missing mean', ans: m, kind: 'rel', tol: 0.003, dec: 3 },
+        { label: 'Standard deviation s', ans: s, kind: 'rel', tol: 0.003, dec: 3 },
+        { label: 'Coefficient of variation', ans: s / m, kind: 'rel', tol: 0.012, dec: 3 },
+        { label: 'Lower limit of the 95% interval for the mean', ans: m - ci, kind: 'rel', tol: 0.004, dec: 3 },
+        { label: 'Upper limit of the 95% interval for the mean', ans: m + ci, kind: 'rel', tol: 0.004, dec: 3 }
+      ],
+      steps: [
+        `Read each row: nbr.val is n, sum is Σy, SE.mean is the estimated standard error se(ȳ), CI.mean.0.95 is the margin of error D of the 95% interval (it uses the t distribution), var is s², coef.var is s / ȳ.`,
+        `a) mean = sum / nbr.val = ${sum} / ${n} = ${fm(m, 3)}.`,
+        `b) s = √var = √${v} = ${fm(s, 3)}.`,
+        `c) CV = s / ȳ = ${fm(s, 3)} / ${fm(m, 3)} = ${fm(s / m, 3)}.`,
+        `d) ȳ − D < μ < ȳ + D: ${fm(m, 3)} − ${ci} < μ < ${fm(m, 3)} + ${ci}  →  ${fm(m - ci, 2)} < μ < ${fm(m + ci, 2)}. Check: D = t · SE.mean = ${fm(Stat.tinv(0.975, n - 1), 3)} · ${se} = ${fm(Stat.tinv(0.975, n - 1) * se, 3)}.`,
+        `Meaning of SE.mean: the variation (standard deviation) of the sample means across all samples of size ${n}. It is not the variation between the units in the sample (that is s).`
+      ]
+    };
+  } };
+
+const CALC_ORDER = ['desc', 'printout', 'normal', 'normalcv', 'tyres', 'budget', 'sampling', 'quota', 'se', 'cimean', 'citotal', 'ciwidth', 'ciprop', 'sizeprop', 'sizemean', 'strat', 'grouped'];
+const MOCK_CALC = ['citotal', 'citotal', 'cimean', 'ciprop', 'sizeprop', 'sizemean', 'strat'];
 if (typeof module !== 'undefined') module.exports = { CALC, MOCK_CALC, CALC_ORDER };
 
 </script>
@@ -1057,19 +1168,19 @@ const TOPICS = {
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KEY = 'sa_me1_practice_v1';
-let store = { mc:{}, calc:{}, mocks:[] };
+let store = { mc:{}, calc:{}, mocks:[], study:{} };
 try { const r = localStorage.getItem(KEY); if (r) store = Object.assign(store, JSON.parse(r)); } catch (e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
 function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function rec(id, ok){ const r = store.mc[id] || { r:0, w:0 }; ok ? r.r++ : r.w++; r.last = ok ? 1 : 0; store.mc[id] = r; save(); }
 
-const TABS = [['practice','Practice'],['calc','Calculation lab'],['mock','Mock midterm'],['sheet','Method sheet'],['progress','Progress']];
-let tab = 'practice';
+const TABS = [['study','Study'],['practice','Practice'],['calc','Calculation lab'],['mock','Mock midterm'],['sheet','Method sheet'],['progress','Progress']];
+let tab = 'study';
 function renderTabs(){
   $('#tabs').innerHTML = TABS.map(([k, n]) => `<button role="tab" aria-selected="${k === tab}" data-k="${k}">${n}</button>`).join('');
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.k; renderTabs(); show(); });
 }
-function show(){ ({practice, calc, mock, sheet, progress})[tab](); }
+function show(){ ({study, practice, calc, mock, sheet, progress})[tab](); }
 
 /* ---------- Practice ---------- */
 let P = { topic:'ALL', weakFirst:true, queue:[], i:0, done:false, sel:null, score:0, seen:0 };
@@ -1142,7 +1253,7 @@ function calc(){
   $('#parts').onkeydown = e => { if (e.key === 'Enter') checkCalc(); };
   $('#show').onclick = () => { $('#sol').innerHTML = solHtml(t); };
 }
-function solHtml(t){ return `<div class="fb"><b>Worked solution (lecturer's layout)</b><ol class="steps">${t.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>${t.r && t.r.length ? `<div class="meta" style="margin-top:8px">R check: ${t.r.map(esc).join(' ; ')}</div>` : ''}<div class="meta" style="margin-top:8px">Expected: ${t.parts.map(p => esc(p.label) + ' = ' + fm(p.ans, p.dec)).join('; ')}</div></div>`; }
+function solHtml(t){ return `<div class="fb"><b>Worked solution (lecturer's layout)</b>${stSolHtml(t)}</div>`; }
 function checkCalc(){
   const t = C.task; let good = 0;
   t.parts.forEach((p, i) => {
@@ -1151,6 +1262,184 @@ function checkCalc(){
   });
   const r = store.calc[C.key] || { parts:0, good:0, tasks:0 }; r.parts += t.parts.length; r.good += good; r.tasks++; store.calc[C.key] = r; save();
   $('#sol').innerHTML = `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b>${good === t.parts.length ? 'Well done. Try a new variant.' : 'Compare with the worked solution and find the first step where you differ.'}</div>` + solHtml(t);
+}
+
+
+/* ---------- Paper style math rendering ---------- */
+const STOP = ' \t/=·+;:→×<>';
+function mTok(s){ return esc(s).replace(/_([A-Za-z0-9]+)/g, '<sub>$1</sub>'); }
+function mParse(s){
+  const out = []; let i = 0;
+  const matchParen = (k) => { let d = 0; for (let j = k; j < s.length; j++){ if (s[j] === '(') d++; else if (s[j] === ')'){ d--; if (d === 0) return j; } } return -1; };
+  function atomAt(){
+    let h = '', raw = null, plain = '', any = false, grp = false;
+    while (i < s.length){
+      const ch = s[i];
+      if (ch === '(') { const e = matchParen(i); if (e < 0) break; const inner = s.slice(i + 1, e); const ih = mRender(inner); h += '(' + ih + ')'; raw = ih; grp = (plain === '' && !any); plain += '('; i = e + 1; any = true; continue; }
+      if (ch === '√') { i++; let sub; if (s[i] === '('){ const e = matchParen(i); if (e < 0){ sub = ''; } else { sub = mRender(s.slice(i + 1, e)); i = e + 1; } } else { let j = i; while (j < s.length && !STOP.includes(s[j]) && s[j] !== ')' && s[j] !== '(' && !(s[j] === ',' && !/\d/.test(s[j + 1] || '')) && s[j] !== '−') j++; sub = mTok(s.slice(i, j)); i = j; } h += '<span class="rad"><span class="rs">√</span><span class="ri">' + sub + '</span></span>'; plain += '√'; any = true; grp = false; continue; }
+      if (ch === ')' || STOP.includes(ch)) break;
+      if (ch === ',' && !(/\d/.test(s[i - 1] || '') && /\d/.test(s[i + 1] || ''))) break;
+      if (ch === '−' && any && !/[\dA-Za-zα-ωȳ]/.test(s[i - 1] || '')) break;
+      if (ch === '−' && any) break;
+      if (ch === '<' || ch === '>') break;
+      let j = i; while (j < s.length && !STOP.includes(s[j]) && s[j] !== '(' && s[j] !== ')' && s[j] !== '√' && !(s[j] === ',' && !(/\d/.test(s[j - 1] || '') && /\d/.test(s[j + 1] || ''))) && !(s[j] === '−' && j > i)) j++;
+      if (j === i) { j = i + 1; }
+      const piece = s.slice(i, j); h += mTok(piece); plain += piece; any = true; grp = false; i = j;
+    }
+    return { h, raw, plain, grp };
+  }
+  while (i < s.length){
+    const ch = s[i];
+    if (ch === ' ' || ch === '\t'){ out.push({ t:'sp', h:' ' }); i++; continue; }
+    if (ch === '/'){ out.push({ t:'div' }); i++; continue; }
+    if ('=·+;:→×<>'.includes(ch)){ out.push({ t:'op', h:esc(ch) }); i++; continue; }
+    if (ch === ')'){ out.push({ t:'op', h:')' }); i++; continue; }
+    if (ch === ',' && !(/\d/.test(s[i - 1] || '') && /\d/.test(s[i + 1] || ''))){ out.push({ t:'op', h:',' }); i++; continue; }
+    if (ch === '−' ){ // minus: binary if followed by space, else sign belongs to atom
+      if (s[i + 1] === ' ' || i + 1 >= s.length){ out.push({ t:'op', h:'−' }); i++; continue; }
+    }
+    const before = i; const a = atomAt(); if (i === before){ out.push({ t:'op', h:esc(s[i]) }); i++; continue; }
+    out.push({ t:'atom', h:a.h, raw:a.raw, plain:a.plain, grp:a.grp });
+  }
+  return out;
+}
+function isWord(a){ return /^[A-Za-z]{3,}[.,]?$/.test(a.plain); }
+function mRender(s){
+  const L = mParse(s);
+  for (let k = 0; k < L.length; k++){
+    if (L[k].t !== 'div') continue;
+    let p = k - 1; while (p >= 0 && L[p].t === 'sp') p--; let n = k + 1; while (n < L.length && L[n].t === 'sp') n++;
+    if (p < 0 || n >= L.length || L[p].t !== 'atom' || L[n].t !== 'atom') { L[k] = { t:'op', h:'/' }; continue; }
+    const A = L[p], B = L[n]; if (isWord(A) && isWord(B)) { L[k] = { t:'op', h:'/' }; continue; }
+    let nu = A.grp && A.raw != null ? A.raw : A.h; const de = B.grp && B.raw != null ? B.raw : B.h; let st = p;
+    while (true){ let o = st - 1; while (o >= 0 && L[o].t === 'sp') o--; if (o < 1 || L[o].t !== 'op' || L[o].h !== '·') break; let a2 = o - 1; while (a2 >= 0 && L[a2].t === 'sp') a2--; if (a2 < 0 || L[a2].t !== 'atom') break; nu = L[a2].h + ' · ' + nu; for (let q = a2; q < st; q++) L[q] = { t:'sp', h:'' }; st = a2; }
+    L[p] = { t:'atom', h:'<span class="fr"><span class="nu">' + nu + '</span><span class="de">' + de + '</span></span>', plain:'F', grp:false, raw:null };
+    for (let q = p + 1; q <= n; q++) L[q] = { t:'sp', h:'' };
+  }
+  return L.map(x => x.h || '').join('');
+}
+function mLine(txt, inner){
+  if (!inner && /①/.test(txt) && /②/.test(txt)){ const parts = txt.replace(/^([a-d]\))\s+(?=①)/, '$1\u0001').split(/\s+(?=[①②③])/); return parts.map(p => mLine(p.replace('\u0001', ' '), true)).join(''); }
+  let mark = ''; const mk = txt.match(/^([a-d]\)\s*)?([①②③])\s+/); if (inner && mk){ mark = '<span class="cm">' + esc(mk[2]) + '</span> '; txt = (mk[1] || '') + txt.slice(mk[0].length); }
+  const res = mLine0(txt); return mark ? res.replace(/^(<div class="(?:lb|eq|tx)">)/, '$1' + mark) : res;
+}
+function mLine0(txt){
+  // label before the first colon when it is prose
+  let label = '', body = txt; const m = txt.match(/^((?:[a-d]\)\s*)?[A-Z][^:=]{6,}?):\s+(.*)$/);
+  if (m && !/[=<]/.test(m[1]) && /[=<]/.test(m[2])) { label = m[1]; body = m[2]; }
+  const segs = body.split(/\s*→\s*/);
+  const prose = /^(Based on|Interpretation|INTERPRETATION|Careful|Note|Name|Meaning|Check|Population|Statistical unit)/.test(body) || (!/[=<]/.test(body) && body.split(' ').length > 6);
+  if (prose) return (label ? '<div class="lb">' + esc(label) + '</div>' : '') + '<div class="tx">' + esc(body) + '</div>';
+  return (label ? '<div class="lb">' + esc(label) + '</div>' : '') + segs.map((sg, i) => '<div class="eq' + (i ? ' cont' : '') + '">' + (i ? '<span class="eqs">=</span>' : '') + mRender(sg.replace(/^=\s*/, '')) + '</div>').join('');
+}
+function paperSteps(steps){
+  return '<div class="paper">' + steps.map((s, i) => '<div class="ps"><span class="pn">' + (i + 1) + '</span><div class="pb">' + mLine(s) + '</div></div>').join('') + '</div>';
+}
+
+/* ---------- Sketches (bell curves, intervals, histograms) ---------- */
+let skId = 0;
+function nfmt(v){ return String(Math.round(v * 1000) / 1000); }
+function bellSvg(s){
+  const W = 340, H = 178, x0 = 14, x1 = 326, base = 128, top = 28; const id = 'h' + (++skId);
+  const lo = s.mu - 3.8 * s.sd, hi = s.mu + 3.8 * s.sd; const X = v => x0 + (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * (x1 - x0);
+  const Y = v => base - Math.exp(-0.5 * ((v - s.mu) / s.sd) ** 2) * (base - top);
+  const pts = (a, b) => { const out = []; const n = 60; const A = Math.max(lo, a), B = Math.min(hi, b); if (B <= A) return out; for (let i = 0; i <= n; i++){ const v = A + (B - A) * i / n; out.push([X(v), Y(v)]); } return out; };
+  const curve = pts(lo, hi).map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  let g = `<defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><line x1="0" y1="0" x2="0" y2="5" stroke="#2f6fd6" stroke-width="1.6"/></pattern></defs>`;
+  g += `<line x1="${x0}" y1="${base}" x2="${x1}" y2="${base}" stroke="#1b2a4a" stroke-width="1.2"/>`;
+  (s.areas || []).forEach(ar => { const p = pts(ar.lo, ar.hi); if (p.length < 2) return; const d = 'M' + p[0][0].toFixed(1) + ' ' + base + ' ' + p.map(q => 'L' + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ') + ' L' + p[p.length - 1][0].toFixed(1) + ' ' + base + ' Z'; g += `<path d="${d}" fill="url(#${id})" stroke="#2f6fd6" stroke-width=".8" opacity=".9"/>`;
+    if (ar.txt){ const mid = (Math.max(lo, ar.lo) + Math.min(hi, ar.hi)) / 2; const tx = X(mid); const wide = (Math.min(hi, ar.hi) - Math.max(lo, ar.lo)) > 1.6 * s.sd; const ty = wide ? base - 38 : Math.max(14, Y(mid) - 12); g += `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4fb8" font-family="system-ui,sans-serif" stroke="#fbf8ee" stroke-width="3" paint-order="stroke">${esc(ar.txt)}</text>`; } });
+  g += `<path d="${curve}" fill="none" stroke="#1b2a4a" stroke-width="1.8"/>`;
+  g += `<line x1="${X(s.mu).toFixed(1)}" y1="${base}" x2="${X(s.mu).toFixed(1)}" y2="${Y(s.mu).toFixed(1)}" stroke="#c62828" stroke-width="1.6" stroke-dasharray="4 3"/><text x="${X(s.mu).toFixed(1)}" y="${base + 15}" text-anchor="middle" font-size="11.5" fill="#c62828" font-family="system-ui,sans-serif" font-weight="700">μ = ${nfmt(s.mu)}</text>`;
+  (s.marks || []).forEach((m, i) => { const mx = X(m.x); g += `<line x1="${mx.toFixed(1)}" y1="${base}" x2="${mx.toFixed(1)}" y2="${Y(m.x).toFixed(1)}" stroke="#2f6fd6" stroke-width="1.6"/><text x="${mx.toFixed(1)}" y="${base + 30}" text-anchor="middle" font-size="11.5" fill="#1d4fb8" font-family="system-ui,sans-serif" font-weight="700">${esc(m.txt)}</text>`; });
+  if (s.sd) g += `<text x="${x1}" y="14" text-anchor="end" font-size="10.5" fill="#6b5f3a" font-family="system-ui,sans-serif">σ = ${nfmt(s.sd)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Bell curve sketch">${g}</svg>`;
+}
+function ciSvg(s){
+  const W = 340, H = 178, x0 = 14, x1 = 326, base = 118, top = 26; const id = 'h' + (++skId);
+  const sd = s.se, mu = s.ctr; const lo = mu - 3.8 * sd, hi = mu + 3.8 * sd; const X = v => x0 + (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * (x1 - x0);
+  const Y = v => base - Math.exp(-0.5 * ((v - mu) / sd) ** 2) * (base - top);
+  const pts = (a, b) => { const out = []; for (let i = 0; i <= 60; i++){ const v = Math.max(lo, a) + (Math.min(hi, b) - Math.max(lo, a)) * i / 60; out.push([X(v), Y(v)]); } return out; };
+  const path = pts(lo, hi).map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const L1 = mu - s.D, U1 = mu + s.D; const a = 1 - s.lvl;
+  const area = (A, B) => { const p = pts(A, B); return 'M' + p[0][0].toFixed(1) + ' ' + base + ' ' + p.map(q => 'L' + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ') + ' L' + p[p.length - 1][0].toFixed(1) + ' ' + base + ' Z'; };
+  let g = `<defs><pattern id="${id}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><line x1="0" y1="0" x2="0" y2="5" stroke="#2f6fd6" stroke-width="1.6"/></pattern></defs><line x1="${x0}" y1="${base}" x2="${x1}" y2="${base}" stroke="#1b2a4a" stroke-width="1.2"/>`;
+  const tail = '#e9b8b4';
+  if (s.two){ g += `<path d="${area(lo, L1)}" fill="${tail}" stroke="#c62828" stroke-width=".8"/><path d="${area(U1, hi)}" fill="${tail}" stroke="#c62828" stroke-width=".8"/><path d="${area(L1, U1)}" fill="url(#${id})" stroke="#2f6fd6" stroke-width=".8"/>`; }
+  else { g += `<path d="${area(lo, L1)}" fill="${tail}" stroke="#c62828" stroke-width=".8"/><path d="${area(L1, hi)}" fill="url(#${id})" stroke="#2f6fd6" stroke-width=".8"/>`; }
+  g += `<path d="${path}" fill="none" stroke="#1b2a4a" stroke-width="1.8"/>`;
+  const T = (x, y, t, col, w) => `<text x="${x.toFixed(1)}" y="${y}" text-anchor="middle" font-size="${w || 11.5}" fill="${col}" font-family="system-ui,sans-serif" font-weight="700" stroke="#fbf8ee" stroke-width="3" paint-order="stroke">${esc(t)}</text>`;
+  g += T(X(mu), base - 34, '1 − α = ' + nfmt(s.lvl), '#1d4fb8', 12);
+  g += T(s.two ? X(lo + (L1 - lo) / 2) : X(lo + (L1 - lo) / 2), base - 12, s.two ? 'α/2' : 'α', '#c62828', 11);
+  if (s.two) g += T(X(U1 + (hi - U1) / 2), base - 12, 'α/2', '#c62828', 11);
+  g += `<line x1="${X(mu).toFixed(1)}" y1="${base}" x2="${X(mu).toFixed(1)}" y2="${Y(mu).toFixed(1)}" stroke="#c62828" stroke-width="1.5" stroke-dasharray="4 3"/>` + T(X(mu), base + 15, 'estimate = ' + nfmt(mu), '#c62828', 11);
+  g += `<line x1="${X(L1).toFixed(1)}" y1="${base}" x2="${X(L1).toFixed(1)}" y2="${Y(L1).toFixed(1)}" stroke="#2f6fd6" stroke-width="1.6"/>` + T(X(L1), base + 30, 'lower ' + nfmt(L1), '#1d4fb8', 11);
+  if (s.two) g += `<line x1="${X(U1).toFixed(1)}" y1="${base}" x2="${X(U1).toFixed(1)}" y2="${Y(U1).toFixed(1)}" stroke="#2f6fd6" stroke-width="1.6"/>` + T(X(U1), base + 30, 'upper ' + nfmt(U1), '#1d4fb8', 11);
+  g += `<text x="${x1}" y="14" text-anchor="end" font-size="10.5" fill="#6b5f3a" font-family="system-ui,sans-serif">se = ${nfmt(s.se)}, D = ${nfmt(s.D)}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Confidence interval sketch">${g}</svg>`;
+}
+function barsSvg(s){
+  const W = 340, H = 178, x0 = 28, x1 = 326, base = 128, top = 24; const mx = Math.max(...s.f); const bw = (x1 - x0) / s.f.length;
+  let g = `<line x1="${x0}" y1="${base}" x2="${x1}" y2="${base}" stroke="#1b2a4a" stroke-width="1.2"/><line x1="${x0}" y1="${base}" x2="${x0}" y2="${top - 6}" stroke="#1b2a4a" stroke-width="1.2"/>`;
+  s.f.forEach((v, i) => { const h = (base - top) * v / mx; const hi = i === s.hi; g += `<rect x="${(x0 + i * bw + 2).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="${h.toFixed(1)}" fill="${hi ? '#9ec0f5' : '#d9d2bd'}" stroke="#1b2a4a" stroke-width="1.2"/><text x="${(x0 + i * bw + bw / 2).toFixed(1)}" y="${(base - h - 4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="#1b2a4a" font-family="system-ui,sans-serif">${v}</text>`; });
+  s.edges.forEach((e, i) => { g += `<text x="${(x0 + i * bw).toFixed(1)}" y="${base + 14}" text-anchor="middle" font-size="10.5" fill="#6b5f3a" font-family="system-ui,sans-serif">${e}</text>`; });
+  g += `<text x="${x1}" y="${base + 32}" text-anchor="end" font-size="10.5" fill="#6b5f3a" font-family="system-ui,sans-serif">numbers above the bars are the frequencies f</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Histogram sketch">${g}</svg>`;
+}
+function sketchHtml(sk){
+  if (!sk || !sk.length) return '';
+  return '<div class="skw"><div class="lb">Sketch first, like the lecturer does. Blue hatching is the area you want, the red line is the mean</div><div class="skg">' + sk.map(s => '<figure class="sk">' + (s.t === 'bell' ? bellSvg(s) : s.t === 'ci' ? ciSvg(s) : barsSvg(s)) + '<figcaption>' + esc(s.cap) + '</figcaption></figure>').join('') + '</div></div>';
+}
+
+/* ---------- Study (worked example, recall, three new variants, mixed round) ---------- */
+let S = { lec:'ALL', key:null, stage:'pick', worked:null, i:0, task:null, good:0, total:0, mix:false, mixN:0, checked:false };
+function studyKeys(){ return CALC_ORDER.filter(k => S.lec === 'ALL' || CALC[k].lec === S.lec); }
+function ansHtml(t){ return '<div class="ans">' + t.parts.map(p => '<span>' + esc(p.label) + ' = ' + fm(p.ans, p.dec) + '</span>').join('') + '</div>'; }
+function stSolHtml(t){ return sketchHtml(t.sk) + paperSteps(t.steps) + (t.r && t.r.length ? `<div class="meta" style="margin-top:8px">R check: ${t.r.map(esc).join(' ; ')}</div>` : '') + '<div class="meta" style="margin-top:8px">Final answers</div>' + ansHtml(t); }
+function stBegin(k){ S.key = k; S.mix = false; const c = CALC[k]; S.worked = c.gen(c.origs && c.origs.length ? c.origs[0].o : undefined); S.stage = 'study'; S.i = 0; S.good = 0; S.total = 0; study(); }
+function stNext(){ const c = CALC[S.key]; S.task = c.gen(); S.checked = false; }
+function stMark(done){ const r = store.study[S.key] || { done:0, good:0, parts:0 }; if (done) r.done++; r.good += S.good; r.parts += S.total; store.study[S.key] = r; save(); }
+function study(){
+  const v = $('#view');
+  if (S.stage === 'pick'){
+    const chips = ['ALL', ...Object.keys(TOPICS)].map(k => `<button class="chip" aria-pressed="${S.lec === k}" data-l="${k}">${k === 'ALL' ? 'All lectures' : k}</button>`).join('');
+    const rows = studyKeys().map(k => { const r = store.study[k]; return `<tr><td>${esc(CALC[k].lec)}</td><td>${esc(CALC[k].name)}</td><td>${r ? r.done + ' done, ' + Math.round(100 * r.good / Math.max(1, r.parts)) + '% on new numbers' : 'not started'}</td><td><button class="btn ghost" data-k="${k}">Start</button></td></tr>`; }).join('');
+    v.innerHTML = `<div class="card"><b>How a study round works</b><ol class="steps"><li>Study: read one worked solution in the lecturer's layout.</li><li>Recall: the solution is hidden. Write the steps from memory on paper, then compare.</li><li>Try: three new problems with different numbers, one after another, solved by you before you see any answer.</li></ol><p class="meta">When you have done a few types, use the mixed round. Mixing types is the closest practice to the real exam, because there nobody tells you which method to use.</p></div>
+    <div class="chips">${chips}</div><div class="card"><table><tr><th>Lecture</th><th>Problem type</th><th>Your status</th><th></th></tr>${rows}</table><div class="row" style="margin-top:12px"><button class="btn" id="mx">Mixed round (5 problems from this selection)</button></div></div>`;
+    v.querySelectorAll('.chip').forEach(b => b.onclick = () => { S.lec = b.dataset.l; study(); });
+    v.querySelectorAll('button[data-k]').forEach(b => b.onclick = () => stBegin(b.dataset.k));
+    $('#mx').onclick = () => { S.mix = true; S.mixN = 0; S.good = 0; S.total = 0; S.key = pick(studyKeys()); stNext(); S.stage = 'try'; study(); };
+    return;
+  }
+  const c = CALC[S.key];
+  const back = `<button class="btn ghost" id="bk">Back to the list</button>`;
+  const bindBack = () => { $('#bk').onclick = () => { S.stage = 'pick'; study(); }; };
+  if (S.stage === 'study'){
+    v.innerHTML = `<div class="card"><p class="meta">Step 1 of 3, Study · ${esc(c.lec)} · ${esc(c.name)} · ${esc(c.src)}</p><p class="q">${esc(S.worked.intro)}</p><div class="fb"><b>Worked solution</b>${stSolHtml(S.worked)}</div><p class="note">Read it slowly. For every line ask yourself why this step comes next, and which formula it uses. When you could explain it to a friend, continue.</p><div class="row"><button class="btn" id="go">I understand it, hide it</button>${back}</div></div>`;
+    $('#go').onclick = () => { S.stage = 'recall'; study(); }; bindBack(); return;
+  }
+  if (S.stage === 'recall'){
+    v.innerHTML = `<div class="card"><p class="meta">Step 2 of 3, Recall · ${esc(c.lec)} · ${esc(c.name)}</p><p class="q">${esc(S.worked.intro)}</p><div class="fb"><b>Now on a blank page, without looking:</b> write the full solution of this same problem, line by line, in the lecturer's layout (data, formula with numbers, interval or result, interpretation sentence). Give yourself about 3 minutes. Then press reveal and compare line by line.</div><div class="row" style="margin-top:12px"><button class="btn" id="rv">Reveal and compare</button>${back}</div><div id="rvs"></div></div>`;
+    $('#rv').onclick = () => { $('#rvs').innerHTML = `<div class="fb"><b>Worked solution</b>${stSolHtml(S.worked)}</div><p class="note">Which line did you miss or get wrong? Write that line on a small error list. If you missed more than one line, press Study again and repeat the recall.</p><div class="row"><button class="btn" id="again">I missed a lot, study it again</button><button class="btn" id="ok">I got it, give me new numbers</button></div>`; $('#again').onclick = () => { S.stage = 'study'; study(); }; $('#ok').onclick = () => { S.stage = 'try'; S.i = 1; stNext(); study(); }; }; bindBack(); return;
+  }
+  if (S.stage === 'try'){
+    const t = S.task; const head = S.mix ? `Mixed round, problem ${S.mixN + 1} of 5 (type hidden until you check)` : `Step 3 of 3, New numbers ${S.i} of 3 · ${esc(c.lec)} · ${esc(c.name)}`;
+    v.innerHTML = `<div class="card"><p class="meta">${head}</p><p class="q">${esc(t.intro)}</p><div id="parts">${partsHtml(t, 's', S.checked)}</div><div class="row"><button class="btn" id="chk" ${S.checked ? 'disabled' : ''}>Check my answers</button><button class="btn ghost" id="sk">Give up, show solution</button>${back}</div><div id="sol"></div><p class="note">Solve it on paper first, then type your results. Do not look at the worked example above.</p></div>`;
+    const fin = (good) => { S.checked = true; S.good += good; S.total += t.parts.length; t.parts.forEach((p, i) => { const el = $('#s' + i); if (el) el.disabled = true; }); $('#chk').disabled = true;
+      const last = S.mix ? S.mixN >= 4 : S.i >= 3; const nm = S.mix ? `<div class="meta">This was: ${esc(CALC[S.key].lec + ' ' + CALC[S.key].name)}</div>` : '';
+      $('#sol').innerHTML = `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b> ${good === t.parts.length ? '' : 'Find the first line where your solution differs from this one.'}</div>${nm}<div class="fb"><b>Worked solution</b>${stSolHtml(t)}</div><div class="row"><button class="btn" id="nx">${last ? 'Finish' : 'Next problem'}</button></div>`;
+      $('#nx').onclick = () => { if (S.mix){ const r = store.study.mixed || { done:0, good:0, parts:0 }; r.good += good; r.parts += t.parts.length; store.study.mixed = r; save(); if (last){ r.done++; save(); S.stage = 'done'; } else { S.mixN++; S.key = pick(studyKeys()); stNext(); } } else { stMark(false); if (last){ stMark(true); S.stage = 'done'; } else { S.i++; stNext(); } } study(); }; };
+    $('#chk').onclick = () => { let good = 0; t.parts.forEach((p, i) => { const ok = okPart(p, parseNum($('#s' + i).value)); if (ok) good++; $('#srow' + i).className = 'part ' + (ok ? 'ok' : 'no'); $('#sm' + i).textContent = ok ? '✓' : '✗'; }); fin(good); };
+    $('#sk').onclick = () => fin(0);
+    $('#parts').onkeydown = e => { if (e.key === 'Enter' && !S.checked) $('#chk').click(); };
+    bindBack(); return;
+  }
+  if (S.stage === 'done'){
+    const nxt = studyKeys(); const idx = nxt.indexOf(S.key); const nk = !S.mix && idx >= 0 && idx < nxt.length - 1 ? nxt[idx + 1] : null;
+    v.innerHTML = `<div class="card"><b>${S.mix ? 'Mixed round finished' : 'Type finished: ' + esc(c.name)}</b><p class="q">You got ${S.good} of ${S.total} parts right on new numbers.</p><p class="note">${S.good / Math.max(1, S.total) >= 0.8 ? 'Good. Come back to this type tomorrow without looking at the example first (spacing). Tomorrow, start with the mixed round.' : 'Not yet stable. Repeat the recall step once more tonight, and again tomorrow morning.'}</p><div class="row">${nk ? `<button class="btn" id="nk">Next type: ${esc(CALC[nk].name)}</button>` : ''}<button class="btn ghost" id="mx2">Mixed round</button>${back}</div></div>`;
+    if (nk) $('#nk').onclick = () => stBegin(nk);
+    $('#mx2').onclick = () => { S.mix = true; S.mixN = 0; S.good = 0; S.total = 0; S.key = pick(studyKeys()); stNext(); S.stage = 'try'; study(); }; bindBack();
+  }
 }
 
 /* ---------- Mock midterm ---------- */
@@ -1279,7 +1568,7 @@ function progress(){
   <p class="note">Progress is kept in this browser when storage is available. If it resets, the summary above is your backup.</p>`;
   $('#sum').value = summaryText();
   $('#cp').onclick = () => { const t = $('#sum'); t.select(); const done = ok => { $('#cp').textContent = ok ? 'Copied' : 'Text selected, press Ctrl C or Cmd C'; }; try { navigator.clipboard.writeText(t.value).then(() => done(true), () => done(false)); } catch (e) { done(false); } };
-  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm){ store = { mc:{}, calc:{}, mocks:[] }; save(); P.queue = []; progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
+  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm){ store = { mc:{}, calc:{}, mocks:[], study:{} }; save(); P.queue = []; progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
   $('#wk').onclick = () => { P.topic = 'ALL'; P.weakFirst = true; buildQueue(); P.queue = P.queue.filter(q => store.mc[q.id] && store.mc[q.id].last === 0); tab = 'practice'; renderTabs(); practice(); };
 }
 function summaryText(){
