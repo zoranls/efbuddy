@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>EF Buddy</title>
     <style>
-        :root { --o: 1.9s; } /* page intro starts as the splash fades out */
+        :root { --o: 0s; } /* page intro plays right away behind the splash */
         html {
             height: 100%;
             -webkit-text-size-adjust: 100%;
@@ -433,9 +433,9 @@
             justify-content: center;
             padding: 24px;
             box-sizing: border-box;
-            background: rgba(14, 14, 16, 0.8);
-            -webkit-backdrop-filter: blur(22px) saturate(140%);
-            backdrop-filter: blur(22px) saturate(140%);
+            background: rgba(14, 14, 16, 0.7);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            backdrop-filter: blur(14px) saturate(140%);
             animation: splash-out 0.7s ease 2.1s forwards;
         }
         @keyframes splash-out {
