@@ -112,15 +112,14 @@
                 filter: blur(0);
             }
         }
-        .container > h1,
-        .container > p,
+        .container > .lead,
         .button-group > .btn,
         .container > .status,
+        .container > .schedule,
         .container > .footer {
             animation: intro-item 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
         }
-        .container > h1 { animation-delay: 0.35s; }
-        .container > p { animation-delay: 0.5s; }
+        .container > .lead { animation-delay: 0.4s; }
         .button-group > .btn:nth-child(1) { animation-delay: 0.65s; }
         .button-group > .btn:nth-child(2) { animation-delay: 0.75s; }
         .button-group > .btn:nth-child(3) { animation-delay: 0.85s; }
@@ -142,27 +141,26 @@
         }
         .button-group > .btn.btn-done { animation-name: intro-item-done; }
         .container > .status { animation-delay: 1.15s; }
-        .container > .footer { animation-delay: 1.25s; }
+        .container > .schedule { animation-delay: 1.3s; }
+        .container > .footer { animation-delay: 1.45s; }
         @media (prefers-reduced-motion: reduce) {
             .container,
             .container > h1,
             .container > p,
             .button-group > .btn,
             .container > .status,
+            .container > .schedule,
             .container > .footer { animation: none; }
         }
-        h1 {
+        /* Lead line: the old welcome heading's look, scaled down to an H2. */
+        .lead {
             color: #ffffff;
-            /* No default top margin, so the content is optically centred
-               inside the panel (equal space above and below). */
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-        }
-        p {
-            color: #a1a1aa;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            margin: 0 0 30px;
+            font-size: 1.4rem;
+            text-wrap: balance;
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
         }
         .button-group {
             display: flex;
@@ -250,6 +248,100 @@
         .btn-disabled:hover::before { transform: translateX(-120%); }
         @media (prefers-reduced-motion: reduce) {
             .btn, .btn::before { transition: none; }
+        }
+
+        /* Upcoming exams: one liquid glass panel under the status line. */
+        .schedule {
+            --tint: 147, 197, 253;
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            margin-top: 28px;
+            padding: 18px 18px 14px;
+            text-align: left;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.02) 100%),
+                radial-gradient(120% 90% at 50% 130%, rgba(var(--tint), 0.22) 0%, rgba(var(--tint), 0.05) 60%, transparent 100%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            backdrop-filter: blur(14px) saturate(160%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+                inset 0 0 24px rgba(var(--tint), 0.08),
+                0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+        .schedule-title {
+            margin: 0 0 10px 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #a1a1aa;
+        }
+        .schedule ul { list-style: none; margin: 0; padding: 0; }
+        .exam {
+            --c: 161, 161, 170;
+            display: grid;
+            grid-template-columns: 46px 1fr auto;
+            align-items: center;
+            gap: 14px;
+            padding: 9px 8px;
+            border-radius: 14px;
+            transition: background 0.2s ease;
+        }
+        .exam + .exam { border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .exam:hover { background: rgba(255, 255, 255, 0.04); }
+        .exam-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            border: 1px solid rgba(var(--c), 0.35);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02)),
+                rgba(var(--c), 0.14);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+            line-height: 1;
+        }
+        .exam-date b { font-size: 1.15rem; color: #fff; font-weight: 700; }
+        .exam-date i {
+            margin-top: 3px;
+            font-style: normal;
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(var(--c), 1);
+            font-weight: 700;
+        }
+        .exam-main { min-width: 0; }
+        .exam-name { font-size: 0.98rem; font-weight: 600; color: #f4f4f5; }
+        .exam-sub { margin-top: 2px; font-size: 0.8rem; color: #8b8b94; }
+        .exam-chip {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: rgba(var(--c), 1);
+            background: rgba(var(--c), 0.12);
+            border: 1px solid rgba(var(--c), 0.25);
+        }
+        .exam-chip.soon { background: rgba(var(--c), 0.22); }
+        .schedule-note {
+            margin: 10px 6px 0;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.78rem;
+            color: #71717a;
+        }
+        @media (max-width: 420px) {
+            .exam { grid-template-columns: 42px 1fr; }
+            .exam-chip { grid-column: 2; justify-self: start; }
         }
         .footer {
             margin-top: 36px;
@@ -380,8 +472,7 @@
 <body>
 
     <div class="container">
-        <h1>Welcome to EF Buddy</h1>
-        <p>Please choose what you wanna learn &amp; practice:</p>
+        <h2 class="lead">Please choose what you wanna learn &amp; practice:</h2>
         
         <div class="button-group">
             <span class="btn btn-disabled" aria-disabled="true" title="Coming soon">Math</span>
@@ -393,11 +484,55 @@
 
         <div class="status"><span class="status-clock" aria-hidden="true"></span>OM scheduled</div>
 
+        <section class="schedule" aria-label="Upcoming exams">
+            <h3 class="schedule-title">Upcoming exams</h3>
+            <ul id="exam-list"></ul>
+            <p class="schedule-note">Math and Operations Management final exam dates are not published yet.</p>
+        </section>
+
         <div class="footer">
             <span class="footer-brand">SEB LU <span class="footer-sep">|</span> International Business</span>
             <span class="footer-note">More courses to come...</span>
         </div>
     </div>
 
+
+    <script>
+    (function () {
+        var C = { sa: '110, 231, 183', math: '147, 197, 253', om: '252, 211, 77', mkt: '196, 181, 253' };
+        // Source: Canvas syllabi and course info (Ljubljana time, UTC+1 in winter).
+        var EXAMS = [
+            { c: 'sa',   n: 'Statistical Analysis', t: 'Midterm 1', d: '2026-11-13T13:00:00+01:00', time: '13:00' },
+            { c: 'math', n: 'Mathematics',          t: 'Midterm 1', d: '2026-11-18T17:00:00+01:00', time: '17:00' },
+            { c: 'om',   n: 'Operations Management', t: 'Midterm', d: '2026-11-23T17:00:00+01:00', time: '17:00' },
+            { c: 'mkt',  n: 'Marketing',            t: 'Midterm 2', d: '2026-12-07T17:00:00+01:00', time: '17:00' },
+            { c: 'math', n: 'Mathematics',          t: 'Midterm 2', d: '2026-12-15T18:00:00+01:00', time: '18:00' },
+            { c: 'sa',   n: 'Statistical Analysis', t: 'Midterm 2', d: '2026-12-18T13:00:00+01:00', time: '13:00' },
+            { c: 'mkt',  n: 'Marketing',            t: 'Midterm 3', d: '2027-01-15T13:00:00+01:00', time: '13:00' },
+            { c: 'sa',   n: 'Statistical Analysis', t: 'Final exam', d: '2027-01-22T09:00:00+01:00', time: 'or 5 Feb' }
+        ];
+        var MON = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+        var WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        var now = new Date();
+        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var ul = document.getElementById('exam-list');
+        EXAMS.forEach(function (e) {
+            var d = new Date(e.d);
+            if (now.getTime() > d.getTime() + 3 * 3600 * 1000) return;
+            var day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            var diff = Math.round((day - today) / 86400000);
+            var chip = diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : 'in ' + diff + ' days';
+            var li = document.createElement('li');
+            li.className = 'exam';
+            li.style.setProperty('--c', C[e.c]);
+            li.innerHTML =
+                '<div class="exam-date"><b>' + d.getDate() + '</b><i>' + MON[d.getMonth()] + '</i></div>' +
+                '<div class="exam-main"><div class="exam-name">' + e.n + '</div>' +
+                '<div class="exam-sub">' + e.t + ' &middot; ' + WD[d.getDay()] + ' &middot; ' + e.time + '</div></div>' +
+                '<span class="exam-chip' + (diff <= 3 ? ' soon' : '') + '">' + chip + '</span>';
+            ul.appendChild(li);
+        });
+    })();
+    </script>
 </body>
 </html>
