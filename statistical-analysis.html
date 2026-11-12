@@ -78,6 +78,11 @@ textarea{width:100%;min-height:200px;font-family:var(--mono);font-size:.85rem;ba
 .rad{display:inline-flex;align-items:stretch;vertical-align:middle}.rs{font-size:1.2em;line-height:1}
 .ri{border-top:1.5px solid #1b2a4a;padding:0 .15em;margin-top:.12em;align-self:flex-start}
 .cm{font:700 .85rem system-ui,sans-serif;border:1px solid #1b2a4a;border-radius:50%;display:inline-block;width:1.5em;height:1.5em;text-align:center;line-height:1.4em;margin-right:.4em}
+.pm{margin-top:14px}.pt{font:700 1rem system-ui,sans-serif;margin-bottom:4px}
+.mx{line-height:2;font-size:1.04rem}
+.hbf{margin:7px 0;white-space:nowrap}.hbt{table-layout:auto}.hbt td.fo{background:#fbf8ee;color:#1b2a4a;font-family:"Cambria Math",Cambria,"STIX Two Math","Times New Roman",serif;padding:8px 14px}.hbt td.fo sub{font-size:.7em;vertical-align:sub;line-height:0}.lh td{background:#efe9d6;color:#1b2a4a;padding:6px 8px;border-bottom:1.5px solid #1b2a4a}.hbl{margin:6px 0 0 18px;padding:0;font:.9rem system-ui,sans-serif}.hbl li{margin:3px 0}.ptab{width:100%;border-collapse:collapse}.ptab th{font:600 .78rem system-ui,sans-serif;color:#6b5f3a;text-align:left;padding:4px 8px;border-bottom:1.5px solid #1b2a4a}
+.ptab td{padding:8px;border-bottom:1px dashed #d9d2bd;vertical-align:middle}.ptab .wh{font:.92rem system-ui,sans-serif;width:30%}.ptab .fo{font-size:1.08rem}
+.lec{font:700 .75rem system-ui,sans-serif;border:1px solid #1b2a4a;border-radius:10px;padding:1px 7px}
 .paper sub{font-size:.7em;vertical-align:sub;line-height:0}
 .ans{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
 .ans span{border:2px solid #1b2a4a;border-radius:4px;padding:4px 10px;background:#fffdf5;color:#1b2a4a;font:600 .95rem "Cambria Math",Cambria,serif}
@@ -774,6 +779,7 @@ CALC.quota = { name: 'Quota sampling: quotas from ratios', src: 'Tutorial 4, Exe
       steps: [
         `A quota is the number of units with precisely defined characteristics that must be in the sample. The characteristics used: year of study and gender.`,
         `The year ratio ${y.join(':')} has ${sy} parts, one part = ${n} / ${sy} = ${unit} students.`,
+        `The gender ratio ${g.join(':')} has ${g[0]} + ${g[1]} = ${sg} parts, so in every year the male share is ${g[0]} / ${sg} and the female share is ${g[1]} / ${sg}. That is why the same ${sg} is under every fraction below.`,
         ...lines,
         `Check: the six quotas add up to ${n}. Quota sampling is non random, so the precision of the estimates cannot be assessed.`
       ]
@@ -830,6 +836,7 @@ CALC.cimean = { name: 'Confidence interval for a mean', src: 'Lecture 5, Example
     const c = crit(a, n, false); const D = c * se;
     let alt;
     if (ambiguous(n)){ const zc = Stat.inv(1 - a / 2); alt = { c: zc, D: zc * se, lo: yb - zc * se, hi: yb + zc * se }; }
+    else if (n >= 100){ const tr = Stat.tinv(1 - a / 2, lowerRow(n - 1)); alt = { c: tr, D: tr * se, lo: yb - tr * se, hi: yb + tr * se }; }
     const useT = n < 100;
     return {
       intro: `${N ? `From a population of N = ${N} units a simple random sample of n = ${n} units was drawn without replacement.` : `A simple random sample of n = ${n} units was drawn.`} The sample mean of ${o.what} is ȳ = ${yb} and the sample standard deviation is s = ${s}. Build the ${lvlTxt(L)} confidence interval for the population mean μ. ${ambiguous(n) ? 'Either the t or the z value is accepted for a sample of this size.' : (useT ? 'Use the t distribution.' : 'The sample is large, so z may be used.')}`,
@@ -846,7 +853,7 @@ CALC.cimean = { name: 'Confidence interval for a mean', src: 'Lecture 5, Example
     };
   } };
 
-const T_ROWS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,40,50,60,80,100,120,200];
+const T_ROWS = [...Array.from({ length: 100 }, (_, i) => i + 1), 110, 120, 130, 140, 150, 200, 300, 400, 500, 800]; /* rows of the handbook t table, SAH pages 67 to 70 */
 const lowerRow = df => { let r = T_ROWS[0]; T_ROWS.forEach(x => { if (x <= df) r = x; }); return r; };
 CALC.citotal = { name: 'Confidence interval for mean and total', src: 'Example midterm calculation task, Lecture 5 Example 5.2, Tutorial 5 Exercise 1a', lec: 'L05',
   origs: [
@@ -1155,8 +1162,187 @@ CALC.printout = { name: 'Read a computer printout (stat.desc)', src: 'Example mi
     };
   } };
 
-const CALC_ORDER = ['desc', 'printout', 'normal', 'normalcv', 'tyres', 'budget', 'sampling', 'quota', 'se', 'cimean', 'citotal', 'ciwidth', 'ciprop', 'sizeprop', 'sizemean', 'strat', 'grouped'];
+
+/* L01: quantiles from a frequency distribution, handbook p. 11 to 12 (Tutorial 1, Exercise 2d) */
+CALC.quantile = { name: 'Quantiles from a frequency distribution (Q1, D9, percentiles)', src: 'Tutorial 1 Exercise 2d, Handbook p. 11 to 12', lec: 'L01',
+  origs: [{ label: 'Tutorial 1, Exercise 2 (46 incomes, five classes), first quartile and ninth decile', o: { edges: [0.5, 20.5, 40.5, 60.5, 80.5, 100.5], f: [7, 30, 7, 1, 1], ps: [0.25, 0.9], what: 'annual net income', unit: 'thousand euros' } }],
+  gen(o) {
+    if (!o){
+      const w = pick([10, 20, 25]), st = pick([0.5, 10.5, 100.5]); const edges = [0, 1, 2, 3, 4, 5].map(i => st + i * w);
+      const f = [0, 1, 2, 3, 4].map(() => 3 + Math.floor(Math.random() * 25));
+      const pool = [0.1, 0.25, 0.5, 0.75, 0.9]; const p1 = pick(pool); let p2 = pick(pool); if (p2 === p1) p2 = p1 === 0.9 ? 0.25 : 0.9;
+      o = { edges, f, ps: [p1, p2], what: 'the measured value', unit: 'units' };
+    }
+    const { edges, f, ps } = o; const N = f.reduce((a, b) => a + b, 0); const F = []; f.reduce((a, b, i) => (F[i] = a + b), 0);
+    const res = ps.map(p => { const R = N * p + 0.5; let k = 0; while (F[k] < R) k++; const Fm = k ? F[k - 1] : 0; const w = edges[k + 1] - edges[k]; const y = edges[k] + (R - Fm) / f[k] * w; return { p, R, k, Fm, w, y }; });
+    const cls = f.map((v, i) => `${edges[i]} to ${edges[i + 1]}: f = ${v}, F = ${F[i]}`).join('; ');
+    return {
+      intro: `Frequency distribution of ${o.what} (${o.unit}), classes with boundaries ${edges.join(', ')} and frequencies ${f.join(', ')} (N = ${N}). Estimate ${res.map(r => qname(r.p)).join(" and ")}.`,
+      parts: res.flatMap(r => [
+        { label: `Rank R_P for P = ${r.p}`, ans: r.R, kind: 'abs', tol: 0.011, dec: 2 },
+        { label: `${qname(r.p)} (y_P)`, ans: r.y, kind: 'rel', tol: 0.004, dec: 2 }
+      ]),
+      steps: [
+        `Frequency table: ${cls}. N = ${N}.`,
+        ...res.flatMap(r => [
+          `${qname(r.p)}: quantile rank P = ${r.p}. Rank: R_P = N · P + 0.5 = ${N} · ${r.p} + 0.5 = ${fm(r.R, 2)}`,
+          `Quantile class: the class with F_−1 < R_P ≤ F_0, here ${fm(r.Fm, 0)} < ${fm(r.R, 2)} ≤ ${fm(F[r.k], 0)}. So y_0,l = ${edges[r.k]}, w_0 = ${fm(r.w, 0)}, f_0 = ${f[r.k]}, F_−1 = ${fm(r.Fm, 0)}`,
+          `y_P = y_0,l + (R_P − F_−1) / f_0 · w_0 = ${edges[r.k]} + (${fm(r.R, 2)} − ${fm(r.Fm, 0)}) / ${f[r.k]} · ${fm(r.w, 0)} = ${fm(r.y, 2)}`,
+          `Based on the sample, about ${fm(r.p * 100, 0)}% of the units have a value of at most ${fm(r.y, 2)} ${o.unit}.`
+        ])
+      ],
+      r: [`quantile(data$Y, p = ${ps[0]})`, 'Handbook p. 11 (single values) and p. 12 (frequency distribution)']
+    };
+  } };
+
+const CALC_ORDER = ['mid1', 'desc', 'quantile', 'printout', 'mid2', 'mid5', 'mid6', 'mid7', 'mid8', 'normal', 'normalcv', 'tyres', 'budget', 'sampling', 'quota', 'se', 'mid3', 'mid9', 'mid10', 'mid4', 'cimean', 'citotal', 'ciwidth', 'ciprop', 'sizeprop', 'sizemean', 'strat', 'grouped'];
 const MOCK_CALC = ['citotal', 'citotal', 'cimean', 'ciprop', 'sizeprop', 'sizemean', 'strat'];
+
+/* ---------------- Example midterm exam 1 (Canvas, 30 Oct 2025): composite tasks, exam numbers by default ---------------- */
+const cdf4 = z => Math.round(Stat.cdf(z) * 1e4) / 1e4;
+function composeMid(blocks){
+  const parts = [], steps = [], sk = [], intro = [];
+  blocks.forEach(b => {
+    intro.push(`${b.tag}: ${b.t.intro}`);
+    (b.t.parts || []).forEach(p => parts.push({ ...p, label: `${b.tag}: ${p.label}` }));
+    steps.push(`Example midterm exam, ${b.tag}`); b.t.steps.forEach(s => steps.push(s));
+    (b.t.sk || []).forEach(s => sk.push(s));
+    (b.extra || []).forEach(p => parts.push(p));
+    (b.extraSteps || []).forEach(s => steps.push(s));
+  });
+  return { intro: intro.join('  '), parts, steps, sk };
+}
+const EXAM_DEF = 'Numbers of the example exam';
+const RAND_ORIG = [{ label: 'Random numbers, same question types', plain: true, o: { rand: true } }];
+
+const EXQ = { lec: null, calcOnly: true, defLabel: EXAM_DEF, origs: RAND_ORIG };
+const drillO = rand => { if (!rand) return { mu: 1400, cv: 0.125, N: 10000, a: 1300, b: 1600, q: 25 }; const mu = pick([1400, 500, 166, 2000]), cv = pick([0.1, 0.125, 0.15, 0.2]), s = mu * cv; return { mu, cv, N: pick([5000, 10000, 20000]), a: Math.round(mu - pick([0.5, 0.8, 1.2]) * s), b: Math.round(mu + pick([0.8, 1.2, 1.6]) * s), q: pick([10, 20, 25]) }; };
+const drillIntro = d => `The service life of first quality drill bits is normally distributed with an average of ${d.mu} drillings and a coefficient of variation of ${+(d.cv * 100).toFixed(1)}%. In one production run, ${d.N} first quality drill bits are produced.`;
+const sgP = d => ({ label: 'Standard deviation σ = CV · mean', ans: d.cv * d.mu, kind: 'rel', tol: 0.003, dec: 3 });
+const sgStep = d => `Y ~ N(μ, σ). The CV is given, so σ = CV · μ = ${d.cv} · ${d.mu} = ${fm(d.cv * d.mu, 3)}. Y ~ N(${d.mu}, ${fm(d.cv * d.mu, 3)}).`;
+const bellS = (cap, mu, sd, lo, hi, txt, marks) => [{ t: 'bell', cap, mu, sd, areas: [{ lo, hi, txt }], marks }];
+
+CALC.mid1 = { ...EXQ, lec: 'L01', name: 'Example midterm 1, Q2: missing mean on the printout (houses)', src: 'Example midterm exam 1, Question 2 (and 3)',
+  gen(o) {
+    const t = CALC.printout.gen(o && o.rand ? undefined : CALC.printout.origs[0].o);
+    return { intro: t.intro.replace(/ \(b\).*$/, ''), parts: [t.parts[0]], steps: [t.steps[0], t.steps.find(s => s.startsWith('a)')), t.steps.find(s => s.startsWith('Meaning of SE.mean')).replace('Meaning of SE.mean', 'Question 3 in the exam asks what SE.mean means. SE.mean')], sk: [] };
+  } };
+
+CALC.mid2 = { ...EXQ, lec: 'L02', name: 'Example midterm 1, Q5: share between μ − cσ and the mean', src: 'Example midterm exam 1, Question 5',
+  gen(o) {
+    const c1 = o && o.rand ? pick([1.2, 1.5, 1.7, 2.1]) : 1.7, F1 = cdf4(-c1), P1 = Math.round((0.5 - F1) * 1e4) / 1e4;
+    return { intro: `What proportion of the values of a normally distributed variable is not more than ${c1} standard deviations below the arithmetic mean and at the same time not above the arithmetic mean?`,
+      parts: [{ label: 'Proportion of the values', ans: P1, kind: 'abs', tol: 0.0006, dec: 4 }],
+      steps: [`① z_a = −${c1.toFixed(2)} (the lower limit is ${c1} standard deviations below the mean) and z_b = 0 (the mean itself). No numbers for μ or σ are needed.`, `② F(z_b) = F(0) = 0.5000, F(z_a) = F(−${c1.toFixed(2)}) = ${F1.toFixed(4)}. P = F(z_b) − F(z_a) = 0.5000 − ${F1.toFixed(4)} = ${P1.toFixed(4)}.`, `③ ${(P1 * 100).toFixed(2)}% of the values lie between μ − ${c1}σ and μ.`],
+      sk: bellS(`The area between μ − ${c1}σ and the mean.`, 0, 1, -c1, 0, P1.toFixed(4), [{ x: -c1, txt: `μ − ${c1}σ` }]) };
+  } };
+
+CALC.mid5 = { ...EXQ, lec: 'L02', name: 'Example midterm 1, Q8: percentage below a value (drill bits)', src: 'Example midterm exam 1, Question 8',
+  gen(o) {
+    const d = drillO(o && o.rand), sg = d.cv * d.mu, z = z2((d.a - d.mu) / sg), F = cdf4(z), pct = F * 100;
+    return { intro: `${drillIntro(d)} What percentage of drill bits are used up before ${d.a} drillings?`,
+      parts: [sgP(d), { label: `Percentage of drill bits used up before ${d.a}`, ans: pct, kind: 'abs', tol: 0.06, dec: 2 }],
+      steps: [sgStep(d), `① z = (${d.a} − ${d.mu}) / ${fm(sg, 3)} = ${fm(z, 2)}.`, `② Left side, read F(z) straight from the table: F(${fm(z, 2)}) = ${F.toFixed(4)}.`, `③ ${fm(pct, 2)}% of the drill bits are used up before ${d.a} drillings.`],
+      sk: bellS('Percentage below the limit: left side, F(z) directly.', d.mu, sg, -1e9, d.a, F.toFixed(4), [{ x: d.a, txt: String(d.a) }]) };
+  } };
+
+CALC.mid6 = { ...EXQ, lec: 'L02', name: 'Example midterm 1, Q9: number of drill bits above a value', src: 'Example midterm exam 1, Question 9',
+  gen(o) {
+    const d = drillO(o && o.rand), sg = d.cv * d.mu, z = z2((d.b - d.mu) / sg), F = cdf4(z), P = Math.round((1 - F) * 1e4) / 1e4, n = d.N * P;
+    return { intro: `${drillIntro(d)} How many drill bits work for at least ${d.b} drillings?`,
+      parts: [sgP(d), { label: `Number of drill bits that last at least ${d.b}`, ans: n, kind: 'abs', tol: Math.max(4, d.N * 0.0004), dec: 0 }],
+      steps: [sgStep(d), `① z = (${d.b} − ${d.mu}) / ${fm(sg, 3)} = ${fm(z, 2)}.`, `② Right side: P(Y ≥ ${d.b}) = 1 − F(${fm(z, 2)}) = 1 − ${F.toFixed(4)} = ${P.toFixed(4)}.`, `③ Number of drill bits = N · P = ${d.N} · ${P.toFixed(4)} = ${fm(n, 1)}, about ${Math.round(n)} drill bits.`],
+      sk: bellS('Units that are at least the limit: right side, 1 − F(z), then multiply by N.', d.mu, sg, d.b, 1e9, P.toFixed(4), [{ x: d.b, txt: String(d.b) }]) };
+  } };
+
+CALC.mid7 = { ...EXQ, lec: 'L02', name: 'Example midterm 1, Q10: value reached by the best share, and its name', src: 'Example midterm exam 1, Question 10',
+  gen(o) {
+    const d = drillO(o && o.rand), sg = d.cv * d.mu, p = 1 - d.q / 100, zq = tz(p), val = d.mu + zq * sg;
+    return { intro: `${drillIntro(d)} At least how many drillings can withstand the ${d.q}% of the most durable drill bits? What do we call such a calculated parameter?`,
+      parts: [sgP(d), { label: `Value reached by the best ${d.q}%`, ans: val, kind: 'abs', tol: 2.1, dec: 2 }],
+      steps: [sgStep(d), `① The best ${d.q}% lie ABOVE a, so ${100 - d.q}% lie below it: quantile rank P = F(z_a) = ${p.toFixed(2)}.`, `② Table, closest entry to ${p.toFixed(2)}: z_a = ${fm(zq, 2)}.`, `③ a = μ + z_a · σ = ${d.mu} + ${fm(zq, 2)} · ${fm(sg, 3)} = ${fm(val, 2)}.`, `Name: ${qname(p)}. Careful, "quantile rank" is ${p.toFixed(2)} and the value is the quantile; always say which type (quartile, decile, percentile).`],
+      sk: bellS('The best share lies on the RIGHT. The table works from the left, so the left part is the rest.', d.mu, sg, val, 1e9, `${d.q}%`, [{ x: val, txt: `a = ${fm(val, 1)}` }]) };
+  } };
+
+CALC.mid8 = { ...EXQ, lec: 'L02', name: 'Example midterm 1, Q14: cut off of the highest values and its name', src: 'Example midterm exam 1, Question 14',
+  gen(o) {
+    const top = o && o.rand ? pick([75, 90, 80]) : 75, p = 1 - top / 100, zq = tz(p), Fq = cdf4(zq);
+    return { intro: `What is the name of, and how is calculated, the highest value of a normally distributed variable that is less than ${top}% of the highest values?`,
+      parts: [{ label: 'z value of the cut off (rounded to two decimals)', ans: zq, kind: 'abs', tol: 0.006, dec: 2 }],
+      steps: [`The cut off has ${top}% of the values above it and ${100 - top}% below it. ① Quantile rank P = ${p.toFixed(2)}, so F(z_a) = ${p.toFixed(2)}.`, `② Table: the closest entry is F(${fm(zq, 2)}) = ${Fq.toFixed(4)}, so z_a = ${fm(zq, 2)}.`, `③ The value is a = μ ${zq < 0 ? '−' : '+'} ${Math.abs(zq).toFixed(2)} · σ. Name: ${qname(p)}.`, 'Do not answer with just z or just the rank: the exam options mix the rank, the z value and the value μ + zσ.'],
+      sk: bellS('The cut off has the share P of the values to its LEFT.', 0, 1, -1e9, zq, p.toFixed(2), [{ x: zq, txt: `z = ${fm(zq, 2)}` }]) };
+  } };
+
+const tyreO = rand => { if (!rand) return { N: 1200000, n: 2400, x: 1488, L: 0.95, mode: 'two', what: 'drivers who changed to winter tyres in time' }; const n = pick([400, 1000, 2400]); return { N: pick([50000, 200000, 1200000]), n, x: Math.round(n * pick([0.3, 0.45, 0.62, 0.7])), L: pick([0.9, 0.95, 0.99]), mode: 'two', what: 'units with the property' }; };
+
+CALC.mid3 = { ...EXQ, lec: 'L05', name: 'Example midterm 1, Q11: sample size for a proportion (winter tyres)', src: 'Example midterm exam 1, Question 11',
+  gen(o) {
+    const rand = o && o.rand, t = CALC.sizeprop.gen(rand ? undefined : { p0: 0.66, rel: 0.03, abs: null, N: 1200000, L: 0.95 });
+    if (!rand) t.intro = 'The Auto Moto Association assumes that only 66% of all 1,200,000 drivers change their tyres to winter tyres in time. How many drivers must be selected in a random sample without replacement so that the estimate does not deviate by more than 3% from the assumed value of the parameter at a risk level of 0.05?';
+    return t;
+  } };
+
+CALC.mid9 = { ...EXQ, lec: 'L05', name: 'Example midterm 1, Q12: interval for a proportion (winter tyres)', src: 'Example midterm exam 1, Question 12',
+  gen(o) {
+    const rand = o && o.rand, od = tyreO(rand), t = CALC.ciprop.gen(od), lo = t.parts[2].ans, hi = t.parts[3].ans;
+    const intro = rand ? t.intro.replace(/ and for the number.*$/, '.') : 'The Auto Moto Association randomly selected 2400 of 1,200,000 drivers and found that 38% of them did not change their tyres in time. With a confidence level of 0.95, estimate the percentage of drivers who changed their tyres on time.';
+    return { intro, parts: t.parts.slice(0, 4),
+      steps: [t.steps[0], ...(rand ? [] : ['38% did not change in time, so the share who did is p = 1 − 0.38 = 0.62 (that is 1488 of 2400).']), t.steps[1], t.steps[2], t.steps[3], t.steps[4], `Percentage: ${fm(lo, 2)}% < Π% < ${fm(hi, 2)}%. Round outward: ${(Math.floor(lo * 10) / 10).toFixed(1)} < Π% < ${(Math.ceil(hi * 10) / 10).toFixed(1)}.`, `Based on the sample, we estimate with a confidence level of ${od.L} that the percentage is between ${(Math.floor(lo * 10) / 10).toFixed(1)}% and ${(Math.ceil(hi * 10) / 10).toFixed(1)}%.`], sk: t.sk };
+  } };
+
+CALC.mid10 = { ...EXQ, lec: 'L05', name: 'Example midterm 1, Q13: margin of error for the proportion (winter tyres)', src: 'Example midterm exam 1, Question 13',
+  gen(o) {
+    const rand = o && o.rand, od = tyreO(rand), t = CALC.ciprop.gen(od), D = (t.parts[3].ans - t.parts[2].ans) / 200;
+    return { intro: rand ? t.intro.replace(/ and for the number.*$/, ' What is the margin of error?') : 'Same data as Question 12 (2400 of 1,200,000 drivers, 38% did not change tyres in time). What is the margin of error at a confidence level of 0.95 for the proportion of drivers who changed their tyres on time?',
+      parts: [t.parts[1], { label: 'Margin of error D as a proportion', ans: D, kind: 'abs', tol: 0.0003, dec: 4 }],
+      steps: [t.steps[1], t.steps[2], t.steps[3], `The margin of error is D = z · se(p) = ${D.toFixed(4)}. It is the half width of the interval.`], sk: t.sk };
+  } };
+
+CALC.mid4 = { name: 'Example midterm 1, Q16: ski equipment fair, calculation task (5 points)', src: 'Example midterm exam 1, Question 16', lec: 'L05', calcOnly: true, defLabel: EXAM_DEF, origs: RAND_ORIG,
+  gen(o) {
+    const rand = o && o.rand;
+    const base = CALC.citotal.gen(rand ? undefined : CALC.citotal.origs[0].o);
+    const t = composeMid([{ tag: 'Q16', t: base }]);
+    if (!rand){
+      const lt = base.parts.find(p => p.label === 'Lower limit of the total'), ut = base.parts.find(p => p.label === 'Upper limit of the total');
+      t.steps.push(`Note on the official solution in the example exam PDF: with t = 2.6006 it prints the total as 290,758 < Y_tot < 342,632. Recomputing gives an upper limit of about ${Math.round(ut.alt).toLocaleString('en-US')}, so 342,632 looks like a typo in the PDF. With the z value the limits are about ${Math.round(lt.ans).toLocaleString('en-US')} and ${Math.round(ut.ans).toLocaleString('en-US')}. Both versions are accepted here.`);
+    }
+    return t;
+  } };
+
+/* Handbook (SAH) pages for every type, read from the scans of the original booklet */
+const HB = {
+  mid1: ['p. 13: mean = sum / n', 'p. 24: what SE.mean is (Q3)'],
+  mid2: ['p. 21 to 22: standardize z, F(0) = 0.5', 'p. 65: F(−1.70)'],
+  mid5: ['p. 18: σ = CV · μ', 'p. 21 to 22: z = (a − μ) / σ', 'p. 65 to 66: F(z)'],
+  mid6: ['p. 18: σ = CV · μ', 'p. 21 to 22: right side 1 − F(z)', 'p. 66: F(z)'],
+  mid7: ['p. 18: σ = CV · μ', 'p. 22: a = μ + z · σ', 'p. 12: names Q, D, P', 'p. 65 to 66: find z'],
+  mid8: ['p. 12: names Q, D, P', 'p. 65: negative z rows'],
+  mid3: ['p. 26: n_r and n = n_r / (1 + n_r / N), relative margin', 'p. 64: z'],
+  mid9: ['p. 25: p, se(p), interval for the proportion', 'p. 64: z'],
+  mid10: ['p. 25: se(p) and D = z · se', 'p. 64: z'],
+  mid4: ['p. 25: ȳ, se(ȳ), Y_s = N · ȳ and the interval', 'p. 64: z, p. 67 to 70: t (df 255, first lower row 200)'],
+  desc: ['p. 9 to 10: classes, boundaries (integer data ± 0.5), midpoint, f, F, f°, F°', 'p. 13: mean, median, mode', 'p. 18: range, variance, CV (population form) and p. 23: sample variance with n − 1'],
+  quantile: ['p. 11: quantile of single values, R_P = N · P + 0.5', 'p. 12: quantile class and y_P for a frequency distribution, names Q, D, P'],
+  printout: ['p. 23: ȳ and s² (n − 1)', 'p. 24: se(ȳ) is the estimated standard error', 'p. 25: interval ȳ ± t · se, df = n − 1; p. 18: CV', 'p. 67 to 70: t table'],
+  normal: ['p. 21: P(Y ≤ a), P(a < Y ≤ b), P(Y > b)', 'p. 22: z = (y − μ) / σ, a = μ + z · σ', 'p. 65 (negative z) and p. 66 (positive z): F(z)', 'p. 12: names Q, D, P'],
+  normalcv: ['p. 18: CV = σ / μ, so σ = CV · μ', 'p. 21 to 22: events, standardization, quantile', 'p. 65 to 66: F(z)'],
+  tyres: ['p. 18: CV = σ / μ', 'p. 21 to 22: events and standardization', 'p. 65 to 66: F(z)'],
+  budget: ['p. 21 to 22: events, a = μ + z · σ', 'p. 65 to 66: find F(z) closest to the share'],
+  sampling: ['p. 23: number of samples C(N, n) and N^n', 'p. 25: sampling fraction f = n / N', 'Inclusion probability and systematic step are not printed, know them'],
+  quota: ['p. 27: n_j = f · N_j, proportional allocation', 'Quota sampling itself is not in the handbook'],
+  se: ['p. 24: SE(ȳ) and se(ȳ)', 'p. 25: se(ȳ) = s / √n · √(1 − f)'],
+  cimean: ['p. 25: interval and se(ȳ) table, df = n − 1', 'p. 64: z, p. 67 to 70: t'],
+  citotal: ['p. 25: Y_s = N · ȳ and se(Y_s) = N · se(ȳ), same interval form', 'p. 64: z, p. 67 to 70: t (df = n − 1, first lower df)'],
+  ciwidth: ['p. 25 to 26: margin of error D = c · se', 'p. 64 and 67 to 70'],
+  ciprop: ['p. 25: p = n_a / n, se(p), N_a,s = N · p, se(N_a)', 'p. 64: z'],
+  sizeprop: ['p. 26: table n_r for proportion, absolute D or relative D°', 'p. 26: n = n_r / (1 + n_r / N)', 'p. 64: z'],
+  sizemean: ['p. 26: table n_r for mean, absolute D or relative D° (CV)', 'p. 26: n = n_r / (1 + n_r / N)', 'p. 64: z'],
+  strat: ['p. 27: ȳ_str, var(ȳ_str), se, Y_str, n_j = f · N_j', 'p. 64 or 67 to 70: critical value'],
+  grouped: ['p. 10: midpoint, f, F', 'p. 23: ȳ and s² from a frequency distribution']
+};
+Object.keys(CALC).forEach(k => { const g = CALC[k].gen; CALC[k].gen = function (o) { const t = g.call(this, o); if (HB[k]) t.hb = HB[k]; (t.parts || []).forEach(p => { if (p.kind === 'rel' && p.dec !== undefined && p.ans) p.tol = Math.max(p.tol, 0.5 * Math.pow(10, -p.dec) / Math.abs(p.ans) + 1e-9); }); return t; }; });
+
 if (typeof module !== 'undefined') module.exports = { CALC, MOCK_CALC, CALC_ORDER };
 
 </script>
@@ -1174,13 +1360,13 @@ function save(){ try { localStorage.setItem(KEY, JSON.stringify(store)); } catch
 function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function rec(id, ok){ const r = store.mc[id] || { r:0, w:0 }; ok ? r.r++ : r.w++; r.last = ok ? 1 : 0; store.mc[id] = r; save(); }
 
-const TABS = [['study','Study'],['practice','Practice'],['calc','Calculation lab'],['mock','Mock midterm'],['sheet','Method sheet'],['progress','Progress']];
+const TABS = [['study','Study'],['practice','Practice'],['calc','Calculation lab'],['mock','Mock midterm'],['exam','Example exam 1'],['sheet','Method sheet'],['hb','Handbook guide'],['progress','Progress']];
 let tab = 'study';
 function renderTabs(){
   $('#tabs').innerHTML = TABS.map(([k, n]) => `<button role="tab" aria-selected="${k === tab}" data-k="${k}">${n}</button>`).join('');
   $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.k; renderTabs(); show(); });
 }
-function show(){ ({study, practice, calc, mock, sheet, progress})[tab](); }
+function show(){ ({study, practice, calc, mock, exam, sheet, hb: hbguide, progress})[tab](); }
 
 /* ---------- Practice ---------- */
 let P = { topic:'ALL', weakFirst:true, queue:[], i:0, done:false, sel:null, score:0, seen:0 };
@@ -1235,7 +1421,7 @@ function calc(){
   const chips = ['ALL', ...Object.keys(TOPICS)].map(k => { const n = k === 'ALL' ? CALC_ORDER.length : CALC_ORDER.filter(x => CALC[x].lec === k).length; return `<button class="chip" aria-pressed="${C.lec === k}" data-l="${k}">${k === 'ALL' ? 'All lectures' : k} (${n})</button>`; }).join('');
   const opts = calcKeys().map(k => `<option value="${k}" ${k === C.key ? 'selected' : ''}>${esc(CALC[k].lec + ' ' + CALC[k].name)}</option>`).join('');
   const ob = CALC[C.key].origs;
-  const og = ob ? `<select id="og" aria-label="Numbers"><option value="-1">Random numbers</option>${ob.map((x, i) => `<option value="${i}" ${C.orig === i ? 'selected' : ''}>Original: ${esc(x.label)}</option>`).join('')}</select>` : '';
+  const og = ob ? `<select id="og" aria-label="Numbers"><option value="-1">${esc(CALC[C.key].defLabel || 'Random numbers')}</option>${ob.map((x, i) => `<option value="${i}" ${C.orig === i ? 'selected' : ''}>${x.plain ? '' : 'Original: '}${esc(x.label)}</option>`).join('')}</select>` : '';
   const t = C.task;
   $('#view').innerHTML = `<div class="chips">${chips}</div><div class="card"><div class="row"><select id="ck" aria-label="Task type">${opts}</select><button class="btn ghost" id="nv">New variant</button><button class="btn ghost" id="rnd">Random type</button></div>
   ${og ? `<div class="row" style="margin-top:8px">${og}</div>` : ''}
@@ -1247,8 +1433,8 @@ function calc(){
   $('#view').querySelectorAll('.chip').forEach(b => b.onclick = () => { C.lec = b.dataset.l; const ks = calcKeys(); if (!ks.includes(C.key)) C.key = ks[0]; C.orig = -1; newTask(); calc(); });
   $('#ck').onchange = e => { C.key = e.target.value; C.orig = -1; newTask(); calc(); };
   if ($('#og')) $('#og').onchange = e => { C.orig = +e.target.value; newTask(); calc(); };
-  $('#nv').onclick = () => { C.orig = -1; newTask(); calc(); };
-  $('#rnd').onclick = () => { const ks = calcKeys(); C.key = pick(ks); C.orig = -1; newTask(); calc(); };
+  $('#nv').onclick = () => { C.orig = CALC[C.key].defLabel ? 0 : -1; newTask(); calc(); };
+  $('#rnd').onclick = () => { const ks = calcKeys(); C.key = pick(ks); C.orig = CALC[C.key].defLabel ? 0 : -1; newTask(); calc(); };
   $('#chk').onclick = () => checkCalc();
   $('#parts').onkeydown = e => { if (e.key === 'Enter') checkCalc(); };
   $('#show').onclick = () => { $('#sol').innerHTML = solHtml(t); };
@@ -1267,7 +1453,8 @@ function checkCalc(){
 
 /* ---------- Paper style math rendering ---------- */
 const STOP = ' \t/=·+;:→×<>';
-function mTok(s){ return esc(s).replace(/_([A-Za-z0-9]+)/g, '<sub>$1</sub>'); }
+function mTok(s){ return esc(s).replace(/_([A-Za-z0-9α-ωȳ\u0004\u0005]+)/g, (m, x) => '<sub>' + x.replace(/\u0004/g, '/').replace(/\u0005/g, '−1') + '</sub>'); }
+function mInline(s){ s = s.replace(/_−1/g, '_\u0005'); s = s.replace(/_([A-Za-zα-ω])\/(\d)/g, '_$1\u0004$2'); return mRender(s).replace(/[①②③]/g, m => '<span class="cm">' + m + '</span>'); }
 function mParse(s){
   const out = []; let i = 0;
   const matchParen = (k) => { let d = 0; for (let j = k; j < s.length; j++){ if (s[j] === '(') d++; else if (s[j] === ')'){ d--; if (d === 0) return j; } } return -1; };
@@ -1277,12 +1464,13 @@ function mParse(s){
       const ch = s[i];
       if (ch === '(') { const e = matchParen(i); if (e < 0) break; const inner = s.slice(i + 1, e); const ih = mRender(inner); h += '(' + ih + ')'; raw = ih; grp = (plain === '' && !any); plain += '('; i = e + 1; any = true; continue; }
       if (ch === '√') { i++; let sub; if (s[i] === '('){ const e = matchParen(i); if (e < 0){ sub = ''; } else { sub = mRender(s.slice(i + 1, e)); i = e + 1; } } else { let j = i; while (j < s.length && !STOP.includes(s[j]) && s[j] !== ')' && s[j] !== '(' && !(s[j] === ',' && !/\d/.test(s[j + 1] || '')) && s[j] !== '−') j++; sub = mTok(s.slice(i, j)); i = j; } h += '<span class="rad"><span class="rs">√</span><span class="ri">' + sub + '</span></span>'; plain += '√'; any = true; grp = false; continue; }
+      if (ch === '.' && !/\d/.test(s[i - 1] || '') && (i + 1 >= s.length || s[i + 1] === ' ')) break;
       if (ch === ')' || STOP.includes(ch)) break;
       if (ch === ',' && !(/\d/.test(s[i - 1] || '') && /\d/.test(s[i + 1] || ''))) break;
       if (ch === '−' && any && !/[\dA-Za-zα-ωȳ]/.test(s[i - 1] || '')) break;
       if (ch === '−' && any) break;
       if (ch === '<' || ch === '>') break;
-      let j = i; while (j < s.length && !STOP.includes(s[j]) && s[j] !== '(' && s[j] !== ')' && s[j] !== '√' && !(s[j] === ',' && !(/\d/.test(s[j - 1] || '') && /\d/.test(s[j + 1] || ''))) && !(s[j] === '−' && j > i)) j++;
+      let j = i; while (j < s.length && !STOP.includes(s[j]) && !(s[j] === '.' && j > i && !/\d/.test(s[j - 1]) && (j + 1 >= s.length || s[j + 1] === ' ')) && s[j] !== '(' && s[j] !== ')' && s[j] !== '√' && !(s[j] === ',' && !(/\d/.test(s[j - 1] || '') && /\d/.test(s[j + 1] || ''))) && !(s[j] === '−' && j > i)) j++;
       if (j === i) { j = i + 1; }
       const piece = s.slice(i, j); h += mTok(piece); plain += piece; any = true; grp = false; i = j;
     }
@@ -1294,6 +1482,7 @@ function mParse(s){
     if (ch === '/'){ out.push({ t:'div' }); i++; continue; }
     if ('=·+;:→×<>'.includes(ch)){ out.push({ t:'op', h:esc(ch) }); i++; continue; }
     if (ch === ')'){ out.push({ t:'op', h:')' }); i++; continue; }
+    if (ch === '.' && !/\d/.test(s[i - 1] || '') && (i + 1 >= s.length || s[i + 1] === ' ')){ out.push({ t:'op', h:'.' }); i++; continue; }
     if (ch === ',' && !(/\d/.test(s[i - 1] || '') && /\d/.test(s[i + 1] || ''))){ out.push({ t:'op', h:',' }); i++; continue; }
     if (ch === '−' ){ // minus: binary if followed by space, else sign belongs to atom
       if (s[i + 1] === ' ' || i + 1 >= s.length){ out.push({ t:'op', h:'−' }); i++; continue; }
@@ -1311,8 +1500,10 @@ function mRender(s){
     let p = k - 1; while (p >= 0 && L[p].t === 'sp') p--; let n = k + 1; while (n < L.length && L[n].t === 'sp') n++;
     if (p < 0 || n >= L.length || L[p].t !== 'atom' || L[n].t !== 'atom') { L[k] = { t:'op', h:'/' }; continue; }
     const A = L[p], B = L[n]; if (isWord(A) && isWord(B)) { L[k] = { t:'op', h:'/' }; continue; }
-    let nu = A.grp && A.raw != null ? A.raw : A.h; const de = B.grp && B.raw != null ? B.raw : B.h; let st = p;
-    while (true){ let o = st - 1; while (o >= 0 && L[o].t === 'sp') o--; if (o < 1 || L[o].t !== 'op' || L[o].h !== '·') break; let a2 = o - 1; while (a2 >= 0 && L[a2].t === 'sp') a2--; if (a2 < 0 || L[a2].t !== 'atom') break; nu = L[a2].h + ' · ' + nu; for (let q = a2; q < st; q++) L[q] = { t:'sp', h:'' }; st = a2; }
+    const nuBase = A.grp && A.raw != null ? A.raw : A.h; let nu = nuBase; const de = B.grp && B.raw != null ? B.raw : B.h; let st = p;
+    while (true){ let o = st - 1; while (o >= 0 && L[o].t === 'sp') o--; if (o >= 0 && L[o].t === 'atom' && o < st - 1 && !/^([a-z]{2,}|[A-Z][a-z]{2,})[.,:;]?$/.test(L[o].plain) && L[o].plain !== 'Σ'){ nu = L[o].h + ' ' + nu; for (let q = o; q < st; q++) L[q] = { t:'sp', h:'' }; st = o; continue; } if (o < 1 || L[o].t !== 'op' || L[o].h !== '·') break; let a2 = o - 1; while (a2 >= 0 && L[a2].t === 'sp') a2--; if (a2 < 0 || L[a2].t !== 'atom') break; nu = L[a2].h + ' · ' + nu; for (let q = a2; q < st; q++) L[q] = { t:'sp', h:'' }; st = a2; }
+    if (nu !== nuBase && nuBase !== A.h && nu.endsWith(nuBase)) nu = nu.slice(0, nu.length - nuBase.length) + A.h;
+    { let o = st - 1; while (o >= 0 && L[o].t === 'sp') o--; if (o >= 0 && L[o].t === 'atom' && L[o].plain === 'Σ'){ nu = L[o].h + ' ' + nu; for (let q = o; q < st; q++) L[q] = { t:'sp', h:'' }; } }
     L[p] = { t:'atom', h:'<span class="fr"><span class="nu">' + nu + '</span><span class="de">' + de + '</span></span>', plain:'F', grp:false, raw:null };
     for (let q = p + 1; q <= n; q++) L[q] = { t:'sp', h:'' };
   }
@@ -1324,6 +1515,7 @@ function mLine(txt, inner){
   const res = mLine0(txt); return mark ? res.replace(/^(<div class="(?:lb|eq|tx)">)/, '$1' + mark) : res;
 }
 function mLine0(txt){
+  txt = txt.replace(/_−1/g, '_\u0005');
   // label before the first colon when it is prose
   let label = '', body = txt; const m = txt.match(/^((?:[a-d]\)\s*)?[A-Z][^:=]{6,}?):\s+(.*)$/);
   if (m && !/[=<]/.test(m[1]) && /[=<]/.test(m[2])) { label = m[1]; body = m[2]; }
@@ -1388,14 +1580,15 @@ function barsSvg(s){
 }
 function sketchHtml(sk){
   if (!sk || !sk.length) return '';
-  return '<div class="skw"><div class="lb">Sketch first, like the lecturer does. Blue hatching is the area you want, the red line is the mean</div><div class="skg">' + sk.map(s => '<figure class="sk">' + (s.t === 'bell' ? bellSvg(s) : s.t === 'ci' ? ciSvg(s) : barsSvg(s)) + '<figcaption>' + esc(s.cap) + '</figcaption></figure>').join('') + '</div></div>';
+  return '<div class="skw"><div class="lb">' + (sk.every(s => s.t === 'bars') ? 'Sketch first, like the lecturer does. The blue bar is the class you are asked about.' : sk.some(s => s.t === 'ci') ? 'Sketch first. The blue hatched middle is the confidence level 1 − α, the red tails are the risk, the red line is your estimate.' : 'Sketch first, like the lecturer does. Blue hatching is the area you want, the red dashed line is the mean μ.') + '</div><div class="skg">' + sk.map(s => '<figure class="sk">' + (s.t === 'bell' ? bellSvg(s) : s.t === 'ci' ? ciSvg(s) : barsSvg(s)) + '<figcaption>' + esc(s.cap) + '</figcaption></figure>').join('') + '</div></div>';
 }
 
 /* ---------- Study (worked example, recall, three new variants, mixed round) ---------- */
 let S = { lec:'ALL', key:null, stage:'pick', worked:null, i:0, task:null, good:0, total:0, mix:false, mixN:0, checked:false };
-function studyKeys(){ return CALC_ORDER.filter(k => S.lec === 'ALL' || CALC[k].lec === S.lec); }
+function studyKeys(){ return CALC_ORDER.filter(k => !CALC[k].calcOnly && (S.lec === 'ALL' || CALC[k].lec === S.lec)); }
 function ansHtml(t){ return '<div class="ans">' + t.parts.map(p => '<span>' + esc(p.label) + ' = ' + fm(p.ans, p.dec) + '</span>').join('') + '</div>'; }
-function stSolHtml(t){ return sketchHtml(t.sk) + paperSteps(t.steps) + (t.r && t.r.length ? `<div class="meta" style="margin-top:8px">R check: ${t.r.map(esc).join(' ; ')}</div>` : '') + '<div class="meta" style="margin-top:8px">Final answers</div>' + ansHtml(t); }
+function hbRow(t){ return t.hb && t.hb.length ? `<div class="meta" style="margin-top:8px"><b>Handbook, open these pages:</b></div><ul class="hbl">${t.hb.map(x => `<li>${mTok(x)}</li>`).join('')}</ul>` : ''; }
+function stSolHtml(t){ return sketchHtml(t.sk) + paperSteps(t.steps) + hbRow(t) + (t.r && t.r.length ? `<div class="meta" style="margin-top:8px">R check: ${t.r.map(esc).join(' ; ')}</div>` : '') + '<div class="meta" style="margin-top:8px">Final answers</div>' + ansHtml(t); }
 function stBegin(k){ S.key = k; S.mix = false; const c = CALC[k]; S.worked = c.gen(c.origs && c.origs.length ? c.origs[0].o : undefined); S.stage = 'study'; S.i = 0; S.good = 0; S.total = 0; study(); }
 function stNext(){ const c = CALC[S.key]; S.task = c.gen(); S.checked = false; }
 function stMark(done){ const r = store.study[S.key] || { done:0, good:0, parts:0 }; if (done) r.done++; r.good += S.good; r.parts += S.total; store.study[S.key] = r; save(); }
@@ -1496,7 +1689,7 @@ function finishMock(){
 
 /* ---------- Formula sheet ---------- */
 function sheet(){
-  const steps = (title, lines) => `<div class="card"><b>${title}</b><ol class="steps" style="font-family:inherit">${lines.map(l => `<li style="font-family:inherit;font-size:.95rem">${l}</li>`).join('')}</ol></div>`;
+  const steps = (title, lines) => `<div class="paper pm"><div class="pt">${title}</div>${lines.map((l, i) => `<div class="ps"><span class="pn">${i + 1}</span><div class="pb"><div class="mx">${mInline(l)}</div></div></div>`).join('')}</div>`;
   const methods =
     steps('Always start with the basic terms', ['Population (all units we are interested in) and, for a sample, the sample.', 'Statistical unit (one unit) or sample unit.', 'Variable with its scale (categorical nominal or ordinal, numerical interval or ratio).', 'Parameter (and its estimate from the sample, for example μ and ȳ, Π and p).']) +
     steps('Normal distribution: three numbered steps (Tutorial 2)', [
@@ -1521,7 +1714,9 @@ function sheet(){
     steps('Stratified sample (Tutorial 4 Exercise 1c, Example 5.6)', [
       'Name the sampling type (stratified random sampling) and justify it: the variable differs between the groups, so units within a group are more alike, which lowers the standard error.',
       'Sample sizes with a sample proportion f: n_j = f · N_j. Proportional allocation: n_j = n · N_j / N.',
-      'ȳ_str = (1/N) Σ N_j · ȳ_j. var(ȳ_str) = (1/N²) Σ N_j² · (s_j² / n_j) · (1 − n_j/N_j). se = √var.',
+      'Estimate: ȳ_str = (1/N) Σ N_j · ȳ_j',
+      'Variance: var(ȳ_str) = (1/N²) Σ N_j² · (s_j² / n_j) · (1 − n_j/N_j)',
+      'Standard error: se = √var',
       'Interval ȳ_str ± z · se for large samples, then the same interpretation sentence.']);
   const rows = [
     ['L01','Sample mean','ȳ = Σyᵢ / n, grouped: ȳ = Σ f_k · y_k / n'],
@@ -1546,8 +1741,98 @@ function sheet(){
     ['L05','Sample size, mean','n_r = z²σ² / D²,  n = n_r / (1 + n_r/N), round up'],
     ['L05','Sample size, proportion','n_r = z² Π(1 − Π) / D²,  same finite correction'],
     ['L05','Relative margin','D = D° · assumed value']
-  ].map(r => `<tr><td>${r[0]}</td><td>${esc(r[1])}</td><td class="f"><code>${esc(r[2])}</code></td></tr>`).join('');
-  $('#view').innerHTML = `<p class="note" style="margin-top:0">Built from your annotated Practice Solutions folder (Tutorials 1, 2, 4, 5 and Lectures 1, 2, 5), so the layout matches how the lecturer solves tasks. Check every formula and table value against your original Statistical Analysis Handbook.</p>${methods}<div class="card"><b>Formulas</b><table><tr><th>Lecture</th><th>What</th><th>Formula</th></tr>${rows}</table></div>`;
+  ].map(r => `<tr><td><span class="lec">${r[0]}</span></td><td class="wh">${esc(r[1])}</td><td class="fo">${mInline(r[2])}</td></tr>`).join('');
+  $('#view').innerHTML = `<p class="note" style="margin-top:0">Built from your annotated Practice Solutions folder (Tutorials 1, 2, 4, 5 and Lectures 1, 2, 5), so the layout matches how the lecturer solves tasks. Check every formula and table value against your original Statistical Analysis Handbook.</p>${methods}<div class="paper pm"><div class="pt">Formulas</div><table class="ptab"><tr><th>Lecture</th><th>What</th><th>Formula</th></tr>${rows}</table></div>`;
+}
+
+
+/* ---------- Example exam 1 (Canvas example of the first midterm, 30 Oct 2025): questions one by one as on paper ---------- */
+const PRINTOUT1 = 'Computer printout 1, price (in thousand dollars) and size (in square feet) of 27 randomly selected houses in Pennsylvania sold in 1977: nbr.val 27 and 27; min 25.900 and 975; max 84.910 and 3420; sum 1039.53 and 40826; median 36.900 and 1488; mean ????? and 1512.074; SE.mean 2.754 and 107.438; CI.mean.0.95 5.660 and 220.842; var 204.739 and 311659.994; coef.var 0.372 and 0.369.';
+const EXAM = [
+  { n:1, t:'L02', q:'Which of the statements for a normally distributed random variable is NOT correct?', o:['More than 99 percent of the total values lie in the interval (μ − 3σ, μ + 3σ).','The shape and position of the normal distribution are determined by the standard deviation and the arithmetic mean.','The distribution is unimodal and symmetric for each value of the arithmetic mean and the standard deviation.','The smaller the standard deviation, the more flattened (stretched) the normal distribution.','The area below the density function curve of the normal distribution to the left of the median is equal to 0.5.'], a:3, hb:'no table needed', e:'A smaller standard deviation makes the curve narrower and taller, not flatter. A larger σ stretches it. The other four statements are true: about 99.7% lie within 3σ, μ and σ fix the shape and position, the curve is unimodal and symmetric, and half of the area lies left of the median.' },
+  { n:2, t:'L01', ctx:PRINTOUT1, q:'Using data from 27 houses in Pennsylvania sold in 1977 we want to find out how the sales price of houses (PRICE, in thousand dollars) depends on size. How much is the missing value marked with question marks on the printout (the mean price)?', o:['55.4','36.9','We cannot calculate this on the basis of the data provided.','38.5','5.3'], a:3, hb:'p. 13', e:'The mean is the sum divided by the number of values: 1039.53 / 27 = 38.501, so 38.5. Both numbers are on the printout. 36.9 is the median, not the mean.' },
+  { n:3, t:'L04', q:'Referring to the same data (printout 1). What do we measure with the value labeled SE.mean on the printout?', o:['the difference between the house prices in the selected sample','expected average house price','the difference between the average price of the house in the selected sample and the true value of the parameter','differences in the point estimates for the average house price across all samples with a size of 27','price variations between the 27 selected houses'], a:3, hb:'p. 24', e:'SE.mean is the standard error of the mean. It measures how much the sample means (the point estimates of the average price) vary from sample to sample across all possible samples of size 27. The variation between the 27 houses themselves is the standard deviation s, not SE.mean.' },
+  { n:4, t:'L03', q:'The tourism association of the country wanted to analyze guest satisfaction with hotel accommodation. For this purpose, 10 locations were randomly selected, 3 hotels were randomly selected in each of the selected locations and then 25 guests were randomly selected in each of the selected hotels. Guests rate satisfaction on a scale of 1 to 5. Which sampling method is chosen?', o:['Simple random sampling.','Quota sampling.','Stratified sampling.','Multi stage sampling.','Systematic sampling.'], a:3, hb:'none, know the definitions', e:'We sample in stages: first locations, then hotels inside the chosen locations, then guests inside the chosen hotels. Each stage is random. That is multi stage sampling. Stratified sampling would take units from every stratum, quota sampling is not random.' },
+  { n:5, t:'L02', q:'What proportion of the values of a normally distributed variable is not more than 1.7 standard deviations below the arithmetic mean and at the same time not above the arithmetic mean?', o:['0.1700','0.5446','0.0446','0.9554','0.4554'], a:4, hb:'p. 65, F(−1.70)', e:'We want P(μ − 1.7σ < Y ≤ μ). Standardize: z_a = −1.70 and z_b = 0. P = F(0) − F(−1.70) = 0.5000 − 0.0446 = 0.4554. No numbers for μ and σ are needed.' },
+  { n:6, t:'L01', ctx:'The company manufactures drill bits. The service life of its first quality drill bits is normally distributed with an average of 1,400 drillings and a coefficient of variation of 12.5%. In one production run, 10,000 first quality drill bits are produced.', q:'What is the statistical unit in this case?', o:['drill bit','one production run','first quality','drill bits','service life'], a:0, hb:'none', e:'The statistical unit is one individual member of the population: one drill bit (singular). The production run is the context, "first quality" is a property and the service life is the variable.' },
+  { n:7, t:'L01', ctx:'Same data as Question 6 (mean service life 1,400 drillings, CV 12.5%, 10,000 drill bits).', q:'What is a variable in this case and what is its mode value?', o:['The variable is a drill bit, the mode is 1,400 drillings.','The variable is production, the mode is 10,000.','The variable is the service life, the mode is 175 drillings.','The variable is the service life, the mode is 1,400 drillings.','The variable is the first quality, the mode is 1,400 drillings.'], a:3, hb:'none', e:'The variable is the service life, measured in drillings. A normal distribution is symmetric and unimodal, so mean = median = mode = 1,400. 175 is the standard deviation (0.125 · 1400).' },
+  { n:8, t:'L02', ctx:'Same data as Question 6.', q:'What percentage of drill bits are used up before 1,300 drillings?', o:['0.7157 %','71.57 %','57 %','28.43 %','0.2843 %'], a:3, hb:'p. 22, p. 65', e:'σ = CV · μ = 0.125 · 1400 = 175. z = (1300 − 1400) / 175 = −0.57. F(−0.57) = 0.2843, so 28.43% (left side, read F(z) directly from the table).' },
+  { n:9, t:'L02', ctx:'Same data as Question 6.', q:'How many drill bits work for at least 1,600 drillings?', o:['12,710 drill bits','8,729 drill bits','Since the average endurance is 1,400 drillings, no drill bit can withstand at least 1,600 drillings.','1,357 drill bits','1,271 drill bits'], a:4, hb:'p. 66', e:'z = (1600 − 1400) / 175 = 1.14. Right side: P(Y ≥ 1600) = 1 − F(1.14) = 1 − 0.8729 = 0.1271. Number of drill bits = 10,000 · 0.1271 = 1,271.' },
+  { n:10, t:'L02', ctx:'Same data as Question 6.', q:'At least how many drillings can withstand the 25% of the most durable drill bits? What do we call such a calculated parameter?', o:['At least 1,282.75 drillings; This is the third quartile.','At least 1,517.25 drillings; This is the first quartile.','At least 1,517.25 drillings; This is the third quartile.','At least 1,517.25 drillings; This is the third quantile.','At least 1,282.75 drillings; This is the first quartile.'], a:2, hb:'p. 12, p. 65 to 66', e:'The best 25% lie above a, so F(z_a) = 0.75 and z_a = 0.67. a = μ + z · σ = 1400 + 0.67 · 175 = 1517.25. A value with 75% of the units below it is the third quartile Q3 (the 75th percentile). "Quantile" is the general word, you must name the type, and 0.75 is the quantile rank, not the value.' },
+  { n:11, t:'L05', q:'The Auto Moto Association assumes that only 66% of all 1,200,000 drivers change their tyres to winter tyres in time. How many drivers must be selected in a random sample without replacement so that the estimate does not deviate by more than 3% from the assumed value of the parameter at a risk level of 0.05?', o:['At least 2195 drivers.','At most 2194 drivers who changed tyres on time.','At least 2198 drivers.','At least 2199 drivers who changed tyres on time.','At most 958 drivers.'], a:0, hb:'p. 26, p. 64', e:'"3% of the assumed value" is a relative margin: D = 0.03 · 0.66 = 0.0198. Step 1: n_r = z² · Π(1 − Π) / D² = 1.96² · 0.66 · 0.34 / 0.0198² = 2198.8. Step 2: n = n_r / (1 + n_r / N) = 2198.8 / (1 + 2198.8 / 1,200,000) = 2194.8, round UP: 2195. The 958 in option E is the answer for 3 percentage points (absolute margin).' },
+  { n:12, t:'L05', ctx:'Linked with Question 11. The association randomly selected 2400 drivers and found that 38% of them did not change tyres in time.', q:'With a confidence level of 0.95, estimate the percentage of drivers who changed their tyres on time.', o:['Π% < 63.7','Π% = 62','36.0 < Π% < 40.0','60.0 < Π% < 64.0','60.3 < Π% < 63.7'], a:3, hb:'p. 25, p. 64', e:'p = 1 − 0.38 = 0.62. se(p) = √(0.62 · 0.38 / 2400 · (1 − 2400 / 1,200,000)) = 0.0099. D = 1.96 · 0.0099 = 0.0194. Interval: 0.6006 < Π < 0.6394, in percent 60.06 < Π% < 63.94. Round outward: 60.0 < Π% < 64.0.' },
+  { n:13, t:'L05', ctx:'Same data as Question 12.', q:'What is the margin of error at a confidence level of 0.95 for the proportion of drivers who changed their tyres on time?', o:['0.38','0.0163','0.0194','0.5','0.025'], a:2, hb:'p. 25', e:'The margin of error is D = z · se(p) = 1.96 · 0.0099 = 0.0194.' },
+  { n:14, t:'L02', q:'What is the name of, and how is calculated, the highest value of a normally distributed variable that is less than 75% of the highest values?', o:['μ − 0.67 σ; 25. centile','0.67; 3. quartile','−0.67; 1. quartile','0.25; quantile rank','μ + 0.67 σ; 75. centile'], a:0, hb:'p. 12, p. 65', e:'The cut off has 75% of the values above it and 25% below it, so the quantile rank is P = 0.25 and F(z) = 0.25, which gives z = −0.67. The value is a = μ − 0.67σ, the 25th percentile (the first quartile). Options B and C give z or a rank, not the value μ + zσ.' },
+  { n:15, t:'L03', q:'Which of the statements about multi stage sampling is NOT correct?', o:['In this type of sampling, the sampling unit is not the same as the statistical unit.','In this type of sampling, it is possible to select units at random even if we can not get the list of all statistical units in the population.','With this type of sampling, the maximum precision of the sample estimate is achieved for a given sample size.','With this type of sampling, the sampling costs are generally lower than with other types of random sampling.','This type of sampling is suitable for hierarchically organized populations.'], a:2, hb:'none, know the definitions', e:'Multi stage sampling is cheaper and needs no full list of units, but it is generally less precise than simple random sampling for the same sample size, because units in the same cluster are similar. So the claim of maximum precision is false.' }
+];
+let EX = { ans:{}, done:false, skip:true };
+function exam(){
+  const list = EXAM.filter(q => !(EX.skip && q.t === 'L05'));
+  let lastCtx = '';
+  const items = list.map(q => {
+    const ctx = q.ctx && q.ctx !== lastCtx ? `<div class="meta" style="margin:14px 0 6px;font-style:italic">${esc(q.ctx)}</div>` : ''; lastCtx = q.ctx || lastCtx;
+    const opts = q.o.map((t, i) => {
+      let cls = 'opt' + (EX.ans[q.n] === i && !EX.done ? ' good' : '');
+      if (EX.done){ if (i === q.a) cls = 'opt good'; else if (EX.ans[q.n] === i) cls = 'opt bad'; }
+      return `<button class="${cls}" data-q="${q.n}" data-i="${i}" ${EX.done ? 'disabled' : ''}><span class="k">${'ABCDE'[i]}</span>${esc(t)}</button>`;
+    }).join('');
+    let fb = '';
+    if (EX.done){ const ok = EX.ans[q.n] === q.a; fb = `<div class="fb ${ok ? 'good' : 'bad'}"><b>${EX.ans[q.n] === undefined ? 'Not answered.' : ok ? 'Correct.' : 'Not quite.'} Correct answer: ${'ABCDE'[q.a]}.</b> ${esc(q.e)}<div class="meta" style="margin-top:6px">Handbook: ${esc(q.hb)}</div></div>`; }
+    return ctx + `<div class="card"><div class="meta">Question ${q.n} · ${esc(TOPICS[q.t])}</div><div class="q">${esc(q.q)}</div>${opts}${fb}</div>`;
+  }).join('');
+  const total = list.length, answered = list.filter(q => EX.ans[q.n] !== undefined).length, good = list.filter(q => EX.ans[q.n] === q.a).length;
+  const head = `<div class="card"><b>Example of the first midterm exam, question by question</b><p class="meta">The multiple choice questions of the Canvas example exam, in the original order and wording, one correct answer each. Answer them all like on paper, then press Check. ${EX.skip ? 'Lecture 5 questions (11, 12, 13) are hidden. Question 16 (the 5 point calculation task) is in the Calculation lab.' : 'Question 16 (the 5 point calculation task) is in the Calculation lab.'}</p><div class="row"><label class="meta"><input type="checkbox" id="exs" ${EX.skip ? 'checked' : ''}> Hide Lecture 5 questions</label></div></div>`;
+  const foot = EX.done ? `<div class="card"><b>Score: ${good} of ${total}</b><div class="row" style="margin-top:8px"><button class="btn" id="exr">Try again</button></div></div>` : `<div class="card"><p class="meta">${answered} of ${total} answered.</p><div class="row"><button class="btn" id="exc">Check my answers</button><button class="btn ghost" id="exr">Reset</button></div></div>`;
+  $('#view').innerHTML = head + items + foot;
+  $('#exs').onchange = e => { EX.skip = e.target.checked; EX.ans = {}; EX.done = false; exam(); };
+  $('#view').querySelectorAll('.opt').forEach(b => b.onclick = () => { EX.ans[+b.dataset.q] = +b.dataset.i; const y = window.scrollY; exam(); window.scrollTo(0, y); });
+  const c = $('#exc'); if (c) c.onclick = () => { EX.done = true; exam(); window.scrollTo(0, 0); };
+  const r = $('#exr'); if (r) r.onclick = () => { EX.ans = {}; EX.done = false; exam(); window.scrollTo(0, 0); };
+}
+
+/* ---------- Handbook guide ---------- */
+function hbguide(){
+  const f4 = x => Number(x).toFixed(4).replace(/^0/, '').replace('-0', '-');
+  const R = [
+    ['L01','Terms and scales','Descriptive statistics', 'desc', ['midpoint: y_k = (lower boundary + upper boundary) / 2','relative frequency: f°_k = f_k / n','mean from a table: ȳ = Σ f_k · y_k / n'], 'p. 9 to 10, p. 13', 'Tutorial 1, Exercise 2 (46 employees, annual net income)'],
+    ['L01','','Quantile: quartile, decile, percentile','quantile', ['rank: R_P = N · P + 0.5','y_P = y_0,l + (R_P − F_−1) / f_0 · w_0'], 'p. 11 (single values), p. 12 (frequency distribution)', 'Tutorial 1, Exercise 2d (Q1 and D9)'],
+    ['L01','','Sample variance, standard deviation, CV','printout', ['s² = Σ f_k (y_k − ȳ)² / (n − 1)','CV = s / ȳ'], 'p. 18 (population forms), p. 23 (sample, n − 1)', 'Example midterm, computer printout 1 (27 houses, price)'],
+    ['L02','Normal distribution','Probability P(Y ≤ a), P(Y > b), P(a < Y ≤ b)','normal', ['① z = (a − μ) / σ','② table F(z)','P(a < Y ≤ b) = F(z_b) − F(z_a)','P(Y > b) = 1 − F(z_b)'], 'p. 21 to 22, tables p. 65 and 66', 'Tutorial 2, Exercise 1 (IQ, variance 289). Lecture 2, Examples 2.3 and 2.4 (heights of women)'],
+    ['L02','','Value for a given share (quantile of a normal variable)','normal', ['① P = F(z_a), find z_a in the table','a = μ + z_a · σ'], 'p. 22, tables p. 65 and 66', 'Tutorial 2, Exercise 1. Lecture 2, Example 2.4. Name it Q, D or P.'],
+    ['L02','','CV given instead of σ','normalcv', ['CV = σ / μ','σ = CV · μ'], 'p. 18, then p. 21 to 22', 'Example midterm, Questions 6 to 10 (10,000 drill bits)'],
+    ['L02','','Warranty share, change of CV, budget','tyres', ['① z = (a − μ) / σ, then F(z)','new σ = new CV · μ'], 'p. 18, p. 21 to 22, p. 65 to 66', 'Tutorial 2, Exercise 2 (tyres XYZ) and Exercise 3 (FotoExpert, key: budget)'],
+    ['L03','Sampling methods','Sampling plan, inclusion probability, step','sampling', ['inclusion probability = n / N','systematic step = N / n','number of samples: C(N, n) = N! / (n! (N − n)!)'], 'p. 23 (number of samples). The rest is not printed, know it.', 'Lecture 3, Tutorial 4'],
+    ['L03','','Quota sample, stratified sizes','quota', ['n_j = n · N_j / N','n_j = f · N_j'], 'p. 27', 'Tutorial 4, Exercise 3 (n = 120, ratios 3:2:1 and 4:6)'],
+    ['L04','Estimators, standard error','Standard error of the mean and the effect of n','se', ['se(ȳ) = s / √n · √(1 − n / N)','SE(ȳ) = σ / √n · √((N − n) / (N − 1))'], 'p. 24 to 25', 'Lecture 4, Example 4.1. Illustrative example 4.3 (what changes the width)'],
+    ['L05','Confidence intervals and sample size','Interval for a mean','cimean', ['① ȳ and se(ȳ) = s / √n · √(1 − n / N)','② critical value c: z p. 64, t p. 67 to 70 with df = n − 1','③ ȳ − c · se < μ < ȳ + c · se'], 'p. 25, p. 64, p. 67 to 70', 'Lecture 5, Examples 5.1 and 5.2'],
+    ['L05','','Interval for a total or a count','citotal', ['Y_s = N · ȳ','se(Y_s) = N · se(ȳ)','N · (ȳ − c · se) < Y < N · (ȳ + c · se)'], 'p. 25', 'Example midterm calculation task (ski fair). Lecture 5, Example 5.2. Tutorial 5, Exercise 1a'],
+    ['L05','','What changes the interval width','ciwidth', ['D = c · se','larger n or smaller confidence level: smaller D'], 'p. 25 to 26', 'Tutorial 5, Exercise 1 b to d. Illustrative example 4.3'],
+    ['L05','','Interval for a proportion or a number','ciprop', ['p = n_a / n','se(p) = √( p (1 − p) / n · (1 − n / N) )','N_a = N · p'], 'p. 25, z on p. 64', 'Lecture 5, Example 5.3. Tutorial 5, Exercises 2 and 3c'],
+    ['L05','','Sample size for a proportion','sizeprop', ['Step 1: n_r = z² Π (1 − Π) / D²','Step 2: n = n_r / (1 + n_r / N), round up'], 'p. 26, z on p. 64', 'Lecture 5, Example 5.5. Tutorial 5, Exercise 4'],
+    ['L05','','Sample size for a mean','sizemean', ['Step 1: n_r = z² σ² / D²','Step 2: n = n_r / (1 + n_r / N), round up'], 'p. 26, z on p. 64', 'Lecture 5, Example 5.4 (1,400 products)'],
+    ['L05','','Stratified sample','strat', ['ȳ_str = (1 / N) Σ N_j · ȳ_j','var(ȳ_str) = (1 / N²) Σ N_j² · s_j² / n_j · (1 − n_j / N_j)','se = √var'], 'p. 27', 'Lecture 5, Example 5.6. Tutorial 4, Exercise 1c. Tutorial 5, Exercise 5'],
+    ['L05','','Grouped data, one sided limit','grouped', ['ȳ = Σ f_k · y_k / n','ȳ − t · se < μ (lower limit)'], 'p. 10, p. 23, p. 25', 'Tutorial 5, Exercise 3 (goals per game)']
+  ];
+  let lastLec = '';
+  const zrows = R.map(r => { const head = r[0] !== lastLec ? `<tr class="lh"><td colspan="4"><span class="lec">${r[0]}</span> <b>${esc(TOPICS[r[0]].slice(4))}</b></td></tr>` : ''; lastLec = r[0];
+    return head + `<tr><td class="wh">${esc(r[2])}<br><button class="btn ghost" style="margin-top:6px;padding:3px 10px;font-size:.78rem" data-hk="${r[3]}">Practise this</button></td><td class="fo">${r[4].map(f => `<div class="mx hbf">${mInline(f)}</div>`).join('')}</td><td><b>${esc(r[5])}</b></td><td>${esc(r[6])}</td></tr>`; }).join('');
+  const t = (a, d) => Stat.tinv(1 - a, d).toFixed(4);
+  const v_html = `<div class="card"><b>Handbook guide for Midterm 1 (Lectures 1 to 5, Tutorials 1 to 5)</b><p class="meta">Everything on this page is for Midterm 1 only. Page numbers are the printed numbers of the Statistical Analysis Handbook scans you uploaded. Table values below are computed here, check a few against your book.</p><table class="ptab hbt"><tr><th style="width:15%">If the task is</th><th>Formula, as on paper</th><th>Handbook pages</th><th>Know these examples</th></tr>${zrows}</table></div>
+  <div class="card"><b>How to read the F(z) table (pages 65 and 66)</b>
+  <div class="paper pm"><div class="pt">Reading F(z) for z with two decimals</div>
+  <div class="ps"><span class="pn">1</span><div class="pb"><div class="mx">${mInline('Negative z is on p. 65, positive z on p. 66. The left column is z to one decimal, the top row is the second decimal.')}</div></div></div>
+  <div class="ps"><span class="pn">2</span><div class="pb"><div class="mx">${mInline('Example F(−1.74): row −1.7, column 0.04, value ' + f4(Stat.cdf(-1.74)) + ' (p. 65).')}</div></div></div>
+  <div class="ps"><span class="pn">3</span><div class="pb"><div class="mx">${mInline('Example F(1.00): row 1.0, column 0.00, value ' + f4(Stat.cdf(1)) + ' (p. 66).')}</div></div></div>
+  <div class="ps"><span class="pn">4</span><div class="pb"><div class="mx">${mInline('For a quantile run the table backwards: find the entry closest to the share P, then add row and column to get z. Example P = 0.90 gives z = 1.28 (F = ' + f4(Stat.cdf(1.28)) + ').')}</div></div></div></div></div>
+  <div class="card"><b>How to read the t table (pages 67 to 70) and the z table (page 64)</b>
+  <div class="paper pm"><div class="pt">Critical values</div>
+  <div class="ps"><span class="pn">1</span><div class="pb"><div class="mx">${mInline('The columns are one tail areas α. A two sided interval with risk α uses the column α / 2. Example α = 0.01 two sided: column 0.005.')}</div></div></div>
+  <div class="ps"><span class="pn">2</span><div class="pb"><div class="mx">${mInline('Rows are df = n − 1. Rows exist for every df up to 100, then 110, 120, 130, 140, 150, 200, 300, 400, 500, 800 and ∞. When your df is not printed, take the first lower row. Example df = 255: use row 200, t = ' + t(0.005, 200) + ' at 0.005.')}</div></div></div>
+  <div class="ps"><span class="pn">3</span><div class="pb"><div class="mx">${mInline('Example df = 24, two sided 95%: row 24, column 0.025, t = ' + t(0.025, 24) + '. The z value for the same interval is 1.96 (p. 64).')}</div></div></div>
+  <div class="ps"><span class="pn">4</span><div class="pb"><div class="mx">${mInline('Page 64 lists z for common α: 0.10 gives 1.2816, 0.05 gives 1.6449, 0.025 gives 1.96, 0.01 gives 2.3263, 0.005 gives 2.5758, 0.001 gives 3.0902.')}</div></div></div></div></div>
+  <div class="card"><b>Handbook rules and one check</b><ul class="hbl"><li>Official wording found in your exam documents: the original edition without handwritten notes or additional notes. Stickers or tabs are not mentioned in any document I found, so that is UNVERIFIED. Ask Iza Matko or Prof. Korenjak-Černe in writing before you add anything, and keep any tab completely blank.</li><li>A note on sample size: page 26 gives the approximate correction n = n_r / (1 + n_r / N). Use exactly this form, it is the lecturer's method.</li><li>Pages 28 to 59 and 71 to 80 are about later topics (hypothesis tests and beyond). They are not needed for midterm 1.</li><li>Pages 60 to 62 (literature) were missing from the scans, they are not needed.</li></ul></div>`;
+  $('#view').innerHTML = v_html;
+  $('#view').querySelectorAll('button[data-hk]').forEach(b => b.onclick = () => { tab = 'study'; renderTabs(); stBegin(b.dataset.hk); });
 }
 
 /* ---------- Progress ---------- */
