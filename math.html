@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Midterm 1 Practice</title>
+<style>
+:root{--bg:#f6f5f1;--surface:#fff;--ink:#1d1f24;--muted:#5d6470;--line:#dedbd2;--accent:#1f4fd8;--accent-ink:#fff;--good:#14783c;--good-bg:#e3f4ea;--bad:#b3261e;--bad-bg:#fbe7e5;--warn-bg:#fdf0d5;--radius:10px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--surface:#1d2026;--ink:#ecebe6;--muted:#a1a7b2;--line:#323741;--accent:#7fa2ff;--accent-ink:#0d1220;--good:#6fd39a;--good-bg:#17382a;--bad:#ff9a93;--bad-bg:#432220;--warn-bg:#3b3015}}
+*{box-sizing:border-box}html{font-size:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 80px}
+header h1{font-size:1.45rem;margin:0 0 2px}header p{margin:0;color:var(--muted);font-size:.92rem}
+#cd{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:600;background:var(--warn-bg);border-radius:8px;padding:4px 10px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav button{background:none;border:1px solid transparent;border-radius:8px;padding:8px 13px;font:inherit;color:var(--muted);cursor:pointer}
+nav button[aria-selected=true]{background:var(--surface);border-color:var(--line);color:var(--ink);font-weight:600}
+nav button:focus-visible,.btn:focus-visible,.opt:focus-visible,input:focus-visible,select:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bar2{position:sticky;top:8px;z-index:5;justify-content:space-between}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.meta{font-size:.82rem;color:var(--muted)}
+.q{font-size:1.05rem;margin:6px 0 14px;line-height:1.9}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}.opt .k{display:inline-block;width:1.6em;font-weight:700;color:var(--muted)}
+.opt.good{background:var(--good-bg);border-color:var(--good)}.opt.bad{background:var(--bad-bg);border-color:var(--bad)}
+.fb{margin-top:10px;padding:12px;border-radius:8px;background:var(--warn-bg);font-size:.95rem}.fb.good{background:var(--good-bg)}.fb.bad{background:var(--bad-bg)}.fb>b:first-child{display:block;margin-bottom:4px}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}.stat b{font-size:1.4rem;display:block}
+.part{display:grid;grid-template-columns:1fr 190px 26px;gap:10px;align-items:center;margin-bottom:8px}
+.part input,.part select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-family:var(--mono)}
+.part .m{font-size:1.1rem;text-align:center}.part.ok input,.part.ok select{border-color:var(--good);border-width:2px}.part.no input,.part.no select{border-color:var(--bad);border-width:2px}
+.steps{margin:8px 0 0;padding-left:20px}.steps li{margin-bottom:4px}
+table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600;font-size:.82rem}
+.tt td.st{font-size:.85rem;width:28%}.lh td{background:var(--bg);padding-top:12px}
+select{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;max-width:100%}
+.timer{font-family:var(--mono);font-size:1.3rem;font-weight:700}.timer.low{color:var(--bad)}
+textarea{width:100%;min-height:180px;font-family:var(--mono);font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px}
+.note{font-size:.85rem;color:var(--muted);margin-top:10px}
+@media (max-width:600px){.part{grid-template-columns:1fr;gap:4px}.part .m{text-align:left}}
+.paper{background:#fbf8ee;color:#1b2a4a;border:1px solid #d9d2bd;border-radius:8px;padding:10px 16px;margin-top:8px;font-family:"Cambria Math",Cambria,"STIX Two Math","Times New Roman",serif;font-size:1.06rem}
+.ps{display:flex;gap:12px;padding:8px 0;border-bottom:1px dashed #d9d2bd;line-height:2}.ps:last-child{border-bottom:0}
+.pn{flex:none;width:1.6em;height:1.6em;border-radius:50%;border:1px solid #1b2a4a;font:600 .78rem system-ui,sans-serif;display:flex;align-items:center;justify-content:center;margin-top:6px}
+.pb{flex:1;min-width:0;overflow-x:auto}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 .15em;text-align:center;line-height:1.25}
+.fr .nu{padding:0 .25em;border-bottom:1.4px solid currentColor}.fr .de{padding:0 .25em}
+.rad{display:inline-flex;align-items:flex-start;vertical-align:baseline;white-space:nowrap}.rs{font-size:1.12em;line-height:1;margin-right:-.06em;position:relative;top:.06em}.ri{border-top:1.3px solid currentColor;padding:.05em .12em 0;line-height:1.15}
+.pm{margin-top:14px}.pt{font:700 1rem system-ui,sans-serif;margin-bottom:4px}
+.ptab{width:100%;border-collapse:collapse}.ptab td{padding:8px;border-bottom:1px dashed #d9d2bd;vertical-align:middle;color:#1b2a4a}.ptab .wh{font:.8rem system-ui,sans-serif;color:#6b5f3a;width:24%}.ptab .fo{font-size:1.04rem}
+.wkh{font-size:1rem;margin:22px 0 0;color:var(--muted)}
+.ans{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+.ans span{border:2px solid #1b2a4a;border-radius:4px;padding:4px 10px;background:#fffdf5;color:#1b2a4a;font:600 .92rem "Cambria Math",Cambria,serif}
+.skw{background:#fbf8ee;border:1px solid #d9d2bd;border-radius:8px;padding:10px 12px;margin:8px 0;color:#1b2a4a}
+.skg{display:flex;flex-wrap:wrap;gap:12px}.sk{margin:0;flex:1 1 300px;max-width:360px}.sk figcaption{font:.82rem/1.35 system-ui,sans-serif;color:#3b4561;margin-top:2px}
+.sl{margin:4px 0;max-width:320px}
+.ptab .fo{line-height:2.1;padding:10px 8px}.ptab sub{font-size:.72em}.ptab sup{font-size:.72em}
+.det{display:inline-flex;flex-direction:column;vertical-align:middle;border-left:1.4px solid currentColor;border-right:1.4px solid currentColor;padding:0 .35em;line-height:1.25;margin:0 .15em}
+.bp{font-size:1.75em;line-height:1;vertical-align:middle;font-weight:300;position:relative;top:-.06em}
+.lim{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin-right:.2em}.lim span{font-size:.62em}
+.ix{font-size:.62em;margin-right:-.35em;vertical-align:.9em}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Mathematics for Business and Economics: Midterm 1 practice</h1>
+  <p>Scope from the Canvas announcement: functions of one variable, the derivative and its applications, functions of two variables. Lectures 1 to 6 (pages 1 to 7), exercises and seminars weeks 1 to 6, combinatorics and integrals excluded.</p>
+  <span id="cd"></span>
+</header>
+<nav role="tablist" id="tabs"></nav>
+<main id="view"></main>
+</div>
+<script>
+/* ===== Engine: random, number formatting, answer parser, math layout helpers, sketches ===== */
+const R = {
+  int(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); },
+  pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
+  sign() { return Math.random() < 0.5 ? -1 : 1; },
+  shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+};
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
+/* Number to a short exact looking string: integers, simple fractions, else rounded decimals */
+function toFrac(x, maxDen) {
+  maxDen = maxDen || 12;
+  for (let d = 1; d <= maxDen; d++) { const n = Math.round(x * d); if (Math.abs(n / d - x) < 1e-9) { const g = gcd(n, d); return [n / g, d / g]; } }
+  return null;
+}
+function fmt(x, dec) {
+  if (x === Infinity) return '∞'; if (x === -Infinity) return '−∞';
+  if (!isFinite(x)) return '?';
+  const f = toFrac(x);
+  if (f && f[1] === 1) return neg(String(f[0]));
+  if (f && Math.abs(f[0]) < 1000) return neg(f[0] + '/' + f[1]);
+  const d = dec == null ? (Math.abs(x) >= 100 ? 2 : 4) : dec;
+  let s = (Math.round(x * 10 ** d) / 10 ** d).toFixed(d).replace(/0+$/, '').replace(/\.$/, '');
+  return neg(s);
+}
+function neg(s) { return s.replace(/^-/, '−'); }
+function dec(x, d) { return neg((Math.round(x * 10 ** d) / 10 ** d).toFixed(d)); }
+/* Layout helpers: stacked fraction, root, power, signed term */
+function fr(n, d) { return '<span class="fr"><span class="nu">' + n + '</span><span class="de">' + d + '</span></span>'; }
+function fq(x) { // number as stacked fraction when it is a simple fraction
+  const f = toFrac(x); if (f && f[1] !== 1 && Math.abs(f[0]) < 1000) return (f[0] < 0 ? '−' : '') + fr(Math.abs(f[0]), f[1]);
+  return fmt(x);
+}
+function rt(x) { return '<span class="rad"><span class="rs">√</span><span class="ri">' + x + '</span></span>'; }
+function sp(b, e) { return b + '<sup>' + e + '</sup>'; }
+function sgn(x, first) { // "+ 3" or "− 3" (coefficient display)
+  const s = fmt(Math.abs(x)); if (first) return (x < 0 ? '−' : '') + s; return x < 0 ? ' − ' + s : ' + ' + s;
+}
+/* coefficient times monomial, e.g. term(3,'x²') -> "3x²", term(-1,'x') -> "−x" */
+function term(c, mono, first) {
+  if (Math.abs(c) < 1e-12) return '';
+  const a = Math.abs(c); const cs = (a === 1 && mono) ? '' : fq(a);
+  const body = cs + mono;
+  if (first) return (c < 0 ? '−' : '') + body;
+  return (c < 0 ? ' − ' : ' + ') + body;
+}
+function poly(terms) { // terms: [[coef, mono], ...]
+  let s = '', first = true;
+  terms.forEach(t => { const p = term(t[0], t[1], first); if (p) { s += p; first = false; } });
+  return s || '0';
+}
+/* ===== Answer parser: numbers, fractions, + − * / ^, parentheses, sqrt, cbrt, ln, e, pi ===== */
+function parseExpr(str) {
+  if (str == null) return NaN;
+  let s = String(str).trim().toLowerCase().replace(/−/g, '-').replace(/·|×/g, '*').replace(/√/g, 'sqrt').replace(/π/g, 'pi').replace(/\s+/g, '');
+  if (!s) return NaN;
+  if (/^-?\d+,\d+$/.test(s)) s = s.replace(',', '.');
+  let i = 0;
+  function peek() { return s[i]; }
+  function eat(c) { if (s[i] === c) { i++; return true; } return false; }
+  function num() { const m = s.slice(i).match(/^(\d+\.?\d*|\.\d+)/); if (!m) return null; i += m[0].length; return parseFloat(m[0]); }
+  function atom() {
+    if (eat('(')) { const v = add(); if (!eat(')')) throw 0; return v; }
+    const n = num(); if (n !== null) return n;
+    const fm = s.slice(i).match(/^(sqrt|cbrt|ln|log|exp|e|pi)/);
+    if (fm) {
+      i += fm[0].length; const f = fm[0];
+      if (f === 'e') return Math.E; if (f === 'pi') return Math.PI;
+      const arg = (peek() === '(') ? atom() : unary();
+      if (f === 'sqrt') return Math.sqrt(arg); if (f === 'cbrt') return Math.cbrt(arg);
+      if (f === 'ln' || f === 'log') return Math.log(arg); if (f === 'exp') return Math.exp(arg);
+    }
+    throw 0;
+  }
+  function power() { let b = atom(); if (eat('^')) { const e = unary(); b = Math.pow(b, e); } return b; }
+  function implicit() { let v = power(); while (i < s.length && /[\d(a-z]/.test(peek()) && !/^[+\-*/^)]/.test(peek())) { v *= power(); } return v; }
+  function unary() { if (eat('-')) return -unary(); if (eat('+')) return unary(); return implicit(); }
+  function mul() { let v = unary(); for (;;) { if (eat('*')) v *= unary(); else if (eat('/')) v /= unary(); else return v; } }
+  function add() { let v = mul(); for (;;) { if (eat('+')) v += mul(); else if (eat('-')) v -= mul(); else return v; } }
+  try { const v = add(); if (i !== s.length) return NaN; return v; } catch (e) { return NaN; }
+}
+function parseList(str) {
+  if (str == null) return null; const t = String(str).trim(); if (!t) return null;
+  if (/^(none|no|ne|\/|-|—|ø|∅)$/i.test(t)) return [];
+  const parts = t.split(/[;,]/).map(x => x.trim()).filter(Boolean);
+  const v = parts.map(parseExpr); if (v.some(x => !isFinite(x))) return null; return v.sort((a, b) => a - b);
+}
+function close(u, a, tol) { if (!isFinite(u) || !isFinite(a)) return false; const t = tol != null ? tol : Math.max(0.011, 0.006 * Math.abs(a)); return Math.abs(u - a) <= t; }
+function okPart(p, raw) {
+  if (p.kind === 'ch') return String(raw) === String(p.ans);
+  if (p.kind === 'list') { const u = parseList(raw); if (!u) return false; const a = p.ans.slice().sort((x, y) => x - y); return u.length === a.length && a.every((x, k) => close(u[k], x, p.tol)); }
+  return close(parseExpr(raw), p.ans, p.tol);
+}
+function ansText(p) {
+  if (p.kind === 'ch') return p.opts[p.ans];
+  if (p.kind === 'list') return p.ans.length ? p.ans.slice().sort((a, b) => a - b).map(x => p.show ? p.show(x) : fmt(x)).join('; ') : 'none';
+  return p.show ? p.show : fmt(p.ans);
+}
+/* ===== Function sketch (SVG). spec: {f, x0, x1, y0, y1, pts:[{x,y,t,c}], va:[x], ha:y, xl, yl, step, flip, segs} ===== */
+let skN = 0;
+function plotSvg(s) {
+  const W = 340, H = 260, L = 30, Rr = 12, T = 12, B = 26; const id = 'k' + (++skN);
+  const X = x => L + (x - s.x0) / (s.x1 - s.x0) * (W - L - Rr), Y = y => T + (s.y1 - y) / (s.y1 - s.y0) * (H - T - B);
+  let g = '';
+  const st = s.step || 1;
+  for (let x = Math.ceil(s.x0 / st) * st; x <= s.x1 + 1e-9; x += st) g += `<line x1="${X(x).toFixed(1)}" y1="${T}" x2="${X(x).toFixed(1)}" y2="${H - B}" stroke="#e6dfc8" stroke-width="1"/>`;
+  const sty = s.ystep || st;
+  for (let y = Math.ceil(s.y0 / sty) * sty; y <= s.y1 + 1e-9; y += sty) g += `<line x1="${L}" y1="${Y(y).toFixed(1)}" x2="${W - Rr}" y2="${Y(y).toFixed(1)}" stroke="#e6dfc8" stroke-width="1"/>`;
+  if (s.y0 <= 0 && s.y1 >= 0) g += `<line x1="${L}" y1="${Y(0).toFixed(1)}" x2="${W - Rr}" y2="${Y(0).toFixed(1)}" stroke="#1b2a4a" stroke-width="1.3"/>`;
+  if (s.x0 <= 0 && s.x1 >= 0) g += `<line x1="${X(0).toFixed(1)}" y1="${T}" x2="${X(0).toFixed(1)}" y2="${H - B}" stroke="#1b2a4a" stroke-width="1.3"/>`;
+  const lab = (x, y, t, c, a) => `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${a || 'middle'}" font-size="10.5" fill="${c || '#6b5f3a'}" font-family="system-ui,sans-serif" stroke="#fbf8ee" stroke-width="3" paint-order="stroke">${t}</text>`;
+  for (let x = Math.ceil(s.x0 / st) * st; x <= s.x1 + 1e-9; x += st) if (Math.abs(x) > 1e-9 && (s.lbl == null || Math.abs(Math.round(x / st)) % s.lbl === 0)) g += lab(X(x), (s.y0 <= 0 && s.y1 >= 0 ? Y(0) : H - B) + 12, fmt(x));
+  for (let y = Math.ceil(s.y0 / sty) * sty; y <= s.y1 + 1e-9; y += sty) if (Math.abs(y) > 1e-9 && (s.lbl == null || Math.abs(Math.round(y / sty)) % s.lbl === 0)) g += lab((s.x0 <= 0 && s.x1 >= 0 ? X(0) : L) - 4, Y(y) + 3.5, fmt(y), null, 'end');
+  (s.va || []).forEach(a => { g += `<line x1="${X(a).toFixed(1)}" y1="${T}" x2="${X(a).toFixed(1)}" y2="${H - B}" stroke="#c62828" stroke-width="1.2" stroke-dasharray="5 4"/>`; });
+  if (s.ha != null) g += `<line x1="${L}" y1="${Y(s.ha).toFixed(1)}" x2="${W - Rr}" y2="${Y(s.ha).toFixed(1)}" stroke="#c62828" stroke-width="1.2" stroke-dasharray="5 4"/>`;
+  if (s.f) {
+    let d = '', pen = false; const n = 400; const lo = s.d0 != null ? s.d0 : s.x0, hi = s.d1 != null ? s.d1 : s.x1;
+    for (let k = 0; k <= n; k++) {
+      const x = lo + (hi - lo) * k / n; const y = s.f(x);
+      if (!isFinite(y) || y > s.y1 + (s.y1 - s.y0) * 2 || y < s.y0 - (s.y1 - s.y0) * 2) { pen = false; continue; }
+      const yy = Math.max(s.y0 - (s.y1 - s.y0) * 0.6, Math.min(s.y1 + (s.y1 - s.y0) * 0.6, y));
+      d += (pen ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(yy).toFixed(1) + ' '; pen = true;
+    }
+    g += `<clipPath id="${id}"><rect x="${L}" y="${T}" width="${W - L - Rr}" height="${H - T - B}"/></clipPath><path d="${d}" fill="none" stroke="#1d4fb8" stroke-width="2" clip-path="url(#${id})"/>`;
+  }
+  (s.segs || []).forEach(q => { g += `<line x1="${X(q[0]).toFixed(1)}" y1="${Y(q[1]).toFixed(1)}" x2="${X(q[2]).toFixed(1)}" y2="${Y(q[3]).toFixed(1)}" stroke="#1d4fb8" stroke-width="2.2"/>`; });
+  (s.pts || []).forEach(p => { if (p.x < s.x0 || p.x > s.x1 || p.y < s.y0 || p.y > s.y1) return; g += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3.6" fill="${p.c || '#c62828'}"/>`; if (p.t) g += lab(X(p.x) + (p.dx || 0), Y(p.y) - 8 + (p.dy || 0), p.t, p.c || '#c62828', p.a); });
+  if (s.xl) g += lab(W - Rr - 2, (s.y0 <= 0 && s.y1 >= 0 ? Y(0) : H - B) - 6, s.xl, '#1b2a4a', 'end');
+  if (s.yl) g += lab((s.x0 <= 0 && s.x1 >= 0 ? X(0) : L) + 8, T + 10, s.yl, '#1b2a4a', 'start');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Function sketch">${g}</svg>`;
+}
+/* sign line (table of signs) for inequalities and monotonicity */
+function signLine(pts, signs, var_) {
+  const W = 320, H = 54, L = 16, Rr = 16; const n = pts.length; const X = k => L + (k + 1) * (W - L - Rr) / (n + 1);
+  let g = `<line x1="${L}" y1="30" x2="${W - Rr}" y2="30" stroke="#1b2a4a" stroke-width="1.3"/><text x="${W - 6}" y="34" font-size="11" fill="#1b2a4a" font-family="system-ui">${var_ || 'x'}</text>`;
+  pts.forEach((p, k) => { g += `<line x1="${X(k)}" y1="24" x2="${X(k)}" y2="36" stroke="#1b2a4a" stroke-width="1.3"/><text x="${X(k)}" y="50" text-anchor="middle" font-size="11" fill="#1b2a4a" font-family="system-ui">${p.t}</text>`; if (p.pole) g += `<text x="${X(k)}" y="18" text-anchor="middle" font-size="9.5" fill="#c62828" font-family="system-ui">pole</text>`; });
+  signs.forEach((sg, k) => { const x = k === 0 ? (L + X(0)) / 2 : k === n ? (X(n - 1) + W - Rr) / 2 : (X(k - 1) + X(k)) / 2; g += `<text x="${x}" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="${sg === '+' ? '#14783c' : '#b3261e'}" font-family="system-ui">${sg === '+' ? '+' : '−'}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Sign table">${g}</svg>`;
+}
+
+
+/* ===== Problem generators. Each gen(o) returns {intro, parts, steps, sk, _chk}. o = fixed parameters for the class example. ===== */
+
+const N = (label, ans, extra) => Object.assign({ label, ans, kind: 'num' }, extra || {});
+const CH = (label, opts, ans) => ({ label, opts, ans, kind: 'ch' });
+const LS = (label, ans) => ({ label, ans, kind: 'list' });
+const B = s => '<b>' + s + '</b>';
+const FX = 'f′(x)', FXX = 'f″(x)';
+const TYPES3 = ['local minimum', 'local maximum', 'saddle point'];
+const pw = (b, e) => e === 0 ? '' : e === 1 ? b : sp(b, e);
+function mono(c, vars) { const v = vars.map(([b, e]) => pw(b, e)).join(''); if (!v) return fmt(c); return (c === 1 ? '' : c === -1 ? '−' : fmt(c)) + v; }
+const pn = x => x < 0 ? '(' + fq(x) + ')' : fq(x);
+const fD = x => String(Math.round(x * 1e4) / 1e4).replace(/^-/, '−');
+const pD = x => x < 0 ? '(' + fD(x) + ')' : fD(x);
+function lineEq(k, x0s, x0, y0) {
+  const kc = k === 1 ? '' : k === -1 ? '−' : fq(k);
+  const inner = x0 === 0 ? 'x' : '(x ' + (x0 > 0 ? '− ' + x0s : '+ ' + x0s.replace(/^[−-]/, '')) + ')';
+  const tail = y0 === 0 ? '' : (y0 < 0 ? ' − ' + fmt(-y0) : ' + ' + fmt(y0));
+  if (k === 0) return 'y = ' + fmt(y0);
+  return 'y = ' + kc + inner + tail;
+}
+function fixMinus(h) { return String(h).replace(/(^|[\s(\[,=:;{|])-(?=\d)/g, '$1−'); }
+function clean(t) { t.intro = fixMinus(t.intro); t.steps = t.steps.map(fixMinus); t.parts.forEach(p => { p.label = fixMinus(p.label); }); return t; }
+
+/* exp e^(...) display */
+const ex = e => 'e<sup>' + e + '</sup>';
+function linStr(a, b, v) { return poly([[a, v], [b, '']]); } // a v + b
+
+const WEEKS = {
+  W12: 'Weeks 1 and 2 · Lectures 1, 2 · functions, graphs, economic domain',
+  W3: 'Week 3 · Lecture 3 · derivative, tangent, differential',
+  W4: 'Week 4 · Lecture 4 · extrema, Taylor, function analysis, elasticity',
+  W5: 'Week 5 · Lecture 5 · optimisation, partial derivatives, total differential, MRS',
+  W6: 'Week 6 · Lecture 6 · extrema of two variables'
+};
+const CALC = {};
+
+/* ---------- 1. Graph reading (seminar 5 Oct, problems 1.8, 1.9) ---------- */
+function ratParams(o) {
+  for (let g = 0; g < 500; g++) {
+    const p = o || {};
+    const k = p.k != null ? p.k : R.pick([1, 1, 2, -1, 0.5]);
+    const zs = p.zs || (R.int(0, 1) ? [R.int(-4, 4), R.int(-4, 4)] : [R.int(-4, 4)]);
+    const ps = p.ps || (R.int(0, 1) ? [R.int(-4, 4), R.int(-4, 4)] : [R.int(-4, 4)]);
+    if (!o) {
+      if (zs.length === 2 && zs[0] === zs[1] && R.int(0, 1)) continue;
+      if (ps.some(q => q === 0) || ps.some(q => zs.includes(q))) continue;
+    }
+    // multiplicities: two equal entries = double
+    const num = x => zs.length === 2 ? (x - zs[0]) * (x - zs[1]) : (x - zs[0]) * (zs.length === 1 && ps.length === 2 ? 1 : 1);
+    const nd = zs.length, dd = ps.length;
+    const f = x => k * zs.reduce((s, z) => s * (x - z), 1) / ps.reduce((s, q) => s * (x - q), 1);
+    return { k, zs, ps, f, nd, dd };
+  }
+}
+function multStr(arr, v) {
+  const u = [...new Set(arr)].sort((a, b) => a - b);
+  return u.map(z => { const m = arr.filter(q => q === z).length; return v + ' = ' + fmt(z) + ' (' + (m === 1 ? 'simple, odd' : 'double, even') + ')'; }).join(', ');
+}
+function ratStr(P) {
+  const fac = (arr) => { const u = [...new Set(arr)]; return u.map(z => { const m = arr.filter(q => q === z).length; const b = z === 0 ? 'x' : '(x' + (z > 0 ? ' − ' + z : ' + ' + (-z)) + ')'; return m === 2 ? (z === 0 ? 'x²' : b + '²') : b; }).join(''); };
+  const kk = P.k === 1 ? '' : P.k === -1 ? '−' : fq(P.k);
+  return kk + fr(fac(P.zs), fac(P.ps));
+}
+function ratAsym(P) { return P.nd === P.dd ? P.k : (P.nd < P.dd ? 0 : null); }
+function ratView(P) {
+  const lo = Math.min(...P.zs, ...P.ps) - 2.5, hi = Math.max(...P.zs, ...P.ps) + 2.5;
+  const x0 = Math.min(-5, Math.floor(lo)), x1 = Math.max(5, Math.ceil(hi));
+  return { f: P.f, x0, x1, y0: -5, y1: 5, va: [...new Set(P.ps)], ha: ratAsym(P), xl: 'x', yl: 'y', pts: [...new Set(P.zs)].map(z => ({ x: z, y: 0, c: '#14783c' })).concat([{ x: 0, y: P.f(0), c: '#1d4fb8' }]) };
+}
+CALC.graph = { wk: 'W12', name: 'Reading a graph', src: 'Seminar 5 Oct, problems 1.8 and 1.9', book: { k: 1, zs: [-2, 1], ps: [-1, 3] },
+  gen(o) {
+    let P, t0;
+    for (;;) { P = ratParams(o); if (Math.abs(P.f(0)) <= 4.5 && P.nd <= P.dd) break; if (o) break; }
+    const pz = [...new Set(P.ps)];
+    do { t0 = R.int(-5, 5); } while (P.ps.includes(t0) || P.zs.includes(t0));
+    if (o) t0 = -3;
+    const pos = P.f(t0) > 0;
+    const asy = ratAsym(P);
+    return {
+      intro: 'The figure shows the graph of the function f(x) (the red dashed lines are asymptotes, one square is one unit). Read from the graph: the zeros, the poles, the horizontal asymptote, an estimate of the initial value f(0), and whether f is positive or negative at x = ' + fmt(t0) + '.',
+      introSk: [{ plot: ratView(P), cap: 'Graph of f(x)' }],
+      parts: [LS('Zeros (all x where the graph meets the x axis)', [...new Set(P.zs)]), LS('Poles (vertical asymptotes)', pz), N('Horizontal asymptote y =', asy), N('Initial value f(0), estimate', P.f(0), { tol: 0.3 }), CH('Sign of f(' + fmt(t0) + ')', ['positive', 'negative'], pos ? 0 : 1)],
+      steps: [
+        B('Zeros') + ': where the graph touches or crosses the x axis: ' + multStr(P.zs, 'x') + '. Crossing means odd multiplicity, touching means even.',
+        B('Poles') + ': vertical asymptotes, the function value runs to ±∞: ' + multStr(P.ps, 'x') + '. Sign changes at an odd pole, stays at an even pole.',
+        B('Asymptotic behaviour') + ': for x → ±∞ the graph approaches y = ' + fmt(asy) + '.',
+        B('Initial value') + ': the point on the y axis, f(0) ≈ ' + dec(P.f(0), 2) + '. (The formula behind this graph is f(x) = ' + ratStr(P) + '.)',
+        B('Sign') + ' at x = ' + fmt(t0) + ': the graph is ' + (pos ? 'above' : 'below') + ' the x axis, so f is ' + (pos ? 'positive' : 'negative') + '.'
+      ],
+      sk: [{ plot: ratView(P), cap: 'Zeros green, initial value blue, asymptotes red' }],
+      _chk: { f: P.f }
+    };
+  } };
+
+/* ---------- 2. Rational function from its formula (Lecture 2, problems 1.35) ---------- */
+CALC.rational = { wk: 'W12', name: 'Rational function: zeros, poles, asymptote', src: 'Lecture 2, problem 1.35h', book: { k: 1, zs: [0, 3, 3], ps: [-1, -1, 2] },
+  gen(o) {
+    let P;
+    for (;;) { P = ratParams(o); if (o) break; if (P.nd <= P.dd) break; }
+    const pz = [...new Set(P.ps)], zz = [...new Set(P.zs)];
+    const asy = ratAsym(P);
+    const dbl = pz.find(q => P.ps.filter(z => z === q).length === 2);
+    const qp = pz[0];
+    const changes = P.ps.filter(z => z === qp).length % 2 === 1;
+    return {
+      intro: 'Consider the function f(x) = ' + ratStr(P) + '. Find its zeros, its poles, the initial value, the horizontal asymptote, and decide whether the sign of f changes at the pole x = ' + fmt(qp) + '.',
+      parts: [LS('Zeros', zz), LS('Poles', pz), N('Initial value f(0)', P.f(0)), N('Horizontal asymptote y =', asy), CH('At the pole x = ' + fmt(qp) + ' the sign', ['changes', 'stays the same'], changes ? 0 : 1)],
+      steps: [
+        B('Domain') + ': the denominator must not be 0, D<sub>f</sub> = ℝ \\ {' + pz.map(fmt).join(', ') + '}.',
+        B('Zeros') + ' (numerator = 0): ' + multStr(P.zs, 'x') + '.',
+        B('Poles') + ' (denominator = 0): ' + multStr(P.ps, 'x') + '. Odd multiplicity: the sign changes. Even: it stays.',
+        B('Initial value') + ': f(0) = ' + fq(P.f(0)) + (toFrac(P.f(0)) && toFrac(P.f(0))[1] !== 1 ? ' ≈ ' + dec(P.f(0), 3) : '') + '.',
+        B('Asymptote') + ': degree of numerator ' + P.nd + ', degree of denominator ' + P.dd + (P.nd === P.dd ? ', equal degrees, so y = ratio of leading coefficients = ' + fmt(asy) : ', numerator smaller, so y = 0') + '.'
+      ],
+      sk: [{ plot: ratView(P), cap: 'Sketch: zeros, poles and the asymptote' }],
+      _chk: { f: P.f }
+    };
+  } };
+
+/* ---------- 3. Economic domain of a log demand (Midterm 1 24/25, problems 1.37, 1.52) ---------- */
+CALC.lndom = { wk: 'W12', name: 'Economic domain of a demand function', src: 'Midterm 1 2024/25 Problem 1; problems 1.37a, 1.52', book: { m: 6, n: 3, c: 2 },
+  gen(o) {
+    const c = o ? o.c : R.pick([1, 2, 2, 3]); const m = o ? o.m : R.int(3, 9);
+    let n; do { n = o ? o.n : R.int(1, c * m - 1); } while (!o && (n / c >= m - 0.4 || gcd(n, c) !== 1 && c > 1 && R.int(0, 1)));
+    const lo = n / c, z = (m + n) / (1 + c);
+    const den = (n === 0 ? '' : n) + ' − ' + (c === 1 ? '' : c) + 'P';
+    return {
+      intro: 'Consider the demand function Q(P) = ln ' + fr('P − ' + m, den) + '. a) Find its mathematical domain. b) Find its economic domain.',
+      parts: [N('a) Mathematical domain: lower limit', lo), N('a) Mathematical domain: upper limit', m), N('b) Economic domain: lower limit', lo), N('b) Economic domain: upper limit', z)],
+      steps: [
+        B('a)') + ' The natural logarithm is defined for positive numbers. Solve ' + fr('P − ' + m, den) + ' > 0.',
+        'The rational function has the zero P = ' + m + ' (odd) and the pole P = ' + fq(lo) + ' (odd).',
+        '<div class="sl">' + signLine([{ t: fmt(lo), pole: true }, { t: String(m) }], ['−', '+', '−'], 'P') + '</div>' + B('D<sub>Q</sub><sup>M</sup> = (' + fq(lo) + ', ' + m + ')'),
+        B('b)') + ' P ≥ 0 holds on D<sub>Q</sub><sup>M</sup>. The quantity is nonnegative for Q(P) ≥ 0 ⇔ ln ' + fr('P − ' + m, den) + ' ≥ 0 ⇔ ' + fr('P − ' + m, den) + ' ≥ 1 ⇔ ' + fr(poly([[1 + c, 'P'], [-(m + n), '']]), den) + ' ≥ 0.',
+        'The last rational function has the zero P = ' + fq(z) + ' (odd) and the pole P = ' + fq(lo) + ' (odd).',
+        '<div class="sl">' + signLine([{ t: fmt(lo), pole: true }, { t: fmt(z) }], ['−', '+', '−'], 'P') + '</div>' + B('D<sub>Q</sub><sup>E</sup> = (' + fq(lo) + ', ' + fq(z) + ']') + '  (open at the pole, closed at the zero because Q = 0 is allowed)'
+      ],
+      sk: [{ plot: { f: P => { const u = (P - m) / (n - c * P); return u > 0 ? Math.log(u) : NaN; }, x0: 0, x1: Math.ceil(m + 1), y0: -3, y1: 3, va: [lo], xl: 'P', yl: 'Q', pts: [{ x: z, y: 0, t: 'Q = 0', c: '#14783c' }], step: 1 }, cap: 'Q(P) exists only between the pole and ' + m + '. It is ≥ 0 up to P = ' + fmt(z) + '.' }],
+      _chk: {}
+    };
+  } };
+
+/* ---------- 4. Linear demand from a graph, elasticity (Midterm 1 25/26 Problem 1, problems 2.25) ---------- */
+CALC.lindem = { wk: 'W4', name: 'Linear demand: formula, economic domain, elasticity', src: 'Midterm 1 2025/26 Problem 1; problems 1.29, 2.25', book: { Q0: 4, Pm: 6, P1: 3, Ps: 4 },
+  gen(o) {
+    let Q0, Pm, P1, Ps;
+    do { Q0 = o ? o.Q0 : R.int(3, 9); Pm = o ? o.Pm : R.int(3, 10); P1 = o ? o.P1 : R.int(1, Pm - 1); Ps = o ? o.Ps : R.int(1, Pm - 1); } while (!o && (Q0 === Pm || Ps === P1));
+    const b = Q0 / Pm; const E1 = -P1 / (Pm - P1); const k = -Ps / (Pm - Ps);
+    return {
+      intro: 'The figure shows the graph of a linear demand function. Mind the meaning of the coordinate axes! a) Find its formula Q(P) = a − bP. b) Find its economic domain. c) Find its elasticity and evaluate it at P = ' + P1 + '. d) At what price is the elasticity equal to ' + fq(k) + '?',
+      introSk: [{ plot: { x0: 0, x1: Math.max(Q0, 4) + 1, y0: 0, y1: Pm + 1, segs: [[0, Pm, Q0, 0]], xl: 'Q', yl: 'P' }, cap: 'P on the vertical axis, Q on the horizontal axis' }],
+      parts: [N('a) a (the quantity at P = 0)', Q0), N('a) b (the slope coefficient)', b), N('b) Economic domain [0, P_max]: P_max', Pm), N('c) Elasticity at P = ' + P1, E1), N('d) Price P', Ps)],
+      steps: [
+        B('a)') + ' Read two points. Careful: P is on the vertical axis. P = 0 gives Q = ' + Q0 + ', and P = ' + Pm + ' gives Q = 0.',
+        'Line through the points: Q(P) = ' + Q0 + ' − ' + fq(b) + 'P' + ' (slope ' + fr('0 − ' + Q0, Pm + ' − 0') + ' = −' + fq(b) + ').',
+        B('b)') + ' Economic domain: P ≥ 0 and Q ≥ 0, so ' + Q0 + ' − ' + fq(b) + 'P ≥ 0 ⇔ P ≤ ' + Pm + '. ' + B('D<sub>Q</sub><sup>E</sup> = [0, ' + Pm + ']'),
+        B('c)') + ' E<sub>Q,P</sub> = ' + fr('P', 'Q') + ' · Q′ = ' + fr('P', Q0 + ' − ' + fq(b) + 'P') + ' · (−' + fq(b) + ') = ' + B('−' + fr('P', Pm + ' − P')),
+        'At P = ' + P1 + ': E = −' + fr(P1, Pm - P1) + ' = ' + fmt(E1) + (Math.abs(E1) < 1e-9 ? '' : '. If the price rises by 1%, demand falls by about ' + dec(Math.abs(E1), 2) + '%' + (Math.abs(E1) > 1 ? ' (elastic).' : Math.abs(E1) < 1 ? ' (inelastic).' : ' (unit elastic).')),
+        B('d)') + ' −' + fr('P', Pm + ' − P') + ' = ' + fq(k) + ' ⇒ ' + B('P = ' + Ps)
+      ],
+      sk: [{ plot: { x0: 0, x1: Math.max(Q0, 4) + 1, y0: 0, y1: Pm + 1, segs: [[0, Pm, Q0, 0]], xl: 'Q', yl: 'P', pts: [{ x: 0, y: Pm, t: 'P = ' + Pm, dx: 22 }, { x: Q0, y: 0, t: 'Q = ' + Q0, dy: -4 }] }, cap: 'Two points give the line.' }],
+      _chk: { E: P => -b * P / (Q0 - b * P), E1, Ps, k }
+    };
+  } };
+
+/* ---------- 5. Derivative rules ---------- */
+function derivTemplate(o) {
+  const T = [
+    () => { const a = R.int(-3, 3), b = R.pick([1, 2, -1, 3]); const x0 = R.pick([0, 1]); const f = x => (x * x + a) * Math.exp(b * x), d = x => Math.exp(b * x) * (2 * x + b * (x * x + a));
+      return { fs: '(' + poly([[1, 'x²'], [a, '']]) + ')' + ex(fmt(b) === '1' ? 'x' : fmt(b).replace('−1', '−') + 'x'), rule: 'product rule and chain rule: (uv)′ = u′v + uv′', ds: ex(b === 1 ? 'x' : (b === -1 ? '−x' : fmt(b) + 'x')) + '(' + poly([[b, 'x²'], [2, 'x'], [a * b, '']]) + ')', f, d, x0 }; },
+    () => { const a = R.int(-3, 3), b = R.int(1, 4); const x0 = R.int(-1, 2); const f = x => (x + a) / (x * x + b), d = x => (-x * x - 2 * a * x + b) / ((x * x + b) ** 2);
+      return { fs: fr(poly([[1, 'x'], [a, '']]), poly([[1, 'x²'], [b, '']])), rule: 'quotient rule: (u/v)′ = (u′v − uv′)/v²', ds: fr(poly([[1, 'x²'], [b, '']]) + ' − 2x(' + poly([[1, 'x'], [a, '']]) + ')', '(' + poly([[1, 'x²'], [b, '']]) + ')²') + ' = ' + fr(poly([[-1, 'x²'], [-2 * a, 'x'], [b, '']]), '(' + poly([[1, 'x²'], [b, '']]) + ')²'), f, d, x0 }; },
+    () => { const c = R.pick([[1, 9, 4], [1, 16, 3], [3, 1, 1], [1, 7, 3], [2, 1, 2], [5, 4, 3]]); const [a, b, x0] = c; const f = x => Math.sqrt(a * x * x + b), d = x => a * x / Math.sqrt(a * x * x + b);
+      return { fs: rt(poly([[a, 'x²'], [b, '']])), rule: 'chain rule: outside √u, inside u = ' + poly([[a, 'x²'], [b, '']]), ds: fr('1', '2' + rt(poly([[a, 'x²'], [b, '']]))) + ' · ' + fmt(2 * a) + 'x = ' + fr(term(a, 'x', true), rt(poly([[a, 'x²'], [b, '']]))), f, d, x0 }; },
+    () => { const a = R.int(-3, 3), b = R.int(1, 5); const x0 = R.int(0, 2); const f = x => Math.log(x * x + a * x + b), d = x => (2 * x + a) / (x * x + a * x + b);
+      if (x0 * x0 + a * x0 + b <= 0) return null;
+      return { fs: 'ln(' + poly([[1, 'x²'], [a, 'x'], [b, '']]) + ')', rule: 'chain rule: (ln u)′ = u′/u', ds: fr(poly([[2, 'x'], [a, '']]), poly([[1, 'x²'], [a, 'x'], [b, '']])), f, d, x0 }; },
+    () => { const n = R.int(2, 4); const x0 = R.pick([1, Math.E]); const f = x => x ** n * Math.log(x), d = x => x ** (n - 1) * (n * Math.log(x) + 1);
+      return { fs: sp('x', n) + ' ln x', rule: 'product rule', ds: fmt(n) + pw('x', n - 1) + ' ln x + ' + sp('x', n) + ' · ' + fr(1, 'x') + ' = ' + pw('x', n - 1) + '(' + n + ' ln x + 1)', f, d, x0, x0s: x0 === 1 ? '1' : 'e' }; },
+    () => { const a = R.pick([1, -1, 2, 0.5]), b = R.int(-3, 3); const x0 = R.pick([0, 1]); const f = x => Math.exp(a * x * x + b * x), d = x => (2 * a * x + b) * Math.exp(a * x * x + b * x);
+      return { fs: ex(poly([[a, 'x²'], [b, 'x']])), rule: 'chain rule: (e<sup>u</sup>)′ = e<sup>u</sup> · u′', ds: '(' + poly([[2 * a, 'x'], [b, '']]) + ')' + ex(poly([[a, 'x²'], [b, 'x']])), f, d, x0 }; }
+  ];
+  for (;;) { const t = R.pick(T)(); if (t) return t; }
+}
+CALC.deriv = { wk: 'W3', name: 'Derivative with the rules', src: 'Problems 2.1 to 2.4',
+  gen() {
+    const t = derivTemplate(); const xs = t.x0s || fmt(t.x0);
+    return {
+      intro: 'Let f(x) = ' + t.fs + '. Find f′(x) and evaluate f(' + xs + ') and f′(' + xs + '). Give decimals to 4 places where needed.',
+      parts: [N('f(' + xs + ')', t.f(t.x0)), N('f′(' + xs + ')', t.d(t.x0))],
+      steps: [B('Rule') + ': ' + t.rule + '.', FX + ' = ' + t.ds, 'f(' + xs + ') = ' + fmt(t.f(t.x0)), 'f′(' + xs + ') = ' + B(fmt(t.d(t.x0))) + (t.d(t.x0) > 0 ? ', positive, so f is increasing at ' + xs : t.d(t.x0) < 0 ? ', negative, so f is decreasing at ' + xs : ', zero, so ' + xs + ' is a stationary point') + '.'],
+      sk: [], _chk: { f: t.f, d: t.d, x0: t.x0 }
+    };
+  } };
+
+/* ---------- 6. Tangent line (problem 2.8, lecture 3) ---------- */
+CALC.tangent = { wk: 'W3', name: 'Tangent line', src: 'Problem 2.8; Lecture 3 p8',
+  gen() {
+    const t = derivTemplate(); const xs = t.x0s || fmt(t.x0); const k = t.d(t.x0), y0 = t.f(t.x0), n = y0 - k * t.x0;
+    return {
+      intro: 'Find the tangent line to the graph of f(x) = ' + t.fs + ' at the point with x = ' + xs + '. Write it as y = kx + n.',
+      parts: [N('k (slope)', k), N('n (intercept)', n)],
+      steps: [B('Formula') + ': y = f′(a)(x − a) + f(a), with a = ' + xs + '.', 'f(' + xs + ') = ' + fmt(y0), FX + ' = ' + t.ds + ' (' + t.rule + ')', 'k = f′(' + xs + ') = ' + fmt(k), lineEq(k, xs, t.x0, y0) + ' ⇒ ' + B('y = ' + poly([[k, 'x'], [n, '']]))],
+      sk: [{ plot: { f: t.f, x0: t.x0 - 2.5, x1: t.x0 + 2.5, y0: y0 - Math.max(4, Math.abs(k) * 1.6), y1: y0 + Math.max(4, Math.abs(k) * 1.6), ystep: Math.max(1, Math.round(Math.abs(k) * 3.2 / 8)), segs: [[t.x0 - 2.5, y0 - 2.5 * k, t.x0 + 2.5, y0 + 2.5 * k]], pts: [{ x: t.x0, y: y0, t: 'T' }], step: 1, lbl: 1 }, cap: 'The tangent touches the graph at T and has slope f′(a).' }],
+      _chk: { f: t.f, d: t.d, x0: t.x0 }
+    };
+  } };
+
+/* ---------- 7. Linear approximation and differential (problems 2.10, 2.13, 2.14, 2.16) ---------- */
+CALC.approx = { wk: 'W3', name: 'Linear approximation and differential', src: 'Problems 2.10e, 2.13b, 2.14c, 2.16; Lecture 3 p7 to 9',
+  gen() {
+    const v = R.int(0, 3);
+    if (v === 0 || v === 1) {
+      const cube = v === 1; const a0 = cube ? R.pick([2, 3, 4, 5]) : R.int(3, 12); const A = cube ? a0 ** 3 : a0 * a0; const d = R.pick([-2, -1, -0.5, 0.5, 1, 2, 0.4, -0.3]);
+      const f = cube ? Math.cbrt : Math.sqrt; const fd = cube ? (x => 1 / (3 * Math.cbrt(x * x))) : (x => 1 / (2 * Math.sqrt(x)));
+      const est = f(A) + fd(A) * d; const tgt = A + d; const sym = cube ? '∛' : '√';
+      return {
+        intro: 'Use the linear approximation (the differential) to estimate ' + sym + fD(tgt) + '. Use a = ' + A + '.',
+        parts: [N('f(a)', f(A)), N('f′(a)', fd(A)), N('Estimate of ' + sym + fD(tgt), est, { tol: 0.002 })],
+        steps: [B('Idea') + ': near a, f(x) ≈ f(a) + f′(a)(x − a). Take f(x) = ' + (cube ? 'x<sup>1/3</sup>' : rt('x')) + ', a = ' + A + ', Δx = x − a = ' + fD(d) + '.', 'f(a) = ' + fmt(f(A)), FX + ' = ' + (cube ? fr(1, '3 ∛x²') : fr(1, '2' + rt('x'))) + ' ⇒ f′(' + A + ') = ' + fq(fd(A)), 'f' + pD(tgt) + ' ≈ ' + fmt(f(A)) + ' + ' + fq(fd(A)) + ' · ' + pD(d) + ' = ' + B(dec(est, 4)), 'Exact value: ' + dec(f(tgt), 4) + '. The estimate is good because Δx is small.'],
+        sk: [], _chk: { f, fd, A, d, est }
+      };
+    }
+    if (v === 2) {
+      const h = R.pick([0.05, 0.1, -0.1, 0.2, -0.05, 0.08]); const est = h;
+      return {
+        intro: 'Use the differential to estimate ln ' + fD(1 + h) + '. Use a = 1.',
+        parts: [N('f(1)', 0), N('f′(1)', 1), N('Estimate of ln ' + fD(1 + h), est, { tol: 0.002 })],
+        steps: [B('Idea') + ': f(x) ≈ f(a) + f′(a)(x − a), f(x) = ln x, a = 1, Δx = ' + fD(h) + '.', 'f(1) = ln 1 = 0', FX + ' = ' + fr(1, 'x') + ' ⇒ f′(1) = 1', 'ln ' + fD(1 + h) + ' ≈ 0 + 1 · ' + pD(h) + ' = ' + B(fmt(est)), 'Exact value: ' + dec(Math.log(1 + h), 4) + '.'],
+        sk: [], _chk: {}
+      };
+    }
+    const a = R.int(2, 8), b = R.int(2, 5), p0 = R.int(0, b - 1), dp = R.pick([-0.1, 0.1, -0.2, 0.2, 0.3]);
+    const D = p => (p + a) ** 2 * (b - p), Dd = p => 2 * (p + a) * (b - p) - (p + a) ** 2;
+    const dD = Dd(p0) * dp;
+    return {
+      intro: 'The demand for a product is D(p) = (p + ' + a + ')²(' + b + ' − p), where p is the price. The current price is p = ' + p0 + '. Use the differential to estimate the change in demand if the price changes by ' + fD(dp) + '.',
+      parts: [N('D(' + p0 + ')', D(p0)), N('D′(' + p0 + ')', Dd(p0)), N('Estimated change ΔD ≈ dD', dD, { tol: 0.01 })],
+      steps: [B('Differential') + ': ΔD ≈ dD = D′(p₀) · Δp.', 'D(' + p0 + ') = ' + fmt(D(p0)), 'D′(p) = 2(p + ' + a + ')(' + b + ' − p) − (p + ' + a + ')² (product rule)', 'D′(' + p0 + ') = ' + fmt(Dd(p0)), 'ΔD ≈ ' + fmt(Dd(p0)) + ' · ' + pD(dp) + ' = ' + B(fmt(dD)) + '. ' + (dD < 0 ? 'Demand decreases' : 'Demand increases') + ' by about ' + fmt(Math.abs(dD)) + ' units.', 'Exact change: ' + dec(D(p0 + dp) - D(p0), 4) + '.'],
+      sk: [], _chk: { D, Dd, p0 }
+    };
+  } };
+
+/* ---------- 8. Taylor polynomial of degree 2 (problems 2.18, 2.19; Lecture 4) ---------- */
+CALC.taylor = { wk: 'W4', name: 'Taylor polynomial (degree 2) and estimate', src: 'Problems 2.18f, 2.19a; Lecture 4 p2 to 8',
+  gen() {
+    const v = R.int(0, 3); let F, fa, f1, f2, a, xt, name, fs, d1s, d2s;
+    if (v === 0) { a = R.pick([4, 9, 16, 25, 36, 49]); const d = R.pick([1, -1, 2, 0.5]); xt = a + d; F = Math.sqrt; fa = Math.sqrt(a); f1 = 1 / (2 * fa); f2 = -1 / (4 * fa ** 3); name = '√' + fD(xt); fs = rt('x'); d1s = fr(1, '2' + rt('x')); d2s = '−' + fr(1, '4' + sp('x', '3/2')); }
+    else if (v === 1) { a = 1; xt = R.pick([1.1, 0.9, 1.2, 0.8, 1.05]); F = Math.log; fa = 0; f1 = 1; f2 = -1; name = 'ln ' + fD(xt); fs = 'ln x'; d1s = fr(1, 'x'); d2s = '−' + fr(1, 'x²'); }
+    else if (v === 2) { a = 0; xt = R.pick([0.1, -0.2, 0.2, 0.3, -0.1]); F = Math.exp; fa = 1; f1 = 1; f2 = 1; name = 'e<sup>' + fD(xt) + '</sup>'; fs = 'e<sup>x</sup>'; d1s = 'e<sup>x</sup>'; d2s = 'e<sup>x</sup>'; }
+    else { a = 2; xt = R.pick([2.1, 1.9, 2.2]); F = x => 1 / (x * x); fa = 0.25; f1 = -0.25; f2 = 6 / 16; name = '1/' + fD(xt) + '²'; fs = fr(1, 'x²'); d1s = '−' + fr(2, 'x³'); d2s = fr(6, sp('x', 4)); }
+    const c2 = f2 / 2, h = xt - a; const T2 = fa + f1 * h + c2 * h * h;
+    return {
+      intro: 'Find the Taylor polynomial of degree 2 of f(x) = ' + fs + ' about a = ' + a + ', and use it to estimate ' + name + '.',
+      parts: [N('f(a)', fa), N('f′(a)', f1), N('f″(a)', f2), N('Estimate T₂' + pD(xt) + '', T2, { tol: 0.0005 })],
+      steps: [B('Formula') + ': T₂(x) = f(a) + f′(a)(x − a) + ' + fr('f″(a)', '2') + '(x − a)².', 'f(x) = ' + fs + ' ⇒ f(' + a + ') = ' + fq(fa), FX + ' = ' + d1s + ' ⇒ f′(' + a + ') = ' + fq(f1), FXX + ' = ' + d2s + ' ⇒ f″(' + a + ') = ' + fq(f2), 'T₂(x) = ' + poly([[fa, '']]) + term(f1, '(x' + (a ? ' − ' + a : '') + ')') + term(c2, '(x' + (a ? ' − ' + a : '') + ')²'), 'Estimate: T₂' + pD(xt) + ' = ' + B(dec(T2, 5)) + '. Exact: ' + dec(F(xt), 5) + '.'],
+      sk: [], _chk: { F, a, fa, f1, f2 }
+    };
+  } };
+
+/* ---------- 9. Local extrema of a cubic, inflection (Lecture 3, 4) ---------- */
+CALC.localext = { wk: 'W4', name: 'Local extrema and inflection point', src: 'Lecture 3 p10 to 12; Lecture 4 p1',
+  gen() {
+    let s1, s2; do { s1 = R.int(-3, 3); s2 = R.int(-2, 4); } while (s2 <= s1);
+    const sg = R.pick([1, 1, -1]), r = R.int(-6, 6);
+    const c3 = 2 * sg, c2 = -3 * (s1 + s2) * sg, c1 = 6 * s1 * s2 * sg;
+    const f = x => c3 * x ** 3 + c2 * x * x + c1 * x + r;
+    const xmax = sg > 0 ? s1 : s2, xmin = sg > 0 ? s2 : s1, xi = (s1 + s2) / 2;
+    const ys = [f(s1), f(s2)]; const yl = Math.min(...ys), yh = Math.max(...ys);
+    return {
+      intro: 'Consider f(x) = ' + poly([[c3, 'x³'], [c2, 'x²'], [c1, 'x'], [r, '']]) + '. Find its local extrema (with the second derivative test) and its inflection point. Is f increasing or decreasing on (' + s1 + ', ' + s2 + ')?',
+      parts: [N('x of the local maximum', xmax), N('f at the maximum', f(xmax)), N('x of the local minimum', xmin), N('f at the minimum', f(xmin)), N('x of the inflection point', xi), CH('On (' + s1 + ', ' + s2 + ') f is', ['increasing', 'decreasing'], sg > 0 ? 1 : 0)],
+      steps: [
+        FX + ' = ' + poly([[3 * c3, 'x²'], [2 * c2, 'x'], [c1, '']]) + ' = ' + fmt(3 * c3) + '(x' + (s1 ? sgn(-s1) : '') + ')(x' + (s2 ? sgn(-s2) : '') + ')',
+        B('Stationary points') + ': f′(x) = 0 ⇒ x₁ = ' + s1 + ', x₂ = ' + s2,
+        FXX + ' = ' + poly([[6 * c3, 'x'], [2 * c2, '']]),
+        'f″(' + s1 + ') = ' + fmt(6 * c3 * s1 + 2 * c2) + (6 * c3 * s1 + 2 * c2 < 0 ? ' < 0 ⇒ maximum' : ' > 0 ⇒ minimum') + ',  f″(' + s2 + ') = ' + fmt(6 * c3 * s2 + 2 * c2) + (6 * c3 * s2 + 2 * c2 < 0 ? ' < 0 ⇒ maximum' : ' > 0 ⇒ minimum'),
+        B('Maximum M(' + fmt(xmax) + ', ' + fmt(f(xmax)) + '), minimum m(' + fmt(xmin) + ', ' + fmt(f(xmin)) + ')'),
+        B('Inflection') + ': f″(x) = 0 ⇒ x = ' + fmt(xi) + ', f(' + fmt(xi) + ') = ' + fmt(f(xi)) + ' (f‴ = ' + fmt(6 * c3) + ' ≠ 0).',
+        'Between the stationary points f′ has the sign of ' + fmt(3 * c3) + ' · (+) · (−), so f is ' + (sg > 0 ? 'decreasing' : 'increasing') + ' on (' + s1 + ', ' + s2 + ').'
+      ],
+      sk: [{ plot: { f, x0: s1 - 2, x1: s2 + 2, y0: yl - Math.max(4, (yh - yl) * 0.5), y1: yh + Math.max(4, (yh - yl) * 0.5), ystep: Math.max(1, Math.ceil((yh - yl + 8) / 10)), pts: [{ x: xmax, y: f(xmax), t: 'max' }, { x: xmin, y: f(xmin), t: 'min', dy: 22 }, { x: xi, y: f(xi), t: 'I', c: '#1d4fb8' }], lbl: 2 }, cap: 'Maximum, minimum and the inflection point I halfway between them.' }],
+      _chk: { f, xmax, xmin, xi }
+    };
+  } };
+
+/* ---------- 10. Full analysis A ln(b − x) + (x + c)² (Midterm 1 25/26 Problem 2; problem 2.43) ---------- */
+CALC.analysis = { wk: 'W4', name: 'Function analysis: domain, derivatives, extrema, inflection', src: 'Midterm 1 2025/26 Problem 2; problem 2.43a', book: { b: 2, c: 0.5, x0: -2 },
+  gen(o) {
+    const combos = [[2, 0.5], [4, 1], [8, 2], [6, 1.5], [9, 1], [8, 0.5], [3, 0.75], [5, 1.8], [12, 3], [4, 0.25]];
+    const [b, c] = o ? [o.b, o.c] : R.pick(combos); const A = 2 * b * c, q = Math.sqrt(b * c);
+    let x0; do { x0 = o ? o.x0 : R.int(Math.floor(-3), Math.floor(b) - 1); } while (!o && (x0 === 0 || Math.abs(x0 - (b - c)) < 1e-9));
+    const f = x => A * Math.log(b - x) + (x + c) ** 2, d = x => -A / (b - x) + 2 * (x + c), dd = x => -A / (b - x) ** 2 + 2;
+    const r2 = b - c, xi = b - q;
+    const cs = fq(c);
+    const ymn = Math.min(f(0), f(xi), f(r2)), ymx = Math.max(f(0), f(xi), f(r2));
+    return {
+      intro: 'Consider the function f(x) = ' + fmt(A) + ' ln(' + fmt(b) + ' − x) + (x + ' + cs + ')². a) Find its domain and the first and second derivative. b) Is the function increasing or decreasing at x = ' + x0 + '? c) Find its extrema and inflection points.',
+      parts: [N('a) Domain is (−∞, b): b =', b), N('b) f′(' + x0 + ')', d(x0)), CH('b) At x = ' + x0 + ' the function is', ['increasing', 'decreasing'], d(x0) > 0 ? 0 : 1), N('c) Minimum: x', 0), N('c) Minimum: f(x)', f(0)), N('c) Maximum: x', r2), N('c) Maximum: f(x)', f(r2)), N('c) Inflection point: x', xi), N('c) Inflection point: f(x)', f(xi))],
+      steps: [
+        B('a)') + ' ln needs a positive argument: ' + fmt(b) + ' − x > 0 ⇔ x < ' + fmt(b) + '. ' + B('D<sub>f</sub> = (−∞, ' + fmt(b) + ')'),
+        FX + ' = −' + fr(fmt(A), fmt(b) + ' − x') + ' + 2(x + ' + cs + ') = ' + fr('2x(x − ' + fq(r2) + ')', 'x − ' + fmt(b)),
+        FXX + ' = −' + fr(fmt(A), '(' + fmt(b) + ' − x)²') + ' + 2 = ' + fr('2(x − ' + fq(xi) + ')(x − ' + fq(b + q) + ')', '(x − ' + fmt(b) + ')²'),
+        B('b)') + ' f′(' + x0 + ') = ' + fq(d(x0)) + (d(x0) < 0 ? ' < 0, the function is decreasing' : ' > 0, the function is increasing'),
+        B('c)') + ' f′(x) = 0 ⇒ x₁ = 0, x₂ = ' + fq(r2) + '.  f″(0) = ' + fq(dd(0)) + ' > 0 ⇒ minimum; f″(' + fq(r2) + ') = ' + fq(dd(r2)) + ' < 0 ⇒ maximum.',
+        B('E₁(0, ' + fmt(A) + ' ln ' + fmt(b) + ' + ' + fq(c * c) + ') minimum') + ' ≈ (0, ' + dec(f(0), 3) + ');  ' + B('E₂(' + fq(r2) + ', ' + fq(r2 + c === b ? b * b : (r2 + c) ** 2) + (Math.abs(c - 1) < 1e-9 ? '' : ' + ' + fmt(A) + ' ln ' + fq(c)) + ') maximum') + ' ≈ (' + fmt(r2) + ', ' + dec(f(r2), 3) + ')',
+        B('Inflection') + ': f″(x) = 0 ⇒ (' + fmt(b) + ' − x)² = ' + fmt(b * c) + ' ⇒ x = ' + fq(xi) + ' (the other root ' + fq(b + q) + ' is outside D<sub>f</sub>). ' + B('I(' + fq(xi) + ', ' + dec(f(xi), 3) + ')')
+      ],
+      sk: [{ plot: { f, x0: Math.min(-2, x0 - 1), x1: b + 0.5, d1: b - 1e-3, y0: Math.floor(ymn - 2), y1: Math.ceil(ymx + 3), va: [b], ystep: Math.max(1, Math.round((ymx - ymn + 5) / 8)), step: b > 6 ? 2 : 1, pts: [{ x: 0, y: f(0), t: 'min', dy: 22 }, { x: r2, y: f(r2), t: 'max' }, { x: xi, y: f(xi), t: 'I', c: '#1d4fb8', dx: 10 }] }, cap: 'Graph: ln(' + fmt(b) + ' − x) → −∞ at the border x = ' + fmt(b) + '.' }],
+      _chk: { f, d, dd, xi, r2 }
+    };
+  } };
+
+/* ---------- 11. Global extrema on a closed interval (Midterm 1 24/25 Problem 2; problem 2.48b) ---------- */
+CALC.global = { wk: 'W4', name: 'Global extrema on an interval', src: 'Midterm 1 2024/25 Problem 2; problem 2.48b', book: { al: 1, be: 5, ga: 9, de: 3 },
+  gen(o) {
+    if (o || R.int(0, 2) > 0) {
+      for (let g = 0; g < 2000; g++) {
+        const al = o ? o.al : R.pick([1, 2, 3]), de = o ? o.de : R.pick([1, 2, 3]), be = o ? o.be : R.int(1, 9), ga = o ? o.ga : R.int(2, 12);
+        const lo = -be / al, hi = ga / de; if (hi - lo < 2) continue;
+        const xs = (al * al * ga - de * de * be) / (al * de * (al + de));
+        if (!(xs > lo + 0.3 && xs < hi - 0.3)) continue; if (!toFrac(xs, 6)) continue;
+        const f = x => Math.sqrt(al * x + be) + Math.sqrt(ga - de * x);
+        const fl = f(lo), fh = f(hi), fs = f(xs); if (Math.abs(fl - fh) < 0.05) continue;
+        const xmin = fl < fh ? lo : hi;
+        const t1 = al === 1 ? 'x' : al + 'x', t2 = de === 1 ? 'x' : de + 'x';
+        return {
+          intro: 'Consider the function f(x) = ' + rt(t1 + ' + ' + be) + ' + ' + rt(ga + ' − ' + t2) + '. a) Find its domain. b) Find the global extrema of f(x) on its domain.',
+          parts: [N('a) Domain [a, b]: a', lo), N('a) Domain [a, b]: b', hi), N('b) Global maximum at x', xs), N('b) Global maximum value', fs), N('b) Global minimum at x', xmin), N('b) Global minimum value', f(xmin))],
+          steps: [
+            B('a)') + ' The square root is defined for nonnegative numbers: ' + t1 + ' + ' + be + ' ≥ 0 ⇔ x ≥ ' + fq(lo) + ';  ' + ga + ' − ' + t2 + ' ≥ 0 ⇔ x ≤ ' + fq(hi) + '. ' + B('D<sub>f</sub> = [' + fq(lo) + ', ' + fq(hi) + ']'),
+            B('b)') + ' f′(x) = ' + fr(al, '2' + rt(t1 + ' + ' + be)) + ' − ' + fr(de, '2' + rt(ga + ' − ' + t2)),
+            'Stationary points: ' + fr(al, '2' + rt(t1 + ' + ' + be)) + ' = ' + fr(de, '2' + rt(ga + ' − ' + t2)) + ' ⇒ ' + (al === 1 ? '' : al) + rt(ga + ' − ' + t2) + ' = ' + (de === 1 ? '' : de) + rt(t1 + ' + ' + be) + ' ⇒ ' + (al * al === 1 ? '' : al * al) + '(' + ga + ' − ' + t2 + ') = ' + (de * de === 1 ? '' : de * de) + '(' + t1 + ' + ' + be + ') ⇒ x = ' + fq(xs),
+            'The solution x = ' + fq(xs) + ' ∈ D<sub>f</sub> indeed solves the first equation (both sides positive).',
+            'Consider the stationary point and the endpoints: f(' + fq(xs) + ') = ' + dec(fs, 4) + ' (= ' + rt(fmt(fs * fs)) + '),  f(' + fq(lo) + ') = ' + rt(fmt(fl * fl)) + ' ≈ ' + dec(fl, 4) + ',  f(' + fq(hi) + ') = ' + rt(fmt(fh * fh)) + ' ≈ ' + dec(fh, 4),
+            B('Global maximum M(' + fq(xs) + ', ' + rt(fmt(fs * fs)) + '),  global minimum m(' + fq(xmin) + ', ' + rt(fmt(f(xmin) ** 2)) + ')')
+          ],
+          sk: [{ plot: { f, x0: Math.floor(lo) - 1, x1: Math.ceil(hi) + 1, d0: lo, d1: hi, y0: 0, y1: Math.ceil(fs) + 1, step: hi - lo > 8 ? 2 : 1, pts: [{ x: xs, y: fs, t: 'M' }, { x: xmin, y: f(xmin), t: 'm', dy: 20 }, { x: fl < fh ? hi : lo, y: Math.max(fl, fh), c: '#1d4fb8' }] }, cap: 'Compare the stationary point with BOTH endpoints.' }],
+          _chk: { f, xs, lo, hi }
+        };
+      }
+    }
+    // cubic on an interval
+    for (;;) {
+      let s1 = R.int(-3, 2), s2 = R.int(-1, 4); if (s2 <= s1) continue; const r = R.int(-4, 4);
+      const f = x => x ** 3 - 1.5 * (s1 + s2) * x * x + 3 * s1 * s2 * x + r;
+      const a = R.int(s1 - 2, s1), b = R.int(s1 + 1, s2 + 2); if (b - a < 2) continue;
+      const cand = [a, b, s1, s2].filter(x => x >= a && x <= b); const vals = cand.map(f);
+      const mx = Math.max(...vals), mn = Math.min(...vals); if (vals.filter(v => Math.abs(v - mx) < 1e-9).length > 1 || vals.filter(v => Math.abs(v - mn) < 1e-9).length > 1) continue;
+      const xM = cand[vals.indexOf(mx)], xm = cand[vals.indexOf(mn)];
+      const inside = [s1, s2].filter(x => x > a && x < b);
+      return {
+        intro: 'Find the global extrema of f(x) = ' + poly([[1, 'x³'], [-1.5 * (s1 + s2), 'x²'], [3 * s1 * s2, 'x'], [r, '']]) + ' on the interval I = [' + a + ', ' + b + '].',
+        parts: [N('Global maximum at x', xM), N('Global maximum value', mx), N('Global minimum at x', xm), N('Global minimum value', mn)],
+        steps: [B('Global extrema can be') + ': ① stationary points inside the interval, ② endpoints of the interval.', FX + ' = ' + poly([[3, 'x²'], [-3 * (s1 + s2), 'x'], [3 * s1 * s2, '']]) + ' = 3(x' + (s1 ? sgn(-s1) : '') + ')(x' + (s2 ? sgn(-s2) : '') + ') = 0 ⇒ x = ' + s1 + ', x = ' + s2 + (inside.length < 2 ? ' (only ' + (inside.length ? inside.join(' and ') : 'none') + ' inside I)' : ''), 'Values: ' + cand.map(x => 'f(' + x + ') = ' + fmt(f(x))).join(',  '), B('Global maximum M(' + xM + ', ' + fmt(mx) + '),  global minimum m(' + xm + ', ' + fmt(mn) + ')')],
+        sk: [{ plot: { f, x0: a - 1, x1: b + 1, d0: a, d1: b, y0: Math.floor(mn) - 2, y1: Math.ceil(mx) + 2, ystep: Math.max(1, Math.round((mx - mn + 4) / 8)), pts: [{ x: xM, y: mx, t: 'M' }, { x: xm, y: mn, t: 'm', dy: 20 }] }, cap: 'Only the part over [' + a + ', ' + b + '] counts.' }],
+        _chk: { f, cand }
+      };
+    }
+  } };
+
+/* ---------- 12. Elasticity of a nonlinear demand (problems 2.20 to 2.28) ---------- */
+CALC.elast = { wk: 'W4', name: 'Price elasticity of demand', src: 'Seminar 26 Oct: problems 2.20, 2.27, 2.28; 2.22 to 2.26',
+  gen() {
+    const v = R.int(0, 3); let D, E, Pu, P0, ds, Es, us, dsym;
+    if (v === 0) { const A = R.pick([100, 50, 200]), k = R.pick([0.1, 0.2, 0.25, 0.5]); D = P => A * Math.exp(-k * P); E = P => -k * P; Pu = 1 / k; P0 = R.int(1, Math.round(2 / k)); dsym = A + 'e<sup>−' + fD(k) + 'P</sup>'; ds = 'D′(P) = −' + fmt(k * A) + 'e<sup>−' + fD(k) + 'P</sup>'; Es = fr('P', A + 'e<sup>−' + fD(k) + 'P</sup>') + ' · (−' + fmt(k * A) + 'e<sup>−' + fD(k) + 'P</sup>) = −' + fD(k) + 'P'; us = fD(k) + 'P = 1 ⇒ P = ' + fmt(Pu); }
+    else if (v === 1) { const b = R.pick([1, 2, 3]), u = R.int(2, 5), a = 3 * b * u * u; D = P => a - b * P * P; E = P => -2 * b * P * P / (a - b * P * P); Pu = u; P0 = R.int(1, Math.floor(Math.sqrt(a / b) - 0.01)); dsym = a + ' − ' + (b === 1 ? '' : b) + 'P²'; ds = 'D′(P) = −' + fmt(2 * b) + 'P'; Es = fr('P', dsym) + ' · (−' + fmt(2 * b) + 'P) = −' + fr(fmt(2 * b) + 'P²', dsym); us = fmt(2 * b) + 'P² = ' + a + ' − ' + (b === 1 ? '' : b) + 'P² ⇒ P² = ' + fmt(a / (3 * b)) + ' ⇒ P = ' + fmt(Pu); }
+    else if (v === 2) { const A = R.pick([3, 6, 10, 20]), c = R.pick([1, 4, 9, 16]); D = P => A / (P * P + c); E = P => -2 * P * P / (P * P + c); Pu = Math.sqrt(c); P0 = R.int(1, 5); dsym = fr(A, 'P² + ' + c); ds = 'D′(P) = −' + fr(fmt(2 * A) + 'P', '(P² + ' + c + ')²'); Es = '−' + fr('2P²', 'P² + ' + c); us = '2P² = P² + ' + c + ' ⇒ P = ' + fmt(Pu); }
+    else { const b = R.pick([2, 5, 10]), Pm = R.pick([20, 30, 40, 60]), a = b * Pm; D = P => a - b * P; E = P => -b * P / (a - b * P); Pu = a / (2 * b); P0 = R.pick([5, 10, 15, 25].filter(x => x < Pm && x !== Pu)); dsym = '−' + b + 'P + ' + a; ds = 'D′(P) = −' + b; Es = '−' + fr(b + 'P', a + ' − ' + b + 'P'); us = b + 'P = ' + a + ' − ' + b + 'P ⇒ P = ' + fmt(Pu); }
+    const pc = R.pick([2, 3, -2, 5, -3]); const e0 = E(P0); const dD = e0 * pc;
+    return {
+      intro: 'The demand function for a product is D(P) = ' + dsym + '. a) Find the price elasticity of demand and evaluate it at P = ' + P0 + '. b) Estimate the percentage change in demand if the current price of ' + P0 + ' ' + (pc > 0 ? 'increases' : 'decreases') + ' by ' + Math.abs(pc) + '%. c) Find the price at which the demand is unit elastic. d) Is the demand elastic or inelastic at P = ' + P0 + '?',
+      parts: [N('a) E at P = ' + P0, e0), N('b) Percentage change in demand (%)', dD, { show: dec(dD, 2) + ' %' }), N('c) Unit elastic at P =', Pu), CH('d) At P = ' + P0 + ' the demand is', ['elastic', 'inelastic', 'unit elastic'], Math.abs(Math.abs(e0) - 1) < 1e-9 ? 2 : Math.abs(e0) > 1 ? 0 : 1)],
+      steps: [B('a)') + ' E<sub>D,P</sub> = ' + fr('P', 'D') + ' · D′.  ' + ds, 'E<sub>D,P</sub> = ' + Es, 'E(' + P0 + ') = ' + B(dec(e0, 4)) + '. Meaning: if the price rises by 1%, demand changes by about ' + dec(e0, 2) + '%.', B('b)') + ' ΔD% ≈ E · ΔP% = ' + dec(e0, 4) + ' · ' + pD(pc) + ' = ' + B(dec(dD, 2) + '%'), B('c)') + ' |E| = 1: ' + us, B('d)') + ' |E(' + P0 + ')| = ' + dec(Math.abs(e0), 3) + (Math.abs(e0) > 1 ? ' > 1 ⇒ elastic' : Math.abs(e0) < 1 ? ' < 1 ⇒ inelastic' : ' = 1 ⇒ unit elastic')],
+      sk: [], _chk: { D, E, Pu, P0 }
+    };
+  } };
+
+/* ---------- 13. Economic optimisation, one variable (problem 2.51; old Midterm 1 2020) ---------- */
+CALC.optim1 = { wk: 'W5', name: 'Profit maximisation (one variable)', src: 'Exercises 2 Nov: problems 2.36d, 2.51; old Midterm 1 2020',
+  gen() {
+    if (R.int(0, 1)) {
+      const Q = R.int(2, 12), b = R.pick([1, 2, 3, 0.5]), c = R.pick([0.5, 1, 2, 0]), d = R.int(1, 10), F = R.pick([10, 20, 50, 100]);
+      const a = d + 2 * (b + c) * Q; const P = a - b * Q; const Pi = (b + c) * Q * Q - F;
+      const TC = poly([[c, 'Q²'], [d, 'Q'], [F, '']]);
+      return {
+        intro: 'A firm faces the demand (price) function P(Q) = ' + poly([[a, ''], [-b, 'Q']]) + ' and has the total cost TC(Q) = ' + TC + '. a) How many units should it produce to maximize profit? Check the second order condition. b) At what price does it sell? c) What is the maximum profit?',
+        parts: [N('a) Q*', Q), N('a) π″(Q*)', -2 * (b + c)), N('b) P*', P), N('c) π*', Pi)],
+        steps: [B('Profit') + ': π = TR − TC = P · Q − TC', 'π(Q) = (' + poly([[a, ''], [-b, 'Q']]) + ')Q − (' + TC + ') = ' + poly([[-(b + c), 'Q²'], [a - d, 'Q'], [-F, '']]), 'π′(Q) = ' + poly([[-2 * (b + c), 'Q'], [a - d, '']]) + ' = 0 ⇒ ' + B('Q* = ' + fmt(Q)) + ' (stationary point)', B('Classification') + ': π″(Q) = ' + fmt(-2 * (b + c)) + ' < 0 ⇒ maximum', 'P* = ' + poly([[a, ''], [-b, 'Q']]).replace('Q', '·' + Q) + ' = ' + B(fmt(P)), 'π* = π(' + Q + ') = ' + B(fmt(Pi))],
+        sk: [{ plot: { f: x => -(b + c) * x * x + (a - d) * x - F, x0: 0, x1: 2 * Q + 1, y0: Math.min(-F, 0) - 5, y1: Pi + Math.max(10, Pi * 0.2), ystep: Math.max(1, Math.round((Pi + F + 20) / 8)), step: Math.max(1, Math.round(Q / 4)), xl: 'Q', yl: 'π', pts: [{ x: Q, y: Pi, t: 'max' }] }, cap: 'The profit parabola opens downward, the vertex is the maximum.' }],
+        _chk: { pi: x => (a - b * x) * x - (c * x * x + d * x + F), Q, Pi }
+      };
+    }
+    const P = R.int(4, 15), b = R.pick([1, 2, 3, 4, 5]), c = R.int(1, P - 2), F = R.pick([0, 10, 20, 30]);
+    const a = 2 * b * P - b * c; const Qs = a - b * P; const Pi = (P - c) * Qs - F;
+    return {
+      intro: 'The demand for a product is Q(P) = ' + poly([[a, ''], [-b, 'P']]) + '. Each unit costs €' + c + ' to produce' + (F ? ' and the fixed cost is €' + F : '') + '. a) Find the price that maximizes profit (check the second order condition). b) How many units are sold? c) What is the maximum profit?',
+      parts: [N('a) P*', P), N('a) π″(P*)', -2 * b), N('b) Q*', Qs), N('c) π*', Pi)],
+      steps: [B('Profit as a function of the price') + ': π(P) = (P − ' + c + ') · Q(P)' + (F ? ' − ' + F : '') + ' = (P − ' + c + ')(' + poly([[a, ''], [-b, 'P']]) + ')' + (F ? ' − ' + F : ''), 'π′(P) = (' + poly([[a, ''], [-b, 'P']]) + ') + (P − ' + c + ')(−' + b + ') = ' + poly([[-2 * b, 'P'], [a + b * c, '']]) + ' = 0 ⇒ ' + B('P* = ' + fmt(P)), B('Classification') + ': π″(P) = ' + fmt(-2 * b) + ' < 0 ⇒ maximum', 'Q* = ' + a + ' − ' + b + ' · ' + P + ' = ' + B(fmt(Qs)), 'π* = (' + P + ' − ' + c + ') · ' + Qs + (F ? ' − ' + F : '') + ' = ' + B(fmt(Pi))],
+      sk: [], _chk: { pi: x => (x - c) * (a - b * x) - F, Q: P, Pi }
+    };
+  } };
+
+/* ---------- 14. Partial derivatives (problems 4.6, 4.7; Lecture 5) ---------- */
+function twoVarTemplate() {
+  const T = [
+    () => { const A = R.pick([1, 2, -1, 3]), Bc = R.pick([1, 2, -2, 3]), C = R.int(-5, 5); return { fs: poly([[A, 'x³y'], [Bc, 'xy²'], [C, 'y']]), f: (x, y) => A * x ** 3 * y + Bc * x * y * y + C * y, fx: (x, y) => 3 * A * x * x * y + Bc * y * y, fy: (x, y) => A * x ** 3 + 2 * Bc * x * y + C, fxx: (x, y) => 6 * A * x * y, fyy: (x, y) => 2 * Bc * x, fxy: (x, y) => 3 * A * x * x + 2 * Bc * y,
+      s: { fx: poly([[3 * A, 'x²y'], [Bc, 'y²']]), fy: poly([[A, 'x³'], [2 * Bc, 'xy'], [C, '']]), fxx: poly([[6 * A, 'xy']]), fyy: poly([[2 * Bc, 'x']]), fxy: poly([[3 * A, 'x²'], [2 * Bc, 'y']]) }, pt: [R.int(-2, 2), R.int(-2, 2)] }; },
+    () => { const a = R.pick([1, 2, -1]), b = R.pick([1, -1, 2, 3]); return { fs: 'x' + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(b, 'x²y'), f: (x, y) => x * Math.exp(a * y) + b * x * x * y, fx: (x, y) => Math.exp(a * y) + 2 * b * x * y, fy: (x, y) => a * x * Math.exp(a * y) + b * x * x, fxx: (x, y) => 2 * b * y, fyy: (x, y) => a * a * x * Math.exp(a * y), fxy: (x, y) => a * Math.exp(a * y) + 2 * b * x,
+      s: { fx: ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(2 * b, 'xy'), fy: term(a, 'x', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(b, 'x²'), fxx: poly([[2 * b, 'y']]), fyy: term(a * a, 'x', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y'), fxy: term(a, '', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(2 * b, 'x') }, pt: [R.int(-2, 2), 0] }; },
+    () => { return { fs: 'y ln(x² + y)', f: (x, y) => y * Math.log(x * x + y), fx: (x, y) => 2 * x * y / (x * x + y), fy: (x, y) => Math.log(x * x + y) + y / (x * x + y), fxx: (x, y) => 2 * y * (y - x * x) / (x * x + y) ** 2, fyy: (x, y) => (2 * x * x + y) / (x * x + y) ** 2, fxy: (x, y) => 2 * x ** 3 / (x * x + y) ** 2,
+      s: { fx: fr('2xy', 'x² + y'), fy: 'ln(x² + y) + ' + fr('y', 'x² + y'), fxx: fr('2y(y − x²)', '(x² + y)²'), fyy: fr('2x² + y', '(x² + y)²'), fxy: fr('2x³', '(x² + y)²') }, pt: R.pick([[1, 0], [1, 1], [2, 1], [0, 1], [1, 3]]) }; },
+    () => { const a = R.pick([1, 2, 3]), b = R.int(-4, 4), c = R.pick([1, -1, 2]); return { fs: poly([[a, 'x²y³'], [b, 'xy'], [c, 'y²']]), f: (x, y) => a * x * x * y ** 3 + b * x * y + c * y * y, fx: (x, y) => 2 * a * x * y ** 3 + b * y, fy: (x, y) => 3 * a * x * x * y * y + b * x + 2 * c * y, fxx: (x, y) => 2 * a * y ** 3, fyy: (x, y) => 6 * a * x * x * y + 2 * c, fxy: (x, y) => 6 * a * x * y * y + b,
+      s: { fx: poly([[2 * a, 'xy³'], [b, 'y']]), fy: poly([[3 * a, 'x²y²'], [b, 'x'], [2 * c, 'y']]), fxx: poly([[2 * a, 'y³']]), fyy: poly([[6 * a, 'x²y'], [2 * c, '']]), fxy: poly([[6 * a, 'xy²'], [b, '']]) }, pt: [R.int(-2, 2), R.int(-1, 2)] }; }
+  ];
+  return R.pick(T)();
+}
+CALC.partials = { wk: 'W5', name: 'First and second partial derivatives', src: 'Exercises 2 Nov: problems 4.6b, 4.7; old Midterm 2 2021 Problem 1',
+  gen() {
+    const t = twoVarTemplate(); const [x, y] = t.pt; const P = '(' + x + ', ' + y + ')';
+    return {
+      intro: 'Consider the function f(x, y) = ' + t.fs + '. Find its first and second partial derivatives and evaluate them at the point ' + P + '.',
+      parts: [N('f<sub>x</sub>' + P, t.fx(x, y)), N('f<sub>y</sub>' + P, t.fy(x, y)), N('f<sub>xx</sub>' + P, t.fxx(x, y)), N('f<sub>yy</sub>' + P, t.fyy(x, y)), N('f<sub>xy</sub>' + P, t.fxy(x, y))],
+      steps: [B('Rule') + ': for f<sub>x</sub> treat y as a constant, for f<sub>y</sub> treat x as a constant.', 'f<sub>x</sub>(x, y) = ' + t.s.fx + ',   f<sub>y</sub>(x, y) = ' + t.s.fy, 'f<sub>xx</sub> = ' + t.s.fxx + ',   f<sub>yy</sub> = ' + t.s.fyy + ',   f<sub>xy</sub> = f<sub>yx</sub> = ' + t.s.fxy, 'At ' + P + ': f<sub>x</sub> = ' + fmt(t.fx(x, y)) + ', f<sub>y</sub> = ' + fmt(t.fy(x, y)) + ', f<sub>xx</sub> = ' + fmt(t.fxx(x, y)) + ', f<sub>yy</sub> = ' + fmt(t.fyy(x, y)) + ', f<sub>xy</sub> = ' + fmt(t.fxy(x, y)), 'Check: the mixed derivatives f<sub>xy</sub> and f<sub>yx</sub> are always equal for these functions, so compute the easier one.'],
+      sk: [], _chk: t
+    };
+  } };
+
+/* ---------- 15. Total differential (problems 4.14, 4.15, 4.18; old Midterm 2 2022) ---------- */
+CALC.totdiff = { wk: 'W5', name: 'Total differential: estimate a change', src: 'Seminar 2 Nov: problem 4.14; 4.15, 4.18; old Midterm 2 2022 Problem 2',
+  gen() {
+    const v = R.int(0, 2); let Q, QK, QL, K0, L0, fs, sK, sL, xn = 'K', yn = 'L';
+    if (v === 0) { const a = R.pick([1, 2, 3]), m = R.pick([6, 3, 5, 7]); const sq = R.pick([3, 4, 5]); L0 = sq * sq - m; K0 = R.pick([1, 2, 3, 4]); Q = (K, L) => K ** a * L * Math.sqrt(L + m); QK = (K, L) => a * K ** (a - 1) * L * Math.sqrt(L + m); QL = (K, L) => K ** a * (Math.sqrt(L + m) + L / (2 * Math.sqrt(L + m))); fs = pw('K', a) + 'L' + rt('L + ' + m); sK = (a === 1 ? '' : mono(a, [['K', a - 1]])) + 'L' + rt('L + ' + m); sL = pw('K', a) + '(' + rt('L + ' + m) + ' + ' + fr('L', '2' + rt('L + ' + m)) + ')'; }
+    else if (v === 1) { xn = 'x'; yn = 'y'; const x0 = R.int(1, 5); K0 = x0; L0 = (x0 + 1) / 2; if (L0 % 1) { K0 = x0 + 1; L0 = (K0 + 1) / 2; } Q = (x, y) => x * Math.log(2 * y - x); QK = (x, y) => Math.log(2 * y - x) - x / (2 * y - x); QL = (x, y) => 2 * x / (2 * y - x); fs = 'x ln(2y − x)'; sK = 'ln(2y − x) − ' + fr('x', '2y − x'); sL = fr('2x', '2y − x'); }
+    else { xn = 'x'; yn = 'y'; const c = R.pick([[3, 3], [2, 2], [1, 8], [2, 16], [4, 4]]); [K0, L0] = c; Q = (x, y) => Math.cbrt(x * x * y); QK = (x, y) => 2 * Math.cbrt(y) / (3 * Math.cbrt(x)); QL = (x, y) => Math.cbrt(x * x) / (3 * Math.cbrt(y * y)); fs = '∛(x²y)'; sK = fr('2', '3') + sp('x', '−1/3') + sp('y', '1/3'); sL = fr('1', '3') + sp('x', '2/3') + sp('y', '−2/3'); }
+    let dK, dL; do { dK = R.pick([0.2, 0.1, -0.1, 0.5, -0.2]); dL = R.pick([-0.3, 0.3, -0.1, 0.2, -0.2]); } while (!isFinite(Q(K0 + dK, L0 + dL)) || (v === 1 && 2 * (L0 + dL) - (K0 + dK) < 0.5));
+    const q0 = Q(K0, L0), qk = QK(K0, L0), ql = QL(K0, L0); const est = q0 + qk * dK + ql * dL; const reqL = -qk * dK / ql;
+    return {
+      intro: 'The production function of a company is Q(' + xn + ', ' + yn + ') = ' + fs + '. At the moment the company uses ' + xn + '₀ = ' + fD(K0) + ' and ' + yn + '₀ = ' + fD(L0) + '. Use the total differential to estimate a) the new production level if ' + xn + ' changes to ' + fD(K0 + dK) + ' and ' + yn + ' changes to ' + fD(L0 + dL) + '; b) the required change in ' + yn + ' if ' + xn + ' changes to ' + fD(K0 + dK) + ' and production must stay unchanged.',
+      parts: [N('Q(' + xn + '₀, ' + yn + '₀)', q0), N('Q<sub>' + xn + '</sub>(' + xn + '₀, ' + yn + '₀)', qk), N('Q<sub>' + yn + '</sub>(' + xn + '₀, ' + yn + '₀)', ql), N('a) New production ≈', est, { tol: Math.max(0.011, Math.abs(est) * 0.002) }), N('b) Required Δ' + yn + ' ≈', reqL, { tol: 0.006 })],
+      steps: [B('a)') + ' Q(' + xn + '₀ + Δ' + xn + ', ' + yn + '₀ + Δ' + yn + ') ≈ Q(' + xn + '₀, ' + yn + '₀) + Q<sub>' + xn + '</sub> Δ' + xn + ' + Q<sub>' + yn + '</sub> Δ' + yn + '   (new value ≈ old value + total differential)',
+        'Q<sub>' + xn + '</sub> = ' + sK + ',   Q<sub>' + yn + '</sub> = ' + sL,
+        'Q(' + fD(K0) + ', ' + fD(L0) + ') = ' + fmt(q0) + ',  Q<sub>' + xn + '</sub> = ' + fmt(qk) + ',  Q<sub>' + yn + '</sub> = ' + fmt(ql) + ',  Δ' + xn + ' = ' + fD(dK) + ',  Δ' + yn + ' = ' + fD(dL),
+        'Q ≈ ' + fmt(q0) + ' + ' + pn(qk) + ' · ' + pD(dK) + ' + ' + pn(ql) + ' · ' + pD(dL) + ' = ' + B(dec(est, 4)) + '   (exact ' + dec(Q(K0 + dK, L0 + dL), 4) + ')',
+        B('b)') + ' Unchanged production: dQ = 0 ⇒ ' + pn(qk) + ' · ' + pD(dK) + ' + ' + pn(ql) + ' · Δ' + yn + ' ≈ 0 ⇒ Δ' + yn + ' ≈ ' + B(dec(reqL, 4)),
+        yn + ' should be ' + (reqL < 0 ? 'decreased' : 'increased') + ' by approximately ' + dec(Math.abs(reqL), 3) + ' units.'],
+      sk: [], _chk: { Q, QK, QL, K0, L0 }
+    };
+  } };
+
+/* ---------- 16. MRS and MRTS (problems 4.16, 4.17) ---------- */
+CALC.mrs = { wk: 'W5', name: 'MRS and MRTS', src: 'Seminar 2 Nov: problems 4.16, 4.17',
+  gen() {
+    if (R.int(0, 1)) {
+      const a = R.int(1, 3), b = R.int(1, 3), x0 = R.int(1, 4), y0 = R.int(2, 10), dy = -R.int(1, 3);
+      const U = (x, y) => x ** a * y ** b, Ux = (x, y) => a * x ** (a - 1) * y ** b, Uy = (x, y) => b * x ** a * y ** (b - 1);
+      const mrs = Uy(x0, y0) / Ux(x0, y0); const dx = -mrs * dy;
+      const us = pw('x', a) + pw('y', b);
+      return {
+        intro: 'A consumer has the utility function U(x, y) = ' + us + '. At the moment he consumes x = ' + x0 + ' and y = ' + y0 + ' per day. Find the marginal rate of substitution MRS<sub>y</sub>, and estimate how much x he needs to keep his utility unchanged if y decreases by ' + (-dy) + '.',
+        parts: [N('U<sub>x</sub>(' + x0 + ', ' + y0 + ')', Ux(x0, y0)), N('U<sub>y</sub>(' + x0 + ', ' + y0 + ')', Uy(x0, y0)), N('MRS<sub>y</sub>', mrs), N('Required Δx', dx)],
+        steps: [B('Definition') + ': MRS<sub>y</sub> = ' + fr('U<sub>y</sub>(x₀, y₀)', 'U<sub>x</sub>(x₀, y₀)') + ', the amount of x the consumer gives up for one more unit of y.', 'U<sub>x</sub> = ' + mono(a, [['x', a - 1], ['y', b]]) + ' = ' + fmt(Ux(x0, y0)) + ',  U<sub>y</sub> = ' + mono(b, [['x', a], ['y', b - 1]]) + ' = ' + fmt(Uy(x0, y0)), 'MRS<sub>y</sub> = ' + fr(fmt(Uy(x0, y0)), fmt(Ux(x0, y0))) + ' = ' + B(fq(mrs)), B('Utility unchanged') + ': dU = U<sub>x</sub>Δx + U<sub>y</sub>Δy ≈ 0 ⇒ Δx ≈ −MRS<sub>y</sub> · Δy = −' + fq(mrs) + ' · ' + pn(dy) + ' = ' + B(fmt(dx)), 'He needs about ' + dec(dx, 3) + ' more units of x.'],
+        sk: [], _chk: { U, Ux, Uy, x0, y0 }
+      };
+    }
+    const c = R.pick([[2, 1, 2, 1, 5], [1, 1, 1, 2, 3], [1, 2, 3, 1, 5], [2, 1, 1, 3, 5]]); const [p, q, K0, L0, s] = c; // Q = K L e^(pK + qL − s), pK0 + qL0 = s
+    const Q = (K, L) => K * L * Math.exp(p * K + q * L - s), QK = (K, L) => L * Math.exp(p * K + q * L - s) * (1 + p * K), QL = (K, L) => K * Math.exp(p * K + q * L - s) * (1 + q * L);
+    const dK = R.pick([-0.1, -0.2, 0.1]); const mrts = QL(K0, L0) / QK(K0, L0); const dL = -QK(K0, L0) * dK / QL(K0, L0);
+    const es = ex(poly([[p, 'K'], [q, 'L'], [-s, '']]));
+    return {
+      intro: 'The production function of a company is Q(K, L) = KL' + es + ', where K is the capital input and L the labour input. At the moment it uses K = ' + K0 + ' and L = ' + L0 + '. Find MRTS<sub>L</sub>, and estimate the change in labour needed to keep production unchanged if capital changes by ' + fD(dK) + '.',
+      parts: [N('Q<sub>K</sub>(' + K0 + ', ' + L0 + ')', QK(K0, L0)), N('Q<sub>L</sub>(' + K0 + ', ' + L0 + ')', QL(K0, L0)), N('MRTS<sub>L</sub>', mrts), N('Required ΔL', dL)],
+      steps: [B('Definition') + ': MRTS<sub>L</sub> = ' + fr('Q<sub>L</sub>(K₀, L₀)', 'Q<sub>K</sub>(K₀, L₀)') + ', the amount by which K can be reduced when one more unit of L is used, production unchanged.', 'Q<sub>K</sub> = L' + es + ' + KL' + es + ' · ' + p + ' = L' + es + '(1 + ' + (p === 1 ? '' : p) + 'K),   Q<sub>L</sub> = K' + es + '(1 + ' + (q === 1 ? '' : q) + 'L)', 'At (' + K0 + ', ' + L0 + ') the exponent is 0, so e⁰ = 1: Q<sub>K</sub> = ' + fmt(QK(K0, L0)) + ',  Q<sub>L</sub> = ' + fmt(QL(K0, L0)), 'MRTS<sub>L</sub> = ' + B(fq(mrts)), B('Production unchanged') + ': Q<sub>K</sub>ΔK + Q<sub>L</sub>ΔL ≈ 0 ⇒ ΔL ≈ −' + fr(fmt(QK(K0, L0)), fmt(QL(K0, L0))) + ' · ' + pD(dK) + ' = ' + B(fD(dL))],
+      sk: [], _chk: { Q, QK, QL, K0, L0 }
+    };
+  } };
+
+/* ---------- 17. Stationary point of a quadratic, Hessian (problem 4.20a; Lecture 5 p10) ---------- */
+CALC.hessq = { wk: 'W6', name: 'Stationary point and Hessian (quadratic)', src: 'Lecture 5 p10; problem 4.20a',
+  gen() {
+    let a, b, c, x0, y0; do { a = R.pick([1, 2, 3, -1, -2, 4, 8]); b = R.pick([-8, -4, -2, -1, 1, 2, 3, 0]); c = R.pick([1, 2, 3, -1, -3]); x0 = R.int(-3, 3); y0 = R.int(-3, 3); } while (Math.abs(4 * a * c - b * b) < 1e-9);
+    const d = -(2 * a * x0 + b * y0), e = -(b * x0 + 2 * c * y0), g = R.int(-5, 9);
+    const f = (x, y) => a * x * x + b * x * y + c * y * y + d * x + e * y + g;
+    const H = 4 * a * c - b * b; const type = H < 0 ? 2 : a > 0 ? 0 : 1;
+    return {
+      intro: 'Find and classify the stationary points of f(x, y) = ' + poly([[a, 'x²'], [b, 'xy'], [c, 'y²'], [d, 'x'], [e, 'y'], [g, '']]) + '.',
+      parts: [N('Stationary point x₀', x0), N('Stationary point y₀', y0), N('f(x₀, y₀)', f(x0, y0)), N('Hessian H(x₀, y₀)', H), CH('Type', TYPES3, type)],
+      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[2 * a, 'x'], [b, 'y'], [d, '']]) + ' = 0,   f<sub>y</sub> = ' + poly([[b, 'x'], [2 * c, 'y'], [e, '']]) + ' = 0', 'Solve the linear system ⇒ ' + B('T(' + x0 + ', ' + y0 + ', ' + fmt(f(x0, y0)) + ')'), 'f<sub>xx</sub> = ' + fmt(2 * a) + ',  f<sub>yy</sub> = ' + fmt(2 * c) + ',  f<sub>xy</sub> = ' + fmt(b), B('Hessian') + ': H = f<sub>xx</sub> f<sub>yy</sub> − f<sub>xy</sub>² = ' + pn(2 * a) + ' · ' + pn(2 * c) + ' − ' + pn(b) + '² = ' + fmt(H), H < 0 ? 'H < 0 ⇒ neither convex nor concave ⇒ ' + B('saddle point') : 'H > 0 and f<sub>xx</sub> = ' + fmt(2 * a) + (a > 0 ? ' > 0 ⇒ strictly convex ⇒ ' + B('local minimum') : ' < 0 ⇒ strictly concave ⇒ ' + B('local maximum'))],
+      sk: [], _chk: { f, x0, y0 }
+    };
+  } };
+
+/* ---------- 18. Two stationary points ax³ + by² + cxy (Lecture 6 p6; problem 4.20b) ---------- */
+CALC.hessc = { wk: 'W6', name: 'Extrema of two variables (two stationary points)', src: 'Exercises 9 Nov: problems 4.20c, 4.21; Lecture 6 p6; problem 4.20b',
+  gen() {
+    const c0 = R.pick([[1, 1, 12], [1, 1, 6], [1 / 3, 1, 2], [2 / 3, -1, 2], [1, -1, 6], [1, 3, 6], [1 / 3, -1, 4], [2, 1, 6], [1, 2, 6]]);
+    let [a, b, c] = c0; if (R.int(0, 1)) c = -c;
+    const f = (x, y) => a * x ** 3 + b * y * y + c * x * y; const x2 = c * c / (6 * a * b), y2 = -c * x2 / (2 * b);
+    const H = (x, y) => 6 * a * x * 2 * b - c * c; const H2 = H(x2, y2); const t2 = H2 < 0 ? 2 : (6 * a * x2 > 0 ? 0 : 1);
+    return {
+      intro: 'Find and classify the stationary points of f(x, y) = ' + poly([[a, 'x³'], [b, 'y²'], [c, 'xy']]) + '.',
+      parts: [N('Second stationary point x₂ (≠ 0)', x2), N('y₂', y2), N('H(0, 0)', H(0, 0)), CH('Type at (0, 0)', TYPES3, 2), N('H(x₂, y₂)', H2), CH('Type at (x₂, y₂)', TYPES3, t2), N('f(x₂, y₂)', f(x2, y2))],
+      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[3 * a, 'x²'], [c, 'y']]) + ' = 0,   f<sub>y</sub> = ' + poly([[2 * b, 'y'], [c, 'x']]) + ' = 0', 'From f<sub>y</sub>: y = ' + term(-c / (2 * b), 'x', true) + '. Insert into f<sub>x</sub>: ' + poly([[3 * a, 'x²'], [-c * c / (2 * b), 'x']]) + ' = 0 ⇒ x(' + poly([[3 * a, 'x'], [-c * c / (2 * b), '']]) + ') = 0', 'Stationary points ' + B('T₁(0, 0, 0)') + ' and ' + B('T₂(' + fmt(x2) + ', ' + fmt(y2) + ', ' + fmt(f(x2, y2)) + ')'), 'f<sub>xx</sub> = ' + fmt(6 * a) + 'x,  f<sub>yy</sub> = ' + fmt(2 * b) + ',  f<sub>xy</sub> = ' + fmt(c) + ';  H = ' + fmt(12 * a * b) + 'x − ' + fmt(c * c), 'At T₁: H(0, 0) = ' + fmt(H(0, 0)) + ' < 0 ⇒ ' + B('saddle point'), 'At T₂: H = ' + fmt(H2) + ' > 0 and f<sub>xx</sub> = ' + fmt(6 * a * x2) + (6 * a * x2 > 0 ? ' > 0 ⇒ ' + B('local minimum') : ' < 0 ⇒ ' + B('local maximum'))],
+      sk: [], _chk: { f, x2, y2 }
+    };
+  } };
+
+/* ---------- 19. Revenue of two substitute products (problem 4.24) ---------- */
+CALC.optim2 = { wk: 'W6', name: 'Two products: maximize revenue', src: 'Exercises 9 Nov: problem 4.24', book: { P1: 10, P2: 15, be: 2, ga: 1, ep: 1 },
+  gen(o) {
+    for (;;) {
+      const P1 = o ? o.P1 : R.int(4, 15), P2 = o ? o.P2 : R.int(4, 15), be = o ? o.be : R.pick([1, 2, 3]), ga = o ? o.ga : R.pick([1, 0.5]), ep = o ? o.ep : R.pick([1, 2, 3]);
+      if (be * ep <= ga * ga) continue;
+      const al = 2 * be * P1 - 2 * ga * P2, de = 2 * ep * P2 - 2 * ga * P1; if (al <= 0 || de <= 0) continue;
+      const Q1 = al - be * P1 + ga * P2, Q2 = de + ga * P1 - ep * P2; if (Q1 <= 0 || Q2 <= 0) continue;
+      const Rv = P1 * Q1 + P2 * Q2; const H = 4 * be * ep - 4 * ga * ga;
+      return {
+        intro: 'A company sells two substitute products with the joint demand Q₁ = ' + poly([[al, ''], [-be, 'P₁'], [ga, 'P₂']]) + ',  Q₂ = ' + poly([[de, ''], [ga, 'P₁'], [-ep, 'P₂']]) + '. a) Find the prices that maximize total revenue. b) How many products are sold and what is the maximized revenue?',
+        parts: [N('a) P₁*', P1), N('a) P₂*', P2), N('Hessian H', H), N('b) Q₁', Q1), N('b) Q₂', Q2), N('b) Maximum revenue R*', Rv)],
+        steps: [B('Revenue') + ': R = P₁Q₁ + P₂Q₂ = ' + poly([[al, 'P₁'], [-be, 'P₁²'], [2 * ga, 'P₁P₂'], [de, 'P₂'], [-ep, 'P₂²']]), 'R<sub>P₁</sub> = ' + poly([[al, ''], [-2 * be, 'P₁'], [2 * ga, 'P₂']]) + ' = 0,   R<sub>P₂</sub> = ' + poly([[de, ''], [2 * ga, 'P₁'], [-2 * ep, 'P₂']]) + ' = 0', 'Solve the system ⇒ ' + B('P₁ = ' + P1 + ', P₂ = ' + P2), 'R<sub>P₁P₁</sub> = ' + fmt(-2 * be) + ',  R<sub>P₂P₂</sub> = ' + fmt(-2 * ep) + ',  R<sub>P₁P₂</sub> = ' + fmt(2 * ga) + ' ⇒ H = ' + fmt(H) + ' > 0 and R<sub>P₁P₁</sub> < 0 ⇒ concave ⇒ ' + B('maximum'), 'Q₁ = ' + fmt(Q1) + ',  Q₂ = ' + fmt(Q2) + ',  R* = ' + P1 + ' · ' + fmt(Q1) + ' + ' + P2 + ' · ' + fmt(Q2) + ' = ' + B(fmt(Rv))],
+        sk: [], _chk: { R: (p, q) => p * (al - be * p + ga * q) + q * (de + ga * p - ep * q), P1, P2 }
+      };
+    }
+  } };
+
+Object.values(CALC).forEach(c => { const g = c.gen; c.gen = o => clean(g(o)); });
+const CALC_ORDER = ['graph', 'rational', 'lndom', 'deriv', 'tangent', 'approx', 'taylor', 'localext', 'analysis', 'global', 'lindem', 'elast', 'optim1', 'partials', 'totdiff', 'mrs', 'hessq', 'hessc', 'optim2'];
+
+
+/* ===== Concept questions (Practice tab). t = week key, a = index of the correct option ===== */
+const BANK = [
+{ id:'w1a', t:'W12', src:'Lecture 1 p4', q:'What is the domain of f(x) = √(x − 2) / (x − 5)?', o:['[2, ∞)','(2, 5) ∪ (5, ∞)','[2, 5) ∪ (5, ∞)','ℝ \\ {5}','(5, ∞)'], a:2, e:'Two conditions: under the square root x − 2 ≥ 0, so x ≥ 2 (2 itself is allowed). The denominator cannot be 0, so x ≠ 5. Together [2, 5) ∪ (5, ∞).' },
+{ id:'w1b', t:'W12', src:'Lecture 1 p15 to 17', q:'A polynomial has the factor (x − 3)². What does its graph do at x = 3?', o:['It crosses the x axis and changes sign','It touches the x axis and keeps its sign','It has a vertical asymptote','It has a pole','Nothing, x = 3 is not a zero'], a:1, e:'(x − 3)² gives a zero of even multiplicity (double zero). At an even zero the graph touches the axis and the sign does not change. Odd multiplicity: the graph crosses and the sign changes.' },
+{ id:'w1c', t:'W12', src:'Lecture 2 p2', q:'For f(x) = (3x + 1)/(x² − 4), what happens as x → ∞?', o:['f(x) → 3','f(x) → ∞','f(x) → 0','f(x) → 1/4','f(x) → −∞'], a:2, e:'The degree of the numerator (1) is smaller than the degree of the denominator (2), so the limit at infinity is 0 and y = 0 is the horizontal asymptote.' },
+{ id:'w1d', t:'W12', src:'Lecture 2 p5 to 6', q:'How is the graph of g(x) = f(x + 2) obtained from the graph of f?', o:['Shift up by 2','Shift down by 2','Shift right by 2','Shift left by 2','Stretch horizontally by 2'], a:3, e:'f(x + c) moves the graph LEFT by c. f(x − c) moves it right. Adding outside, f(x) + c, moves it up.' },
+{ id:'w1e', t:'W12', src:'Seminar 12 Oct, problems 1.29, 1.37', q:'What is the economic domain of a demand function Q(P)?', o:['All P where the formula is defined','All P ≥ 0','All P in the mathematical domain with P ≥ 0 and Q(P) ≥ 0','All P where Q is increasing','All P with Q(P) > 0 only'], a:2, e:'Economic domain = mathematical domain plus two economic conditions: the price is nonnegative (P ≥ 0) and the quantity is nonnegative (Q ≥ 0). Q = 0 is allowed, so that endpoint is closed.' },
+{ id:'w1f', t:'W12', src:'Lecture 1 p7', q:'What is the inverse of f(x) = −3x + 6?', o:['f⁻¹(x) = 3x − 6','f⁻¹(x) = −x/3 + 2','f⁻¹(x) = 1/(−3x + 6)','f⁻¹(x) = x/3 − 2','f⁻¹(x) = −3x − 6'], a:1, e:'Write f(y) = x: −3y + 6 = x, so y = (6 − x)/3 = −x/3 + 2.' },
+{ id:'w1g', t:'W12', src:'Lecture 1 p5', q:'f(x) = 2x − 1 and g(x) = x². What is (g ∘ f)(x) = g(f(x))?', o:['2x² − 1','(2x − 1)²','2x − 1 + x²','4x − 1','x²(2x − 1)'], a:1, e:'Apply f first, then g: g(2x − 1) = (2x − 1)² = 4x² − 4x + 1. The other order gives f(g(x)) = 2x² − 1.' },
+{ id:'w1h', t:'W12', src:'Lecture 2 p9', q:'What is lim (x⁵ / eˣ) as x → ∞?', o:['∞','1','5','0','It does not exist'], a:3, e:'The exponential function grows faster than every power, so the fraction tends to 0.' },
+{ id:'w1i', t:'W12', src:'Lecture 1 p8', q:'The cost function is C(q) = 20q + 2500. What does the number 20 mean?', o:['The fixed cost','The cost of producing 20 units','The extra cost of one more unit','The break even quantity','The average cost'], a:2, e:'In a linear function kx + n, k is the slope: when q grows by 1 unit, C grows by 20. So 20 euros is the cost of one more unit. 2500 is the fixed cost.' },
+{ id:'w1j', t:'W12', src:'Lecture 2 p1', q:'For a rational function in cancelled form, what are the poles?', o:['Zeros of the numerator','Zeros of the denominator','Points where f = 1','The x intercepts','Points where f′ = 0'], a:1, e:'Poles are the zeros of the denominator (after cancelling). Near a pole |f(x)| grows to infinity, the graph has a vertical asymptote.' },
+/* ---------- Week 3 ---------- */
+{ id:'w3a', t:'W3', src:'Lecture 3 p6', q:'What is the derivative of f(x) = ln(x² + 1)?', o:['1/(x² + 1)','2x/(x² + 1)','2x ln(x² + 1)','1/(2x)','2x · ln x'], a:1, e:'Chain rule: (ln u)′ = u′/u with u = x² + 1, u′ = 2x.' },
+{ id:'w3b', t:'W3', src:'Lecture 3 p9', q:'f′(2) = −3. What can you say?', o:['f is increasing at 2','f is decreasing at 2','2 is a stationary point','f(2) = −3','f has a minimum at 2'], a:1, e:'The sign of the first derivative tells the direction: f′(a) < 0 means decreasing at a.' },
+{ id:'w3c', t:'W3', src:'Lecture 3 p7', q:'Which is the equation of the tangent line to y = f(x) at x = a?', o:['y = f(a)(x − a) + f′(a)','y = f′(a)x + f(a)','y = f′(a)(x − a) + f(a)','y = f″(a)(x − a) + f(a)','y = f′(x)(x − a)'], a:2, e:'Slope f′(a) through the point (a, f(a)): y − f(a) = f′(a)(x − a).' },
+{ id:'w3d', t:'W3', src:'Lecture 3 p8 to 9', q:'The differential df = f′(a)·Δx is used to…', o:['compute the exact value of f','estimate the change f(a + Δx) − f(a)','find the second derivative','find the zeros of f','find the domain'], a:1, e:'Near a, the graph looks like its tangent, so the change of f is approximately f′(a)Δx. That is the linear approximation.' },
+{ id:'w3e', t:'W3', src:'Lecture 3 p6', q:'What is the derivative of e^(3x)?', o:['e^(3x)','3e^(3x)','3x e^(3x − 1)','e^(3x)/3','3e^x'], a:1, e:'Chain rule: (e^u)′ = e^u · u′, u = 3x, u′ = 3.' },
+{ id:'w3f', t:'W3', src:'Lecture 3 p5', q:'Which formula is the quotient rule?', o:['(u/v)′ = u′/v′','(u/v)′ = (u′v + uv′)/v²','(u/v)′ = (u′v − uv′)/v²','(u/v)′ = (uv′ − u′v)/v²','(u/v)′ = (u′v − uv′)/v'], a:2, e:'(u/v)′ = (u′v − uv′)/v². The order matters: derivative of the top first.' },
+{ id:'w3g', t:'W3', src:'Lecture 3 p10', q:'f(x) = x³. Which statement about x = 0 is true?', o:['It is a local minimum','It is a local maximum','It is a stationary point but not an extremum','f′(0) ≠ 0','It is a pole'], a:2, e:'f′(0) = 0, so 0 is stationary, but x³ keeps increasing through 0. A stationary point is not always an extremum (here it is an inflection point).' },
+{ id:'w3h', t:'W3', src:'Lecture 3 p4', q:'What does the derivative f′(a) measure geometrically?', o:['The area under the graph','The slope of the tangent at a','The height of the graph at a','The slope of the secant between 0 and a','The curvature at a'], a:1, e:'f′(a) is the limit of secant slopes, so it is the slope of the tangent line at (a, f(a)).' },
+/* ---------- Week 4 ---------- */
+{ id:'w4a', t:'W4', src:'Lecture 3 p11', q:'f″(a) > 0. What does the graph look like near a?', o:['Concave (below its tangent)','Convex (above its tangent)','It has an inflection point','It is decreasing','It has a pole'], a:1, e:'Positive second derivative: convex, the graph lies above its tangent. Negative: concave.' },
+{ id:'w4b', t:'W4', src:'Lecture 3 p12', q:'At a stationary point a, f″(a) < 0. Then a is…', o:['a local minimum','a local maximum','an inflection point','a saddle point','not determined'], a:1, e:'Concave at a stationary point: the graph is below its horizontal tangent, so it is a local maximum.' },
+{ id:'w4c', t:'W4', src:'Lecture 4 p9 to 10, Lecture 5 p1 to 2', q:'f′(a) = f″(a) = 0 and f‴(a) ≠ 0. Then at a there is…', o:['a minimum','a maximum','an inflection point','a pole','nothing can be said'], a:2, e:'Higher order test: the first nonzero derivative has odd order m = 3, so a is an inflection point.' },
+{ id:'w4d', t:'W4', src:'Lecture 4 p3', q:'In the Taylor polynomial about a, what is the coefficient of (x − a)²?', o:['f″(a)','f″(a)/2','f′(a)/2','f″(a)/3!','2f″(a)'], a:1, e:'T(x) = f(a) + f′(a)(x − a) + f″(a)/2! (x − a)² + f‴(a)/3! (x − a)³ + …' },
+{ id:'w4e', t:'W4', src:'Lecture 4 p6', q:'What is the Taylor polynomial of degree 3 of eˣ about 0?', o:['1 + x + x² + x³','1 + x + x²/2 + x³/6','x + x²/2 + x³/3','1 − x + x²/2 − x³/6','1 + x + x²/2 + x³/3'], a:1, e:'Every derivative of eˣ is eˣ, equal to 1 at 0, so the coefficients are 1/n!: 1 + x + x²/2 + x³/6.' },
+{ id:'w4f', t:'W4', src:'Problem 2.48b', q:'Where can the global extrema of a differentiable f on a closed interval [a, b] be?', o:['Only at stationary points','Only at the endpoints','At stationary points inside the interval or at the endpoints','Only where f″ = 0','Anywhere, we cannot know'], a:2, e:'Compare the function values at all stationary points inside [a, b] AND at a and b. The biggest is the global maximum, the smallest the global minimum.' },
+{ id:'w4g', t:'W4', src:'Book p26', q:'Which formula is the elasticity of y = f(x)?', o:['E = y′','E = (y/x)·y′','E = (x/y)·y′','E = x·y′','E = y′/x'], a:2, e:'E(y,x) = (x/y)·y′. For demand: E(Q,P) = (P/Q)·Q′. It is the % change of y when x grows by 1%.' },
+{ id:'w4h', t:'W4', src:'Seminar 26 Oct', q:'At the current price, the demand elasticity is −2. If the price rises by 1%, demand…', o:['rises by about 2%','falls by about 2%','falls by about 0.5%','falls by exactly 2 units','does not change'], a:1, e:'E = −2: a 1% price increase gives about a 2% decrease in demand. |E| > 1, so demand is elastic.' },
+{ id:'w4i', t:'W4', src:'Book p26', q:'|E| < 1 at the current price. The demand is…', o:['elastic','inelastic','unit elastic','increasing','not defined'], a:1, e:'|E| < 1: inelastic (demand reacts less than proportionally). |E| > 1 elastic, |E| = 1 unit elastic.' },
+{ id:'w4j', t:'W4', src:'Problem 2.25', q:'For Q = 10 − 2P, at which price is demand unit elastic?', o:['P = 5','P = 2.5','P = 2','P = 10','P = 1'], a:1, e:'E = P/(10 − 2P) · (−2) = −2P/(10 − 2P). |E| = 1 ⇔ 2P = 10 − 2P ⇔ P = 2.5. For linear demand it is always the middle of the price range.' },
+{ id:'w4k', t:'W4', src:'Lecture 4 p9', q:'f(x) = x⁴. Is x = 0 an inflection point, given that f″(0) = 0?', o:['Yes, f″(0) = 0 is enough','No, it is a minimum (the first nonzero derivative f⁗(0) = 24 has even order and is positive)','No, it is a maximum','No, it is a pole','Cannot be decided'], a:1, e:'f″(a) = 0 alone does not prove an inflection. Use the higher order test: f′ = f″ = f‴ = 0 at 0 and f⁗(0) = 24 > 0 with even order, so minimum.' },
+{ id:'w4l', t:'W4', src:'Midterm 1 2025/26', q:'In a full function analysis, after finding f′, how do you classify a stationary point most quickly?', o:['Compute f at many points','Sign of f″ at the point','Sign of f at the point','Look at the domain','Use the limit at infinity'], a:1, e:'Second derivative test: f″ > 0 minimum, f″ < 0 maximum. If f″ = 0 use the higher order test or the sign of f′ around the point.' },
+/* ---------- Week 5 ---------- */
+{ id:'w5a', t:'W5', src:'Lecture 5 p5', q:'f(x, y) = x²y³. What is f_x?', o:['2xy³','3x²y²','2x · 3y²','x²y³','2xy²'], a:0, e:'For f_x treat y as a constant: the derivative of x² is 2x, y³ stays. f_x = 2xy³.' },
+{ id:'w5b', t:'W5', src:'Lecture 6 p1 to 2', q:'f(x, y) = x²y³. What is the mixed derivative f_xy?', o:['6xy²','2y³','6x²y','6xy','12xy²'], a:0, e:'f_x = 2xy³, then differentiate by y: f_xy = 6xy². f_yx gives the same.' },
+{ id:'w5c', t:'W5', src:'Lecture 5 p6 to 7', q:'Which formula is the total differential of f at (x₀, y₀)?', o:['df = f_x + f_y','df = f_x(x₀, y₀)Δx + f_y(x₀, y₀)Δy','df = f(x₀, y₀)(Δx + Δy)','df = f_xx Δx² + f_yy Δy²','df = f_x Δy + f_y Δx'], a:1, e:'df = f_x Δx + f_y Δy estimates the change Δf when x changes by Δx and y by Δy.' },
+{ id:'w5d', t:'W5', src:'Lecture 5 p6', q:'The tangent plane to z = f(x, y) at (a, b) is…', o:['z = f(a, b) + f_x(a, b)(x − a) + f_y(a, b)(y − b)','z = f_x(x − a) + f_y(y − b)','z = f(a, b)(x − a)(y − b)','z = f(a, b) + f_xx(x − a)² + f_yy(y − b)²','z = f_x(a, b)x + f_y(a, b)y'], a:0, e:'Like the tangent line, with one slope term per variable.' },
+{ id:'w5e', t:'W5', src:'Book p49', q:'MRS_y = U_y / U_x. What does it mean?', o:['The utility of one unit of y','The amount of x the consumer gives up for one more unit of y, utility unchanged','The price ratio','The amount of y given up for one more x','The total utility'], a:1, e:'Marginal rate of substitution of y: how much x you are willing to give up to get one additional unit of y while keeping utility unchanged.' },
+{ id:'w5f', t:'W5', src:'Book p49', q:'For a production function Q(x, y), MRTS_y equals…', o:['Q_x / Q_y','Q_y / Q_x','Q_x · Q_y','Q / y','Q_xy'], a:1, e:'MRTS_y = Q_y / Q_x: the amount by which input x can be reduced when one more unit of y is used, production unchanged.' },
+{ id:'w5g', t:'W5', src:'Problem 2.51', q:'Which conditions identify the profit maximizing quantity Q*?', o:['π(Q*) = 0','π′(Q*) = 0 and π″(Q*) < 0','π′(Q*) = 0 and π″(Q*) > 0','TR(Q*) = TC(Q*)','π″(Q*) = 0'], a:1, e:'First order: π′ = 0 (stationary point). Second order: π″ < 0 (concave), so it is a maximum. TR = TC is break even, not the optimum.' },
+{ id:'w5h', t:'W5', src:'Problem 4.13', q:'Q_K(8, 2) = 5 for a production function Q(K, L). Interpretation?', o:['Producing 5 units needs 8 units of K','If K grows by 1 unit (L fixed), output grows by about 5 units','Output is 5','If L grows by 1, output grows by 5','K should be reduced by 5'], a:1, e:'A partial derivative is a marginal value: the approximate change in output for one more unit of K, with L kept constant.' },
+{ id:'w5i', t:'W5', src:'Old Midterm 2 2022', q:'You want production unchanged when K increases by ΔK. Which equation gives the required ΔL?', o:['Q_K ΔK + Q_L ΔL ≈ 0','Q_K ΔL + Q_L ΔK ≈ 0','ΔL = ΔK','Q_K = Q_L','ΔL = −ΔK'], a:0, e:'Unchanged production means dQ = 0: Q_K ΔK + Q_L ΔL ≈ 0, so ΔL ≈ −Q_K ΔK / Q_L.' },
+/* ---------- Week 6 ---------- */
+{ id:'w6a', t:'W6', src:'Book p51', q:'Which formula is the Hessian H of f(x, y)?', o:['f_xx + f_yy','f_xx f_yy − f_xy²','f_xx f_yy + f_xy²','f_x f_y − f_xy','f_xy² − f_xx f_yy'], a:1, e:'H = det[[f_xx, f_xy],[f_xy, f_yy]] = f_xx f_yy − f_xy².' },
+{ id:'w6b', t:'W6', src:'Book p51', q:'At a stationary point H > 0 and f_xx < 0. The point is…', o:['a local minimum','a local maximum','a saddle point','not determined','an inflection point'], a:1, e:'H > 0 and f_xx < 0: strictly concave, so a local maximum. H > 0 and f_xx > 0: convex, minimum.' },
+{ id:'w6c', t:'W6', src:'Book p51', q:'At a stationary point H < 0. The point is…', o:['a local minimum','a local maximum','a saddle point','a global maximum','not determined'], a:2, e:'H < 0: neither convex nor concave, the point is a saddle point.' },
+{ id:'w6d', t:'W6', src:'Book p51', q:'At a stationary point H = 0. What does the course say?', o:['It is a minimum','It is a maximum','It is a saddle point','This case is beyond the scope of the course','It is not stationary'], a:3, e:'The book states it: the case H(x₀, y₀) = 0 is beyond the scope of this course (the test is inconclusive).' },
+{ id:'w6e', t:'W6', src:'Lecture 5 p10', q:'When is (x₀, y₀) a stationary point of f(x, y)?', o:['f(x₀, y₀) = 0','f_x(x₀, y₀) = 0 and f_y(x₀, y₀) = 0','f_xx(x₀, y₀) = 0','H(x₀, y₀) = 0','f_x(x₀, y₀) = f_y(x₀, y₀)'], a:1, e:'Both first partial derivatives vanish: the tangent plane is horizontal.' },
+{ id:'w6f', t:'W6', src:'Problem 4.24', q:'Two products with prices P₁, P₂ and demands Q₁, Q₂. Total revenue is…', o:['P₁ + P₂','Q₁ + Q₂','P₁Q₁ + P₂Q₂','P₁Q₂ + P₂Q₁','(P₁ + P₂)(Q₁ + Q₂)'], a:2, e:'Revenue from each product is price times quantity sold. Add them: R = P₁Q₁ + P₂Q₂.' },
+{ id:'w6g', t:'W6', src:'Lecture 6 p6', q:'f(x, y) = x³ + y² + 12xy has stationary points (0, 0) and (24, −144). What is (0, 0)?', o:['local minimum','local maximum','saddle point (H = −144 < 0)','beyond the scope','not stationary'], a:2, e:'f_xx = 6x, f_yy = 2, f_xy = 12. At (0, 0): H = 0 · 2 − 144 = −144 < 0, a saddle point.' },
+{ id:'w6h', t:'W6', src:'Problem 4.20a', q:'f(x, y) = x² + y² − xy − 3y + 1. What is H at every point?', o:['4','3','−1','5','0'], a:1, e:'f_xx = 2, f_yy = 2, f_xy = −1. H = 2 · 2 − (−1)² = 3 > 0 and f_xx > 0, so the stationary point is a minimum.' }
+];
+
+/* ===== Past midterm papers (official solutions, Canvas files Midterms 24/25 and 25/26, plus two old Midterm 2 problems) ===== */
+const PAST = [
+ { id:'m2526A', title:'Midterm 1 (A), 20 Nov 2025', note:'Canvas: Midterms_25_26.pdf, version A. Time 30 minutes, 15 points.', probs:[
+  { n:1, pts:6, text:'The figure shows the graph of a linear demand function. Mind the meaning of the coordinate axes! a) (2) Find its expression Q(P). b) (1) Find its economic domain. c) (2) Find its elasticity. d) (1) At what price is the elasticity equal to −2?',
+    sk:{ x0:0, x1:5, y0:0, y1:7, segs:[[0,6,4,0]], xl:'Q', yl:'P' },
+    parts:[N('a) Q(P) = a − bP: a',4), N('a) b',2/3), N('b) Economic domain [0, P_max]: P_max',6), N('c) Check your elasticity formula at P = 3',-1), N('d) Price P',4)],
+    sol:['<b>a)</b> Find the line through the points P = 0, Q = 4 and P = 6, Q = 0 to get Q(P) = 4 − '+fr(2,3)+'P.','<b>b)</b> D<sub>Q</sub><sup>E</sup> = [0, 6]','<b>c)</b> E<sub>Q,P</sub> = '+fr('P','Q')+' · Q′ = −'+fr('P','6 − P')+'  (at P = 3: −1)','<b>d)</b> −'+fr('P','6 − P')+' = −2 ⇒ P = 4'] },
+  { n:2, pts:9, text:'Consider the function f(x) = 2 ln(2 − x) + (x + ½)². a) (3) Find its domain and the first and second derivative. b) (1) Is the function increasing or decreasing at x = −2? c) (5) Find its extrema and inflection points.',
+    parts:[N('a) Domain (−∞, b): b',2), N('b) f′(−2)',-3.5), CH('b) At x = −2 f is',['increasing','decreasing'],1), N('c) Minimum x',0), N('c) Minimum f',2*Math.log(2)+0.25), N('c) Maximum x',1.5), N('c) Maximum f',4-2*Math.log(2)), N('c) Inflection x',1), N('c) Inflection f',2.25)],
+    sol:['<b>a)</b> D<sub>f</sub> = (−∞, 2)','f′(x) = −'+fr(2,'2 − x')+' + 2(x + ½) = '+fr('x(2x − 3)','x − 2'),'f″(x) = −'+fr(2,'(2 − x)²')+' + 2 = '+fr('2(x − 1)(x − 3)','(x − 2)²'),'<b>b)</b> f′(−2) = −'+fr(7,2)+' < 0, the function is decreasing','<b>c)</b> E₁(0, 2 ln 2 + ¼) minimum,  E₂('+fr(3,2)+', 4 − 2 ln 2) maximum','(1, '+fr(9,4)+') inflection point (x = 3 is outside the domain)'] }
+ ]},
+ { id:'m2526B', title:'Midterm 1 (B), 20 Nov 2025', note:'Canvas: Midterms_25_26.pdf, version B.', probs:[
+  { n:1, pts:6, text:'The figure shows the graph of a linear demand function. Mind the meaning of the coordinate axes! a) (2) Find its expression Q(P). b) (1) Find its economic domain. c) (2) Find its elasticity. d) (1) At what price is the elasticity equal to −2/3?',
+    sk:{ x0:0, x1:5, y0:0, y1:6, segs:[[0,5,4,0]], xl:'Q', yl:'P' },
+    parts:[N('a) Q(P) = a − bP: a',4), N('a) b',4/5), N('b) P_max',5), N('c) Check your elasticity formula at P = 2.5',-1), N('d) Price P',2)],
+    sol:['<b>a)</b> Line through P = 0, Q = 4 and P = 5, Q = 0: Q(P) = 4 − '+fr(4,5)+'P','<b>b)</b> D<sub>Q</sub><sup>E</sup> = [0, 5]','<b>c)</b> E<sub>Q,P</sub> = '+fr('P','Q')+' · Q′ = −'+fr('P','5 − P'),'<b>d)</b> P = 2'] },
+  { n:2, pts:9, text:'Consider the function f(x) = 8 ln(4 − x) + (x + 1)². a) (3) Find its domain and the first and second derivative. b) (1) Is the function increasing or decreasing at x = 1? c) (5) Find its extrema and inflection points.',
+    parts:[N('a) Domain (−∞, b): b',4), N('b) f′(1)',4/3), CH('b) At x = 1 f is',['increasing','decreasing'],0), N('c) Minimum x',0), N('c) Minimum f',8*Math.log(4)+1), N('c) Maximum x',3), N('c) Maximum f',16), N('c) Inflection x',2), N('c) Inflection f',8*Math.log(2)+9)],
+    sol:['<b>a)</b> D<sub>f</sub> = (−∞, 4)','f′(x) = −'+fr(8,'4 − x')+' + 2(x + 1) = '+fr('2x(x − 3)','x − 4'),'f″(x) = −'+fr(8,'(4 − x)²')+' + 2 = '+fr('2(x − 2)(x − 6)','(x − 4)²'),'<b>b)</b> f′(1) = '+fr(4,3)+' > 0, the function is increasing','<b>c)</b> E₁(0, 8 ln 4 + 1) minimum,  E₂(3, 16) maximum','(2, 8 ln 2 + 9) inflection point'] }
+ ]},
+ { id:'m2425A', title:'Midterm 1 (A), 11 Nov 2024', note:'Canvas: Midterms_24_25.pdf, version A. That year: 2 problems of 5 points.', probs:[
+  { n:1, pts:5, text:'Consider the demand function Q(P) = ln '+fr('P − 6','3 − 2P')+'. a) (2) Find its mathematical domain. b) (3) Find its economic domain.',
+    parts:[N('a) lower limit',1.5), N('a) upper limit',6), N('b) lower limit',1.5), N('b) upper limit',3)],
+    sol:['<b>a)</b> The natural logarithm is defined for positive numbers. Solve '+fr('P − 6','3 − 2P')+' > 0.','Zero P = 6 (odd), pole P = '+fr(3,2)+' (odd). D<sub>Q</sub><sup>M</sup> = ('+fr(3,2)+', 6)','<b>b)</b> P ≥ 0 holds on D<sub>Q</sub><sup>M</sup>. Q(P) ≥ 0 ⇔ '+fr('P − 6','3 − 2P')+' ≥ 1 ⇔ '+fr('3P − 9','3 − 2P')+' ≥ 0','Zero P = 3 (odd), pole P = '+fr(3,2)+' (odd). D<sub>Q</sub><sup>E</sup> = ('+fr(3,2)+', 3]'] },
+  { n:2, pts:5, text:'Consider the function f(x) = '+rt('x + 5')+' + '+rt('9 − 3x')+'. a) (1) Find its domain. b) (4) Find the global extrema of f(x) on its domain.',
+    parts:[N('a) Domain [a, b]: a',-5), N('a) b',3), N('b) Global max x',-3), N('b) Global max value',Math.sqrt(32)), N('b) Global min x',3), N('b) Global min value',Math.sqrt(8))],
+    sol:['<b>a)</b> x + 5 ≥ 0 ⇔ x ≥ −5;  9 − 3x ≥ 0 ⇔ x ≤ 3.  D<sub>f</sub> = [−5, 3]','<b>b)</b> f′(x) = '+fr(1,'2'+rt('x + 5'))+' − '+fr(3,'2'+rt('9 − 3x')),'Stationary points: '+rt('9 − 3x')+' = 3'+rt('x + 5')+' ⇒ 9 − 3x = 9(x + 5) ⇒ x = −3 (indeed solves the first equation)','f(−3) = '+rt(2)+' + '+rt(18)+' = 4'+rt(2)+' = '+rt(32)+',  f(−5) = '+rt(24)+',  f(3) = '+rt(8),'Global maximum M(−3, '+rt(32)+'),  global minimum m(3, '+rt(8)+')'] }
+ ]},
+ { id:'m2425B', title:'Midterm 1 (B), 11 Nov 2024', note:'Canvas: Midterms_24_25.pdf, version B.', probs:[
+  { n:1, pts:5, text:'Consider the demand function Q(P) = ln '+fr('P − 4','5 − 2P')+'. a) (2) Find its mathematical domain. b) (3) Find its economic domain.',
+    parts:[N('a) lower limit',2.5), N('a) upper limit',4), N('b) lower limit',2.5), N('b) upper limit',3)],
+    sol:['<b>a)</b> Zero P = 4 (odd), pole P = '+fr(5,2)+' (odd). D<sub>Q</sub><sup>M</sup> = ('+fr(5,2)+', 4)','<b>b)</b> Q(P) ≥ 0 ⇔ '+fr('P − 4','5 − 2P')+' ≥ 1 ⇔ '+fr('3P − 9','5 − 2P')+' ≥ 0','Zero P = 3, pole P = '+fr(5,2)+'. D<sub>Q</sub><sup>E</sup> = ('+fr(5,2)+', 3]'] },
+  { n:2, pts:5, text:'Consider the function f(x) = '+rt('2x + 6')+' + '+rt('3 − x')+'. a) (1) Find its domain. b) (4) Find the global extrema of f(x) on its domain.',
+    parts:[N('a) a',-3), N('a) b',3), N('b) Global max x',1), N('b) Global max value',Math.sqrt(18)), N('b) Global min x',-3), N('b) Global min value',Math.sqrt(6))],
+    sol:['<b>a)</b> 2x + 6 ≥ 0 ⇔ x ≥ −3;  3 − x ≥ 0 ⇔ x ≤ 3.  D<sub>f</sub> = [−3, 3]','<b>b)</b> f′(x) = '+fr(1,rt('2x + 6'))+' − '+fr(1,'2'+rt('3 − x')),rt('2x + 6')+' = 2'+rt('3 − x')+' ⇒ 2x + 6 = 4(3 − x) ⇒ x = 1','f(1) = '+rt(8)+' + '+rt(2)+' = 3'+rt(2)+' = '+rt(18)+',  f(−3) = '+rt(6)+',  f(3) = '+rt(12),'Global maximum M(1, '+rt(18)+'),  global minimum m(−3, '+rt(6)+')'] }
+ ]},
+ { id:'old2v', title:'Two variable problems from old Midterm 2 papers (HISTORICAL)', note:'These were on Midterm 2 in 2021 and 2022. This year functions of two variables are on Midterm 1, so practise them here. Files in 06 Past exams.', probs:[
+  { n:1, pts:5, text:'(Midterm 2, 1 Dec 2022) The production function of a company is Q(K, L) = K³L'+rt('L + 6')+'. At the moment the company uses K₀ = 4 units of capital and L₀ = 10 units of labor daily. Use the total differential to estimate a) (3) the new production level if K is increased to 4.2 and L is decreased to 9.7; b) (2) the required change in L if K is increased to 4.2 and the production level stays unchanged.',
+    parts:[N('Q(4, 10)',2560), N('Q_K(4, 10)',1920), N('Q_L(4, 10)',336), N('a) New production ≈',2843.2), N('b) ΔL ≈',-8/7)],
+    sol:['Q(K₀ + ΔK, L₀ + ΔL) ≈ Q(K₀, L₀) + Q<sub>K</sub>(K₀, L₀)ΔK + Q<sub>L</sub>(K₀, L₀)ΔL  (new value ≈ old value + total differential)','Q(4, 10) = 2560;  Q<sub>K</sub> = 3K²L'+rt('L + 6')+' ⇒ 1920;  Q<sub>L</sub> = K³'+rt('L + 6')+' + '+fr('K³L','2'+rt('L + 6'))+' ⇒ 336;  ΔK = 0.2, ΔL = −0.3','<b>a)</b> Q(4.2, 9.7) ≈ 2560 + 1920 · 0.2 + 336 · (−0.3) = 2843.2','<b>b)</b> 1920 · 0.2 + 336ΔL ≈ 0 ⇒ ΔL ≈ −'+fr(8,7)+' ≈ −1.14. The labor input should be decreased by about 1.14 units.'] },
+  { n:2, pts:7, text:'(Midterm 2 A, 15 Dec 2021) Consider the function f(x, y) = y ln(x² + y). a) (5) Find its first and second partial derivatives. b) (2) Verify that P(1, 0, 0) is a stationary point of f and classify it.',
+    parts:[N('f_x(1, 0)',0), N('f_y(1, 0)',0), N('f_xx(1, 0)',0), N('f_yy(1, 0)',2), N('f_xy(1, 0)',2), N('H(1, 0)',-4), CH('Type of P',TYPES3,2)],
+    sol:['f<sub>x</sub> = '+fr('2xy','x² + y')+',  f<sub>y</sub> = ln(x² + y) + '+fr('y','x² + y'),'f<sub>xx</sub> = '+fr('2y(y − x²)','(x² + y)²')+',  f<sub>yy</sub> = '+fr('2x² + y','(x² + y)²')+',  f<sub>xy</sub> = '+fr('2x³','(x² + y)²'),'<b>b)</b> f<sub>x</sub>(1, 0) = 0, f<sub>y</sub>(1, 0) = ln 1 + 0 = 0 and f(1, 0) = 0, so P is stationary.','f<sub>xx</sub>(1, 0) = 0, f<sub>yy</sub>(1, 0) = 2, f<sub>xy</sub>(1, 0) = 2. H = 0 · 2 − 2² = −4 < 0 ⇒ saddle point.'] }
+ ]}
+];
+
+/* ===== Method sheet: how to solve each problem type, written as on paper ===== */
+const METHODS = [
+ ['Weeks 1 to 2','Reading a graph (seminar 5 Oct)',['Domain: all x where the graph exists. Range: all heights it reaches.','Zeros with multiplicity: crossing the x axis means odd, touching means even.','Poles with multiplicity: vertical asymptotes. Sign changes on both sides means odd, same sign means even.','Initial value f(0): where the graph meets the y axis.','Behaviour at ±∞: the horizontal asymptote or ±∞.','Increasing or decreasing, extrema, convex or concave: read from the shape.']],
+ ['Weeks 1 to 2','Rational function from the formula',['Cancel common factors first.','Domain: ℝ without the zeros of the denominator.','Zeros: numerator = 0, write the multiplicity. Poles: denominator = 0, with multiplicity.','Initial value f(0).','Asymptote: degree numerator < degree denominator gives y = 0; equal degrees give y = ratio of leading coefficients; numerator bigger: divide the polynomials.','Sketch: sign table from zeros and poles (odd changes, even keeps), then the asymptotes.']],
+ ['Weeks 1 to 2','Economic domain of a demand function',['Mathematical domain first (ln: argument > 0; √: ≥ 0; fraction: denominator ≠ 0). Solve rational inequalities with a sign line of zeros and poles.','Economic conditions: P ≥ 0 and Q(P) ≥ 0.','For Q = ln u: Q ≥ 0 ⇔ u ≥ 1. Move 1 to the left and write it as ONE fraction, then a new sign line.','Write the interval with correct brackets: open at a pole, closed where Q = 0 is reached.']],
+ ['Week 3','Derivative with the rules',['Recognise the outermost operation: sum, product, quotient, or composition.','Product (uv)′ = u′v + uv′. Quotient (u/v)′ = (u′v − uv′)/v². Chain (f(g(x)))′ = f′(g(x)) · g′(x).','Name the outside and inside function every time you use the chain rule.','Simplify (factor out common terms like eˣ), then insert the point.','Sign of f′(a): positive increasing, negative decreasing, zero stationary.']],
+ ['Week 3','Tangent line and linear approximation',['Tangent at a: y = f′(a)(x − a) + f(a). Compute f(a) and f′(a) first.','Approximation: f(a + Δx) ≈ f(a) + f′(a)Δx. Pick a close to the target where f(a) is easy (perfect square, 1 for ln, 0 for eˣ).','Differential: Δf ≈ df = f′(a)Δx (the change, not the new value).','Interpret: "the demand decreases by about … units".']],
+ ['Week 4','Taylor polynomial',['Write f, f′, f″ (and f‴ if asked) in general.','Evaluate them at a.','T₂(x) = f(a) + f′(a)(x − a) + f″(a)/2 · (x − a)². Coefficient of (x − a)ⁿ is f⁽ⁿ⁾(a)/n!.','Insert x for the estimate and compare with the calculator value.']],
+ ['Week 4','Local extrema and inflection points (one variable)',['Domain.','f′(x) = 0 gives the stationary points. Factor f′.','Classify with f″: f″ > 0 minimum, f″ < 0 maximum. If f″ = 0 use the higher order test (first nonzero derivative: even order extremum, odd order inflection).','Inflection points: f″ = 0 and f‴ ≠ 0 (or sign change of f″). Check that they are in the domain!','Write the points with both coordinates: E(x, f(x)).','Increasing/decreasing: sign of f′ on intervals between stationary points.']],
+ ['Week 4','Full analysis like Midterm 1 2025/26 Problem 2',['a) Domain from ln (argument > 0). Then f′ and f″, both as ONE fraction and factored.','b) Insert the given x into f′: sign decides increasing or decreasing.','c) Stationary points: numerator of f′ = 0, keep only points in the domain.','Classify each with f″.','Inflection: numerator of f″ = 0, drop the root outside the domain.','Give exact values (with ln) and decimals.']],
+ ['Week 4','Global extrema on an interval',['Domain or the given interval [a, b].','Stationary points inside the interval (for square roots: square both sides, then CHECK the solution in the original equation).','Evaluate f at the stationary points AND at both endpoints.','Biggest value: global maximum M. Smallest: global minimum m.']],
+ ['Week 4','Elasticity',['E<sub>Q,P</sub> = (P/Q) · Q′. Simplify to one fraction.','Value at the price P₀; interpretation: price up 1% ⇒ demand changes by about E%.','Percentage change of demand: ΔQ% ≈ E · ΔP%.','Unit elastic: |E| = 1. Elastic |E| > 1, inelastic |E| < 1.','Linear demand from a graph: check which axis is P! Two points give the line.']],
+ ['Week 5','Profit maximisation (one variable)',['Profit π = TR − TC, with TR = P · Q. Write π as a function of ONE variable (Q, or P).','π′ = 0 gives the stationary point.','Second order condition: π″ < 0 ⇒ maximum.','Compute the other variable (price or quantity) and the maximum profit.']],
+ ['Week 5','Partial derivatives',['f<sub>x</sub>: differentiate by x, treat y as a constant. f<sub>y</sub>: by y, x constant.','Second order: f<sub>xx</sub> = (f<sub>x</sub>)<sub>x</sub>, f<sub>yy</sub>, f<sub>xy</sub> = (f<sub>x</sub>)<sub>y</sub> = f<sub>yx</sub>.','Insert the point only at the end.']],
+ ['Week 5','Total differential, estimate a change',['Write Q, Q<sub>K</sub>, Q<sub>L</sub> in general, then evaluate at (K₀, L₀). Write ΔK and ΔL with signs.','New value ≈ old value + Q<sub>K</sub>ΔK + Q<sub>L</sub>ΔL.','Unchanged production: Q<sub>K</sub>ΔK + Q<sub>L</sub>ΔL ≈ 0 ⇒ ΔL ≈ −Q<sub>K</sub>ΔK / Q<sub>L</sub>. Answer in a sentence: "L should be decreased by about …".']],
+ ['Week 5','MRS and MRTS',['MRS<sub>y</sub> = U<sub>y</sub>/U<sub>x</sub> (amount of x given up for one more unit of y, utility unchanged).','MRTS<sub>y</sub> = Q<sub>y</sub>/Q<sub>x</sub> (amount of x saved when one more unit of y is used, output unchanged).','Required change of x when y changes by Δy: Δx ≈ −MRS<sub>y</sub> · Δy.']],
+ ['Week 6','Extrema of two variables',['f<sub>x</sub> = 0 and f<sub>y</sub> = 0: solve the system (express one variable from the simpler equation and insert).','Write every stationary point T(x₀, y₀, f(x₀, y₀)).','Second derivatives and H = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>² at each point.','H > 0, f<sub>xx</sub> > 0: minimum. H > 0, f<sub>xx</sub> < 0: maximum. H < 0: saddle point. H = 0: beyond the course.']],
+ ['Week 6','Optimisation with two variables (problem 4.24)',['Write the objective: revenue R = P₁Q₁ + P₂Q₂ (or profit π = R − TC).','R<sub>P₁</sub> = 0 and R<sub>P₂</sub> = 0, solve the linear system.','Check with the Hessian: H > 0 and R<sub>P₁P₁</sub> < 0 ⇒ maximum.','Compute the quantities and the maximum value; check the economic domain (prices and quantities ≥ 0).']]
+];
+
+/* ===== Formulas, written as on paper (rows: [formula html, source]) ===== */
+const I = s => '<i>' + s + '</i>';
+const D1 = '′', D2 = '″';
+const sub = (b, s) => b + '<sub>' + s + '</sub>';
+const P_ = x => '<span class="bp">(</span>' + x + '<span class="bp">)</span>';
+const LIM = u => '<span class="lim">lim<span>' + u + '</span></span>';
+const FORMULAS = [
+ ['Derivatives: table of elementary derivatives', [
+  ['C' + D1 + ' = 0, &nbsp; x' + D1 + ' = 1, &nbsp; (' + sp('x', 'a') + ')' + D1 + ' = a' + sp('x', 'a−1'), 'Lecture 3, table'],
+  [P_(rt('x')) + D1 + ' = ' + fr(1, '2' + rt('x')) + ', &nbsp; ' + P_(fr(1, 'x')) + D1 + ' = −' + fr(1, sp('x', 2)), 'from (xᵃ)′ with a = ½ and a = −1'],
+  ['(' + sp('e', 'x') + ')' + D1 + ' = ' + sp('e', 'x') + ', &nbsp; (' + sp('a', 'x') + ')' + D1 + ' = ' + sp('a', 'x') + ' ln a', 'Lecture 3, table'],
+  ['(ln x)' + D1 + ' = ' + fr(1, 'x') + ', &nbsp; (' + sub('log', 'a') + ' x)' + D1 + ' = ' + fr(1, 'x ln a'), 'Lecture 3, table'],
+  ['(sin x)' + D1 + ' = cos x, &nbsp; (cos x)' + D1 + ' = −sin x', 'Lecture 3, table'],
+  ['(tg x)' + D1 + ' = ' + fr(1, sp('cos', 2) + ' x') + ', &nbsp; (arctg x)' + D1 + ' = ' + fr(1, sp('x', 2) + ' + 1'), 'Lecture 3, table']]],
+ ['Derivatives: rules', [
+  ['(f ± g)' + D1 + ' = f' + D1 + ' ± g' + D1 + ', &nbsp; (C · f)' + D1 + ' = C · f' + D1, 'Lecture 3'],
+  ['(u · v)' + D1 + ' = u' + D1 + 'v + uv' + D1, 'product rule'],
+  [P_(fr('u', 'v')) + D1 + ' = ' + fr('u' + D1 + 'v − uv' + D1, sp('v', 2)), 'quotient rule'],
+  ['(f ∘ g)' + D1 + '(x) = f' + D1 + '(g(x)) · g' + D1 + '(x)', 'chain rule: outside′(inside) · inside′'],
+  [P_(rt('u')) + D1 + ' = ' + fr('u' + D1, '2' + rt('u')) + ', &nbsp; (ln u)' + D1 + ' = ' + fr('u' + D1, 'u') + ', &nbsp; (' + sp('e', 'u') + ')' + D1 + ' = ' + sp('e', 'u') + ' · u' + D1 + ', &nbsp; (' + sp('u', 'n') + ')' + D1 + ' = n' + sp('u', 'n−1') + ' · u' + D1, 'chain rule, most used cases']]],
+ ['Tangent, approximation, Taylor', [
+  ['f' + D1 + '(a) = ' + LIM('h→0') + fr('f(a + h) − f(a)', 'h') + ' = tg α', 'Lecture 3, definition'],
+  ['y = f' + D1 + '(a)(x − a) + f(a)', 'tangent line at a'],
+  ['f(x) ≈ f(a) + f' + D1 + '(a)(x − a)', 'linear approximation'],
+  ['Δf ≈ df = f' + D1 + '(a) · Δx', 'differential'],
+  [sub('T', 'n') + '(x) = f(a) + ' + fr('f' + D1 + '(a)', '1!') + '(x − a) + ' + fr('f' + D2 + '(a)', '2!') + sp('(x − a)', 2) + ' + … + ' + fr(sp('f', '(n)') + '(a)', 'n!') + sp('(x − a)', 'n'), 'Lecture 4, Taylor polynomial'],
+  [sp('e', 'x') + ' = 1 + x + ' + fr(sp('x', 2), '2!') + ' + ' + fr(sp('x', 3), '3!') + ' + … + ' + fr(sp('x', 'n'), 'n!') + ' + …', 'Lecture 4, about a = 0'],
+  ['ln x = (x − 1) − ' + fr(sp('(x − 1)', 2), 2) + ' + ' + fr(sp('(x − 1)', 3), 3) + ' − ' + fr(sp('(x − 1)', 4), 4) + ' + …', 'Lecture 4, about a = 1']]],
+ ['Extrema and shape, one variable', [
+  ['f' + D1 + '(a) > 0 increasing, &nbsp; f' + D1 + '(a) < 0 decreasing, &nbsp; f' + D1 + '(a) = 0 stationary point', 'Lecture 3'],
+  ['f' + D2 + '(a) > 0 convex ∪, &nbsp; f' + D2 + '(a) < 0 concave ∩', 'Lecture 3'],
+  ['f' + D1 + '(a) = 0 and f' + D2 + '(a) > 0 ⇒ local minimum; &nbsp; f' + D2 + '(a) < 0 ⇒ local maximum', 'second derivative test'],
+  ['f' + D1 + '(a) = … = ' + sp('f', '(m−1)') + '(a) = 0, ' + sp('f', '(m)') + '(a) ≠ 0: &nbsp; m even, ' + sp('f', '(m)') + ' > 0 min; &nbsp; m even, ' + sp('f', '(m)') + ' < 0 max; &nbsp; m odd: inflection', 'Lectures 4, 5, higher order test'],
+  ['f' + D2 + '(a) = 0 and f' + '‴' + '(a) ≠ 0 ⇒ inflection point', 'Lecture 4'],
+  ['Global extrema on [a, b]: compare f at stationary points inside AND at a and b', 'problem 2.48']]],
+ ['Economics', [
+  [sub('E', 'y,x') + ' = ' + fr('x', 'y') + ' · y' + D1 + ', &nbsp; ' + sub('E', 'Q,P') + ' = ' + fr('P', 'Q') + ' · Q' + D1, 'book p26, elasticity'],
+  ['|E| = 1 unit elastic, &nbsp; |E| > 1 elastic, &nbsp; |E| < 1 inelastic', 'book p26'],
+  ['Δy % ≈ E · Δx %', 'percentage change'],
+  ['TR = P · Q, &nbsp; π = TR − TC, &nbsp; π' + D1 + ' = 0 and π' + D2 + ' < 0 ⇒ maximum profit', 'problem 2.51'],
+  [sub('D', 'Q') + '<sup>E</sup>: P ∈ ' + sub('D', 'Q') + '<sup>M</sup>, P ≥ 0, Q(P) ≥ 0', 'economic domain'],
+  ['Q = a − bP: &nbsp; ' + sub('E', 'Q,P') + ' = −' + fr('bP', 'a − bP') + ', unit elastic at P = ' + fr('a', '2b'), 'linear demand']]],
+ ['Two variables', [
+  [sub('f', 'x') + ' = ' + fr('∂f', '∂x') + ' (y is a constant), &nbsp; ' + sub('f', 'y') + ' = ' + fr('∂f', '∂y') + ' (x is a constant)', 'Lecture 5'],
+  [sub('f', 'xx') + ' = ' + fr(sp('∂', 2) + 'f', sp('∂x', 2)) + ', &nbsp; ' + sub('f', 'yy') + ' = ' + fr(sp('∂', 2) + 'f', sp('∂y', 2)) + ', &nbsp; ' + sub('f', 'xy') + ' = ' + fr(sp('∂', 2) + 'f', '∂x∂y') + ' = ' + sub('f', 'yx'), 'Lectures 5, 6'],
+  ['z = f(a, b) + ' + sub('f', 'x') + '(a, b)(x − a) + ' + sub('f', 'y') + '(a, b)(y − b)', 'tangent plane'],
+  ['Δf ≈ df = ' + sub('f', 'x') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')Δx + ' + sub('f', 'y') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')Δy', 'total differential'],
+  [sub('MRS', 'y') + ' = ' + fr(sub('U', 'y') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')', sub('U', 'x') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')') + ', &nbsp; ' + sub('MRTS', 'y') + ' = ' + fr(sub('Q', 'y') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')', sub('Q', 'x') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ')'), 'book p49'],
+  ['Stationary point: ' + sub('f', 'x') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ') = 0 and ' + sub('f', 'y') + '(' + sub('x', '0') + ', ' + sub('y', '0') + ') = 0', 'Lectures 5, 6'],
+  ['H = <span class="det"><span>' + sub('f', 'xx') + '&nbsp;&nbsp;' + sub('f', 'xy') + '</span><span>' + sub('f', 'xy') + '&nbsp;&nbsp;' + sub('f', 'yy') + '</span></span> = ' + sub('f', 'xx') + sub('f', 'yy') + ' − ' + sp(sub('f', 'xy'), 2), 'book p51, Hessian'],
+  ['H > 0, ' + sub('f', 'xx') + ' > 0: minimum; &nbsp; H > 0, ' + sub('f', 'xx') + ' < 0: maximum; &nbsp; H < 0: saddle point; &nbsp; H = 0: beyond the course', 'book p51']]]
+];
+
+/* ===== Rules by lecture (everything taught before Midterm 1) ===== */
+const RULES = [
+ ['Lecture 1 (5 Oct): functions, linear function, powers, polynomials', [
+  ['A function assigns every argument x ∈ ' + sub('D', 'f') + ' exactly one value f(x). Every vertical line meets the graph at most once.', 'p4 to 5'],
+  ['Domain traps: &nbsp; ' + fr('…', 'g(x)') + ': g(x) ≠ 0; &nbsp; ' + rt('g(x)') + ': g(x) ≥ 0; &nbsp; ln g(x): g(x) > 0', 'p4'],
+  ['Composition: (g ∘ f)(x) = g(f(x)), apply f first. In general g ∘ f ≠ f ∘ g', 'p5'],
+  ['Inverse: ' + sp('f', '−1') + '(f(x)) = x. Write f(y) = x and solve for y. The graph is reflected over y = x', 'p6 to 7'],
+  ['Linear: f(x) = kx + n, &nbsp; k = ' + fr(sub('y', 2) + ' − ' + sub('y', 1), sub('x', 2) + ' − ' + sub('x', 1)) + ' = tg α, &nbsp; n = ' + sub('y', 1) + ' − k' + sub('x', 1), 'p8 to 11'],
+  ['k > 0 increasing, k < 0 decreasing, k = 0 constant; y intercept (0, n), zero x = −' + fr('n', 'k') + '; perpendicular lines: ' + sub('k', 1) + sub('k', 2) + ' = −1', 'p8 to 11'],
+  ['Quadratic: f(x) = a' + sp('x', 2) + ' + bx + c, &nbsp; ' + sub('x', '1,2') + ' = ' + fr('−b ± ' + rt(sp('b', 2) + ' − 4ac'), '2a') + ', &nbsp; vertex V' + P_('−' + fr('b', '2a') + ', f' + P_('−' + fr('b', '2a'))) , 'exercises 5 Oct, problem 1.24'],
+  [sp('x', 'n') + ', n even: even function f(−x) = f(x), symmetric to the y axis, ' + sub('R', 'f') + ' = [0, ∞). &nbsp; n odd: odd function f(−x) = −f(x), symmetric to the origin, ' + sub('R', 'f') + ' = ℝ', 'p12 to 13'],
+  [sp('x', '−n') + ' = ' + fr(1, sp('x', 'n')) + ': ' + sub('D', 'f') + ' = ℝ \\ {0}; &nbsp; ' + '<sup class="ix">n</sup>' + rt('x') + ': n even ' + sub('D', 'f') + ' = ' + sub('R', 'f') + ' = [0, ∞), n odd ' + sub('D', 'f') + ' = ' + sub('R', 'f') + ' = ℝ', 'p13 to 14'],
+  ['Polynomial of degree n: at most n real zeros; odd degree has at least one real zero; for large |x| it behaves like a<sub>n</sub>' + sp('x', 'n'), 'p15 to 16'],
+  ['p(x) = ' + sp('(x − a)', 'm') + 'q(x), q(a) ≠ 0: a is a zero of multiplicity m. m odd: the graph crosses, sign changes. m even: the graph touches, sign stays', 'p16 to 17'],
+  ['Polynomial division: p(x) = q(x) · s(x) + r(x), deg r < deg s', 'exercises 5 Oct, problem 1.33']]],
+ ['Lecture 2 (6 Oct): rational functions, limits, shifts, exponential and logarithm', [
+  ['r(x) = ' + fr('p(x)', 'q(x)') + ' in cancelled form: ' + sub('D', 'r') + ' = ℝ \\ {zeros of q}; zeros of p are zeros, zeros of q are poles', 'p1'],
+  ['Crossing a zero or a pole: odd multiplicity changes the sign, even multiplicity keeps it', 'p1'],
+  [LIM('x→a') + 'f(x) = L: the value f approaches near a; it does not depend on f(a)', 'p2'],
+  ['x → ±∞: deg p < deg q ⇒ 0; &nbsp; deg p = deg q ⇒ ' + fr(sub('a', 'n'), sub('b', 'n')) + '; &nbsp; deg p > deg q ⇒ ±∞', 'p2'],
+  ['Asymptote: divide, r(x) = s(x) + ' + fr(sub('r', '1') + '(x)', 'q(x)') + ', the polynomial s(x) is the asymptote. Example: ' + fr(sp('x', 2), 'x − 1') + ' = x + 1 + ' + fr(1, 'x − 1'), 'p3 to 4'],
+  ['f(x) + c: up by c; &nbsp; f(x + c): LEFT by c; &nbsp; f(x − c): right by c; &nbsp; k · f(x): vertical stretch; &nbsp; f' + P_(fr('x', 'k')) + ': horizontal stretch', 'p5 to 6'],
+  [sp('a', 'x') + ' (a > 0): D = ℝ, R = (0, ∞); a > 1 increasing, 0 < a < 1 decreasing; ' + sp('a', 'x + y') + ' = ' + sp('a', 'x') + sp('a', 'y') + ', ' + sp('a', 'x − y') + ' = ' + fr(sp('a', 'x'), sp('a', 'y')) + ', ' + sp('(' + sp('a', 'x') + ')', 'y') + ' = ' + sp('a', 'xy') + ', ' + sp('a', 0) + ' = 1', 'p6'],
+  [sub('log', 'a') + ' x is the inverse of ' + sp('a', 'x') + ': ' + sub('log', 'a') + sp('a', 'x') + ' = x, ' + sp('a', sub('log', 'a') + ' x') + ' = x; D = (0, ∞), R = ℝ, ' + sub('log', 'a') + ' 1 = 0, ' + sub('log', 'a') + ' a = 1', 'p7 to 8'],
+  ['ln(xy) = ln x + ln y, &nbsp; ln ' + fr('x', 'y') + ' = ln x − ln y, &nbsp; ln ' + sp('x', 'r') + ' = r ln x, &nbsp; ln e = 1, &nbsp; ' + sp('e', 'ln x') + ' = x', 'p8; quotient and power forms follow from it'],
+  ['ln x > 0 ⇔ x > 1, &nbsp; ln x = 0 ⇔ x = 1, &nbsp; ln x < 0 ⇔ 0 < x < 1', 'needed for economic domains'],
+  ['Growth: ' + sp('e', 'x') + ' beats every power, every power beats ln x: ' + LIM('x→∞') + fr(sp('x', 'm'), sp('e', 'x')) + ' = 0, &nbsp; ' + LIM('x→∞') + fr('ln x', 'x') + ' = 0', 'p9'],
+  ['sin x, cos x, tg x appear in the course only as examples and in the derivative table (Lecture 3). No midterm problem in 2024 or 2025 used them', 'Lecture 1 p3, Lecture 3 table']]],
+ ['Lecture 3 (13 Oct): the derivative and its applications', [
+  ['Difference quotient ' + fr('f(a + h) − f(a)', 'h') + ' = slope of the secant; its limit for h → 0 is f' + D1 + '(a) = slope of the tangent', 'p3 to 4'],
+  ['Name outside and inside function every time you use the chain rule', 'p5 to 6'],
+  ['Tangent y = f' + D1 + '(a)(x − a) + f(a); near a the graph is close to its tangent', 'p7'],
+  ['f' + D1 + '(a) > 0: f increases at a, f' + D1 + '(a) < 0: f decreases; extrema of a differentiable f only at stationary points, but not every stationary point is an extremum (' + sp('x', 3) + ' at 0)', 'p9 to 10'],
+  ['Convex: graph above its tangent, f' + D2 + ' > 0; concave: below, f' + D2 + ' < 0', 'p11 to 12']]],
+ ['Lecture 4 (20 Oct) and Lecture 5 p1 to 2 (27 Oct): extrema, Taylor, analysis', [
+  ['Higher derivatives: f' + D2 + ' = (f' + D1 + ')' + D1 + ', f' + '‴' + ' = (f' + D2 + ')' + D1 + ', … ; Example (ln x)' + D1 + ' = ' + fr(1, 'x') + ', ' + '(ln x)″' + ' = −' + fr(1, sp('x', 2)), 'p1 to 2'],
+  ['Taylor polynomial matches f and its first n derivatives at a; the closer x is to a, the better the estimate', 'p3 to 8'],
+  ['Inflection point: the graph is on both sides of its tangent', 'p9'],
+  ['Full analysis order: 1 domain, 2 zeros and poles, 3 f' + D1 + ' and stationary points, 4 classification with f' + D2 + ', 5 inflection points, 6 behaviour at the borders, 7 table of signs, 8 sketch', 'p11 to 12']]],
+ ['Lectures 5 to 6 (27 Oct, 3 Nov): functions of two variables', [
+  ['f: ' + sub('D', 'f') + ' ⊂ ' + sp('ℝ', 2) + ' → ℝ, (x, y) ↦ z = f(x, y); the graph is a surface in space', 'L5 p3 to 4'],
+  ['Level curve at level c: all (x, y) with f(x, y) = c', 'book p45, problems 4.2 to 4.4'],
+  ['The difference Δf has the same sign as df: where the tangent plane rises, the surface rises', 'L5 p9'],
+  ['Minimum: the surface lies above its tangent plane around the point; maximum: below; saddle: on both sides', 'L6 p4'],
+  ['Mixed derivatives are equal: ' + sub('f', 'xy') + ' = ' + sub('f', 'yx') + ' (compute the easier one, use the other to check)', 'L6 p2'],
+  ['Optimisation: write the objective (revenue, profit) as one function of two variables, set both partial derivatives to 0, classify with H', 'L6 p7, problem 4.24']]]
+];
+
+
+/* ===== UI ===== */
+const $ = s => document.querySelector(s);
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+const KEY = 'mabe_mid1_2026_v1';
+let store = { mc: {}, calc: {}, study: {}, mocks: [], past: {} };
+try { const s = localStorage.getItem(KEY); if (s) store = Object.assign(store, JSON.parse(s)); } catch (e) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
+const TABS = [['study', 'Study'], ['practice', 'Practice'], ['lab', 'Calculation lab'], ['mock', 'Mock midterm'], ['past', 'Past midterms'], ['methods', 'Method sheet'], ['formulas', 'Formulas'], ['progress', 'Progress']];
+let tab = 'study';
+function renderTabs() { $('#tabs').innerHTML = TABS.map(t => `<button role="tab" aria-selected="${tab === t[0]}" data-t="${t[0]}">${t[1]}</button>`).join(''); $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.t; renderTabs(); show(); window.scrollTo(0, 0); }); }
+function show() { ({ study, practice, lab, mock, past, methods, formulas, progress })[tab](); }
+function countdown() {
+  const t = new Date('2026-11-18T17:15:00+01:00') - new Date(); const el = $('#cd'); if (!el) return;
+  if (t <= 0) { el.textContent = 'Midterm 1 has started or is over.'; return; }
+  const d = Math.floor(t / 864e5), h = Math.floor(t % 864e5 / 36e5), m = Math.floor(t % 36e5 / 6e4);
+  el.textContent = 'Midterm 1 in ' + d + ' d ' + h + ' h ' + m + ' min · Wed 18 Nov 17:15 · 30 minutes · no formula sheet';
+}
+const WK_KEYS = Object.keys(WEEKS);
+const wkShort = k => ({ W12: 'Weeks 1 to 2', W3: 'Week 3', W4: 'Week 4', W5: 'Week 5', W6: 'Week 6' }[k]);
+function chips(cur, set, all) { return `<div class="chips">${(all ? ['ALL'] : []).concat(WK_KEYS).map(k => `<button class="chip" aria-pressed="${cur === k}" data-w="${k}">${k === 'ALL' ? 'All weeks' : wkShort(k)}</button>`).join('')}</div>`; }
+function bindChips(fn) { document.querySelectorAll('.chip[data-w]').forEach(b => b.onclick = () => fn(b.dataset.w)); }
+
+/* ---------- shared problem rendering ---------- */
+function skHtml(sk) {
+  if (!sk || !sk.length) return '';
+  return '<div class="skw"><div class="skg">' + sk.map(s => '<figure class="sk">' + (s.plot ? plotSvg(s.plot) : s.html) + '<figcaption>' + esc(s.cap || '') + '</figcaption></figure>').join('') + '</div></div>';
+}
+function paperSteps(steps) { return '<div class="paper">' + steps.map((s, i) => '<div class="ps"><span class="pn">' + (i + 1) + '</span><div class="pb">' + s + '</div></div>').join('') + '</div>'; }
+function finalAns(t) { return '<div class="ans">' + t.parts.map(p => { const l = p.label.replace(/^[a-d]\)\s*/, ''); const ap = /≈\s*$/.test(l); const base = l.replace(/\s*[=:≈]\s*$/, ''); return '<span>' + base + (p.kind === 'ch' ? ': ' : ap ? ' ≈ ' : ' = ') + ansText(p) + '</span>'; }).join('') + '</div>'; }
+function solHtml(t) { return skHtml(t.sk) + paperSteps(t.steps) + '<div class="meta" style="margin-top:8px">Final answers</div>' + finalAns(t); }
+function partsHtml(t, pre, done) {
+  return t.parts.map((p, i) => {
+    const field = p.kind === 'ch' ? `<select id="${pre}${i}" ${done ? 'disabled' : ''}><option value="">choose</option>${p.opts.map((o, k) => `<option value="${k}">${esc(o)}</option>`).join('')}</select>`
+      : `<input id="${pre}${i}" inputmode="text" autocomplete="off" spellcheck="false" placeholder="${p.kind === 'list' ? 'e.g. −2; 3  or none' : 'e.g. 3/2, −0.25, 2ln2+1/4'}" ${done ? 'disabled' : ''}>`;
+    return `<div class="part" id="${pre}row${i}"><label for="${pre}${i}">${p.label}</label>${field}<span class="m" id="${pre}m${i}"></span></div>`;
+  }).join('');
+}
+function gradeParts(t, pre) { let good = 0; t.parts.forEach((p, i) => { const el = document.getElementById(pre + i); const ok = el && okPart(p, el.value); if (ok) good++; const row = document.getElementById(pre + 'row' + i); if (row) row.className = 'part ' + (ok ? 'ok' : 'no'); const m = document.getElementById(pre + 'm' + i); if (m) m.textContent = ok ? '✓' : '✗'; if (el) el.disabled = true; }); return good; }
+function qHtml(t) { return `<div class="q">${t.intro}</div>` + (t.introSk ? skHtml(t.introSk) : ''); }
+function recCalc(k, good, n) { const c = store.calc[k] || { tasks: 0, good: 0, parts: 0 }; c.tasks++; c.good += good; c.parts += n; c.last = new Date().toISOString().slice(0, 10); store.calc[k] = c; save(); }
+const INPUT_NOTE = '<p class="note">Type numbers, fractions or expressions: 3/2, −0.25, sqrt(32), 2ln2 + 1/4, e^2. Decimals with a dot (a comma works only for a single number). For lists separate with ; and type none if there are none. Answers are accepted within about 0.01.</p>';
+
+/* ---------- Study: worked example, recall, three new versions, mixed round ---------- */
+let S = { wk: 'ALL', key: null, stage: 'pick', worked: null, i: 0, task: null, good: 0, total: 0, mix: false, mixN: 0, checked: false };
+function studyKeys() { return CALC_ORDER.filter(k => S.wk === 'ALL' || CALC[k].wk === S.wk); }
+function stBegin(k) { S.key = k; S.mix = false; const c = CALC[k]; S.worked = c.gen(c.book); S.stage = 'study'; S.i = 0; S.good = 0; S.total = 0; study(); window.scrollTo(0, 0); }
+function stNext() { S.task = CALC[S.key].gen(); S.checked = false; }
+function study() {
+  const v = $('#view');
+  if (S.stage === 'pick') {
+    let last = '';
+    const rows = studyKeys().map(k => { const c = CALC[k], r = store.study[k]; const head = c.wk !== last ? `<tr class="lh"><td colspan="3"><b>${esc(WEEKS[c.wk])}</b></td></tr>` : ''; last = c.wk;
+      return head + `<tr><td>${esc(c.name)}<div class="meta">${esc(c.src)}</div></td><td class="st">${r ? r.done + '× done, ' + Math.round(100 * r.good / Math.max(1, r.parts)) + '% right on new numbers' : '<span class="meta">not started</span>'}</td><td><button class="btn ghost" data-k="${k}">Start</button></td></tr>`; }).join('');
+    v.innerHTML = `<div class="card"><b>How a study round works</b><ol class="steps"><li><b>Study</b>: read one worked solution in the professor's layout (where possible the problem from class).</li><li><b>Recall</b>: the solution is hidden. Write it from memory on paper, then compare line by line.</li><li><b>Try</b>: three new problems of the same type with new numbers. Solve on paper first, then type the results.</li></ol><p class="meta">After a few types, do a mixed round: the type is hidden, like in the exam. Order: start with weeks 5 and 6 (the material you missed), then week 4, then the rest.</p></div>
+    ${chips(S.wk, null, true)}<div class="card"><table class="tt">${rows}</table><div class="row" style="margin-top:12px"><button class="btn" id="mx">Mixed round (5 problems from this selection)</button></div></div>`;
+    bindChips(w => { S.wk = w; study(); });
+    v.querySelectorAll('button[data-k]').forEach(b => b.onclick = () => stBegin(b.dataset.k));
+    $('#mx').onclick = () => { S.mix = true; S.mixN = 0; S.good = 0; S.total = 0; S.key = R.pick(studyKeys()); stNext(); S.stage = 'try'; study(); };
+    return;
+  }
+  const c = CALC[S.key]; const back = `<button class="btn ghost" id="bk">Back to the list</button>`; const bindBack = () => { $('#bk').onclick = () => { S.stage = 'pick'; study(); }; };
+  if (S.stage === 'study') {
+    v.innerHTML = `<div class="card"><p class="meta">Step 1 of 3, Study · ${esc(wkShort(c.wk))} · ${esc(c.name)} · ${esc(c.src)}</p>${qHtml(S.worked)}<div class="fb"><b>Worked solution</b>${solHtml(S.worked)}</div><p class="note">Read it slowly. For every line ask: why does this step come next, which rule does it use? When you could explain it to a friend, continue.</p><div class="row"><button class="btn" id="go">I understand it, hide it</button>${back}</div></div>`;
+    $('#go').onclick = () => { S.stage = 'recall'; study(); window.scrollTo(0, 0); }; bindBack(); return;
+  }
+  if (S.stage === 'recall') {
+    v.innerHTML = `<div class="card"><p class="meta">Step 2 of 3, Recall · ${esc(c.name)}</p>${qHtml(S.worked)}<div class="fb"><b>On a blank page, without looking:</b> write the full solution of this same problem, line by line, in the same layout. About 3 to 5 minutes. Then reveal and compare.</div><div class="row" style="margin-top:12px"><button class="btn" id="rv">Reveal and compare</button>${back}</div><div id="rvs"></div></div>`;
+    $('#rv').onclick = () => { $('#rvs').innerHTML = `<div class="fb"><b>Worked solution</b>${solHtml(S.worked)}</div><p class="note">Which line did you miss? Write it on your error list. Missed more than one line: study it again.</p><div class="row"><button class="btn ghost" id="again">Study it again</button><button class="btn" id="ok">I got it, give me new numbers</button></div>`; $('#again').onclick = () => { S.stage = 'study'; study(); }; $('#ok').onclick = () => { S.stage = 'try'; S.i = 1; stNext(); study(); window.scrollTo(0, 0); }; };
+    bindBack(); return;
+  }
+  if (S.stage === 'try') {
+    const t = S.task; const head = S.mix ? `Mixed round, problem ${S.mixN + 1} of 5 (type hidden until you check)` : `Step 3 of 3, New numbers ${S.i} of 3 · ${esc(c.name)}`;
+    v.innerHTML = `<div class="card"><p class="meta">${head}</p>${qHtml(t)}<div id="parts">${partsHtml(t, 's', S.checked)}</div><div class="row"><button class="btn" id="chk">Check my answers</button><button class="btn ghost" id="sk">Give up, show solution</button>${back}</div><div id="sol"></div>${INPUT_NOTE}</div>`;
+    const fin = good => { S.checked = true; S.good += good; S.total += t.parts.length; recCalc(S.key, good, t.parts.length); $('#chk').disabled = true; $('#sk').disabled = true;
+      const last = S.mix ? S.mixN >= 4 : S.i >= 3; const nm = S.mix ? `<div class="meta">This was: ${esc(CALC[S.key].name)} (${esc(wkShort(CALC[S.key].wk))})</div>` : '';
+      $('#sol').innerHTML = `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b> ${good === t.parts.length ? '' : 'Find the first line where your paper differs from this solution.'}</div>${nm}<div class="fb"><b>Worked solution</b>${solHtml(t)}</div><div class="row"><button class="btn" id="nx">${last ? 'Finish' : 'Next problem'}</button></div>`;
+      $('#nx').onclick = () => { if (S.mix) { if (last) S.stage = 'done'; else { S.mixN++; S.key = R.pick(studyKeys()); stNext(); } } else { if (last) { const r = store.study[S.key] || { done: 0, good: 0, parts: 0 }; r.done++; r.good += S.good; r.parts += S.total; store.study[S.key] = r; save(); S.stage = 'done'; } else { S.i++; stNext(); } } study(); window.scrollTo(0, 0); }; };
+    $('#chk').onclick = () => fin(gradeParts(t, 's'));
+    $('#sk').onclick = () => { gradeParts(t, 's'); fin(0); };
+    $('#parts').onkeydown = e => { if (e.key === 'Enter' && !S.checked) $('#chk').click(); };
+    bindBack(); return;
+  }
+  if (S.stage === 'done') {
+    const ks = studyKeys(); const idx = ks.indexOf(S.key); const nk = !S.mix && idx >= 0 && idx < ks.length - 1 ? ks[idx + 1] : null;
+    const pct = S.good / Math.max(1, S.total);
+    v.innerHTML = `<div class="card"><b>${S.mix ? 'Mixed round finished' : 'Type finished: ' + esc(c.name)}</b><p class="q">You got ${S.good} of ${S.total} parts right on new numbers.</p><p class="note">${pct >= 0.8 ? 'Good. Come back to this type tomorrow without the example first (spacing beats repetition).' : 'Not stable yet. Repeat the recall step once more tonight and again tomorrow morning.'}</p><div class="row">${nk ? `<button class="btn" id="nk">Next type: ${esc(CALC[nk].name)}</button>` : ''}<button class="btn ghost" id="mx2">Mixed round</button>${back}</div></div>`;
+    if (nk) $('#nk').onclick = () => stBegin(nk);
+    $('#mx2').onclick = () => { S.mix = true; S.mixN = 0; S.good = 0; S.total = 0; S.key = R.pick(studyKeys()); stNext(); S.stage = 'try'; study(); }; bindBack();
+  }
+}
+
+/* ---------- Practice: concept questions ---------- */
+let P = { wk: 'ALL', queue: [], i: 0, ans: null };
+function buildQueue() { const qs = BANK.filter(q => P.wk === 'ALL' || q.t === P.wk); const w = q => { const r = store.mc[q.id]; return !r ? 1 : r.last === 0 ? 0 : 2; }; P.queue = R.shuffle(qs).sort((a, b) => w(a) - w(b)).map(q => Object.assign({}, q, { _o: R.shuffle(q.o.map((t, i) => ({ t, i }))) })); P.i = 0; P.ans = null; }
+function practice() {
+  if (!P.queue.length) buildQueue();
+  const v = $('#view'); const q = P.queue[P.i];
+  if (!q) { v.innerHTML = chips(P.wk, null, true) + `<div class="card"><b>Round finished.</b><div class="row" style="margin-top:8px"><button class="btn" id="ag">New round</button></div></div>`; bindChips(w => { P.wk = w; buildQueue(); practice(); }); $('#ag').onclick = () => { buildQueue(); practice(); }; return; }
+  const done = P.ans != null;
+  const opts = q._o.map((x, k) => { let cls = 'opt'; if (done) { if (x.i === q.a) cls += ' good'; else if (x.i === P.ans) cls += ' bad'; } return `<button class="${cls}" data-i="${x.i}" ${done ? 'disabled' : ''}><span class="k">${'ABCDE'[k]}</span>${esc(x.t)}</button>`; }).join('');
+  v.innerHTML = chips(P.wk, null, true) + `<div class="card"><div class="meta">Question ${P.i + 1} of ${P.queue.length} · ${esc(wkShort(q.t))} · ${esc(q.src)}</div><div class="q">${esc(q.q)}</div>${opts}${done ? `<div class="fb ${P.ans === q.a ? 'good' : 'bad'}"><b>${P.ans === q.a ? 'Correct.' : 'Not quite.'}</b> ${esc(q.e)}</div><div class="row" style="margin-top:10px"><button class="btn" id="nx">Next</button></div>` : ''}</div><p class="note">Questions you missed come first next time.</p>`;
+  bindChips(w => { P.wk = w; buildQueue(); practice(); });
+  v.querySelectorAll('.opt').forEach(b => b.onclick = () => { P.ans = +b.dataset.i; const r = store.mc[q.id] || { r: 0, w: 0 }; if (P.ans === q.a) { r.r++; r.last = 1; } else { r.w++; r.last = 0; } store.mc[q.id] = r; save(); practice(); });
+  const nx = $('#nx'); if (nx) nx.onclick = () => { P.i++; P.ans = null; practice(); window.scrollTo(0, 0); };
+}
+
+/* ---------- Calculation lab: unlimited practice of one type ---------- */
+let L = { wk: 'W5', key: 'partials', t: null, checked: false };
+function lab() {
+  const keys = CALC_ORDER.filter(k => CALC[k].wk === L.wk); if (!keys.includes(L.key)) { L.key = keys[0]; L.t = null; }
+  if (!L.t) { L.t = CALC[L.key].gen(); L.checked = false; }
+  const t = L.t; const r = store.calc[L.key];
+  $('#view').innerHTML = chips(L.wk) + `<div class="card"><div class="row"><select id="ty">${keys.map(k => `<option value="${k}" ${k === L.key ? 'selected' : ''}>${esc(CALC[k].name)}</option>`).join('')}</select><span class="meta">${esc(CALC[L.key].src)}${r ? ' · ' + r.tasks + ' done, ' + Math.round(100 * r.good / r.parts) + '% parts right' : ''}</span></div></div>
+  <div class="card">${qHtml(t)}<div id="parts">${partsHtml(t, 'l', L.checked)}</div><div class="row"><button class="btn" id="chk" ${L.checked ? 'disabled' : ''}>Check</button><button class="btn ghost" id="sol">Show solution</button><button class="btn ghost" id="nw">New problem</button></div><div id="out"></div>${INPUT_NOTE}</div>`;
+  bindChips(w => { L.wk = w; L.key = null; L.t = null; lab(); });
+  $('#ty').onchange = e => { L.key = e.target.value; L.t = null; lab(); };
+  $('#nw').onclick = () => { L.t = null; lab(); };
+  const showSol = good => { $('#out').innerHTML = (good != null ? `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b></div>` : '') + `<div class="fb"><b>Worked solution</b>${solHtml(t)}</div><div class="row"><button class="btn" id="nw2">Next problem of this type</button></div>`; $('#nw2').onclick = () => { L.t = null; lab(); window.scrollTo(0, 0); }; };
+  $('#chk').onclick = () => { const g = gradeParts(t, 'l'); L.checked = true; $('#chk').disabled = true; recCalc(L.key, g, t.parts.length); showSol(g); };
+  $('#sol').onclick = () => { if (!L.checked) { gradeParts(t, 'l'); L.checked = true; $('#chk').disabled = true; recCalc(L.key, 0, t.parts.length); } showSol(null); };
+  $('#parts').onkeydown = e => { if (e.key === 'Enter' && !L.checked) $('#chk').click(); };
+}
+
+/* ---------- Mock midterm: 30 minutes, 3 problems of 5 points ---------- */
+const MOCK_POOLS = [['lindem', 'lndom', 'elast', 'optim1'], ['analysis', 'global', 'localext', 'taylor', 'approx'], ['partials', 'totdiff', 'mrs', 'hessq', 'hessc', 'optim2']];
+let M = { state: 'idle', probs: [], left: 1800, timer: null, res: null };
+function mock() {
+  const v = $('#view');
+  if (M.state === 'idle') {
+    const last = store.mocks.slice(-5).reverse().map(m => `<tr><td>${esc(m.date)}</td><td>${m.pts.join(' + ')}</td><td><b>${m.total} / 15</b></td></tr>`).join('');
+    v.innerHTML = `<div class="card"><h2 style="margin-top:0">Mock midterm, 30 minutes</h2><p>Three problems of 5 points: ① a demand or optimisation problem, ② a one variable analysis problem, ③ a two variable problem. New numbers every time. Only a simple calculator, no notes, everything on paper first.</p><p class="meta">The real Midterm 1 had 2 problems in 2024 and 2025 (5 + 5 and 6 + 9 points). This year's scope adds functions of two variables, so this mock covers all three areas.</p><button class="btn" id="go">Start the 30 minute mock</button></div>${last ? `<div class="card"><b>Recent mocks</b><table><tr><th>Date</th><th>Points per problem</th><th>Total</th></tr>${last}</table></div>` : ''}`;
+    $('#go').onclick = () => { M = { state: 'run', probs: MOCK_POOLS.map(p => { const k = R.pick(p); return { k, t: CALC[k].gen() }; }), left: 1800, timer: null, res: null }; M.timer = setInterval(tick, 1000); mock(); window.scrollTo(0, 0); };
+    return;
+  }
+  if (M.state === 'run') {
+    v.innerHTML = `<div class="card row bar2"><span>Time left <span class="timer" id="tm">${mmss(M.left)}</span></span><button class="btn" id="fin">Submit</button></div>` + M.probs.map((p, i) => `<div class="card"><div class="meta">Problem ${i + 1} (5 points)</div>${qHtml(p.t)}${partsHtml(p.t, 'k' + i + '_', false)}</div>`).join('') + INPUT_NOTE;
+    $('#fin').onclick = () => { const b = $('#fin'); if (b.dataset.arm) finishMock(); else { b.dataset.arm = 1; b.textContent = 'Click again to submit'; setTimeout(() => { if (b.isConnected) { delete b.dataset.arm; b.textContent = 'Submit'; } }, 4000); } };
+    return;
+  }
+  const r = M.res;
+  v.innerHTML = `<div class="card"><h2 style="margin-top:0">Result: ${r.total} / 15</h2><p>${r.pts.map((x, i) => 'Problem ' + (i + 1) + ': ' + x + ' / 5').join(' · ')}</p><p class="meta">Points here = 5 × share of correct parts, rounded to half points. A real marker gives method points too, so compare your paper with every line below.</p><button class="btn" id="re">Back to start</button></div>` + M.probs.map((p, i) => `<div class="card"><div class="meta">Problem ${i + 1} · ${esc(CALC[p.k].name)}</div>${qHtml(p.t)}${partsHtml(p.t, 'k' + i + '_', true)}<div class="fb"><b>Solution</b>${solHtml(p.t)}</div></div>`).join('');
+  M.probs.forEach((p, i) => p.t.parts.forEach((q, j) => { const el = document.getElementById('k' + i + '_' + j); if (el) el.value = p.vals[j]; const ok = okPart(q, p.vals[j]); document.getElementById('k' + i + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('k' + i + '_m' + j).textContent = ok ? '✓' : '✗'; }));
+  $('#re').onclick = () => { M.state = 'idle'; mock(); };
+}
+function mmss(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+function tick() { M.left--; const el = $('#tm'); if (el) { el.textContent = mmss(M.left); if (M.left < 300) el.classList.add('low'); } if (M.left <= 0) finishMock(); }
+function finishMock() {
+  clearInterval(M.timer); if (M.state !== 'run') return;
+  const pts = M.probs.map((p, i) => { p.vals = p.t.parts.map((q, j) => { const el = document.getElementById('k' + i + '_' + j); return el ? el.value : ''; }); const g = p.t.parts.filter((q, j) => okPart(q, p.vals[j])).length; recCalc(p.k, g, p.t.parts.length); return Math.round(10 * g / p.t.parts.length) / 2; });
+  const total = pts.reduce((a, b) => a + b, 0); M.res = { pts, total }; store.mocks.push({ date: new Date().toISOString().slice(0, 10), pts, total }); save(); M.state = 'done'; if (tab === 'mock') mock();
+}
+
+/* ---------- Past midterms ---------- */
+let PP = { id: null, checked: false };
+function past() {
+  const v = $('#view');
+  if (!PP.id) {
+    v.innerHTML = `<div class="card"><b>The real papers, problem by problem</b><p class="meta">Official Canvas files from the professor, with her solutions. Do each one timed (30 minutes) on paper first, then type the results and check. Version A and B of the same year are the same problems with other numbers: do A, check, then B as a fresh test.</p></div>` + PAST.map(p => { const b = store.past[p.id]; return `<div class="card row" style="justify-content:space-between"><div><b>${esc(p.title)}</b><div class="meta">${esc(p.note)}</div>${b ? `<div class="meta">Best: ${b.best}% of parts, ${b.n} attempt(s)</div>` : ''}</div><button class="btn ghost" data-p="${p.id}">Open</button></div>`; }).join('');
+    v.querySelectorAll('button[data-p]').forEach(b => b.onclick = () => { PP = { id: b.dataset.p, checked: false }; past(); window.scrollTo(0, 0); });
+    return;
+  }
+  const p = PAST.find(x => x.id === PP.id);
+  v.innerHTML = `<div class="card"><b>${esc(p.title)}</b><div class="meta">${esc(p.note)}</div></div>` + p.probs.map(q => `<div class="card"><div class="meta">Problem ${q.n} (${q.pts} points)</div><div class="q">${q.text}</div>${q.sk ? skHtml([{ plot: q.sk, cap: 'P on the vertical axis!' }]) : ''}${partsHtml(q, 'p' + q.n + '_', PP.checked)}${PP.checked ? `<div class="fb"><b>Official solution</b>${paperSteps(q.sol)}<div class="meta" style="margin-top:8px">Final answers</div>${finalAns(q)}</div>` : ''}</div>`).join('') + `<div class="card row"><button class="btn" id="chk" ${PP.checked ? 'disabled' : ''}>Check my answers</button><button class="btn ghost" id="bk">Back to the papers</button></div>${INPUT_NOTE}`;
+  $('#bk').onclick = () => { PP = { id: null }; past(); };
+  $('#chk').onclick = () => { const vals = {}; p.probs.forEach(q => q.parts.forEach((x, j) => { vals[q.n + '_' + j] = (document.getElementById('p' + q.n + '_' + j) || {}).value; }));
+    PP.checked = true; past(); let good = 0, n = 0;
+    p.probs.forEach(q => q.parts.forEach((x, j) => { const el = document.getElementById('p' + q.n + '_' + j); el.value = vals[q.n + '_' + j] || ''; const ok = okPart(x, el.value); if (ok) good++; n++; document.getElementById('p' + q.n + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('p' + q.n + '_m' + j).textContent = ok ? '✓' : '✗'; }));
+    const b = store.past[p.id] || { best: 0, n: 0 }; b.n++; b.best = Math.max(b.best, Math.round(100 * good / n)); store.past[p.id] = b; save();
+    document.querySelector('#view').insertAdjacentHTML('afterbegin', `<div class="card fb ${good === n ? 'good' : 'bad'}"><b>${good} of ${n} parts correct.</b> Compare your paper with the official solution under each problem.</div>`); window.scrollTo(0, 0); };
+}
+
+/* ---------- Method sheet and formulas ---------- */
+function methods() {
+  let last = '';
+  $('#view').innerHTML = `<p class="note" style="margin-top:0">How to solve each type, in the order you write it on paper. Built from the 2026 lectures, the exercises and the official midterm solutions.</p>` + METHODS.map(m => { const h = m[0] !== last ? `<h3 class="wkh">${esc(m[0])}</h3>` : ''; last = m[0]; return h + `<div class="paper pm"><div class="pt">${m[1]}</div>${m[2].map((l, i) => `<div class="ps"><span class="pn">${i + 1}</span><div class="pb">${l}</div></div>`).join('')}</div>`; }).join('');
+}
+function formulas() {
+  const grp = g => `<div class="paper pm"><div class="pt">${g[0]}</div><table class="ptab">${g[1].map(r => `<tr><td class="fo">${r[0]}</td><td class="wh">${esc(r[1])}</td></tr>`).join('')}</table></div>`;
+  $('#view').innerHTML = `<div class="chips"><button class="chip" aria-pressed="true" data-j="f1">Formulas</button><button class="chip" aria-pressed="false" data-j="r1">Rules by lecture</button></div><p class="note" style="margin-top:0">No handbook or formula sheet is allowed in this exam, so learn these by heart. Cover the left column and recite, then check.</p><h3 class="wkh" id="f1">Formulas</h3>` + FORMULAS.map(grp).join('') + `<h3 class="wkh" id="r1">Rules by lecture (everything taught before Midterm 1)</h3>` + RULES.map(grp).join('');
+  document.querySelectorAll('.chip[data-j]').forEach(b => b.onclick = () => { document.getElementById(b.dataset.j).scrollIntoView({ behavior: 'smooth' }); });
+}
+
+/* ---------- Progress ---------- */
+function progress() {
+  const wk = WK_KEYS.map(k => { const qs = BANK.filter(q => q.t === k); const right = qs.filter(q => store.mc[q.id] && store.mc[q.id].last === 1).length; const tried = qs.filter(q => store.mc[q.id]).length; const cs = CALC_ORDER.filter(c => CALC[c].wk === k).map(c => store.calc[c]).filter(Boolean); const cg = cs.reduce((a, c) => a + c.good, 0), cp = cs.reduce((a, c) => a + c.parts, 0); const pct = cp ? Math.round(100 * cg / cp) : 0;
+    return `<div class="stat"><div class="meta">${esc(wkShort(k))}</div><b>${cp ? pct + '%' : 'no data'}</b><div class="bar"><i style="width:${pct}%"></i></div><div class="meta">Calculations: ${cg} of ${cp} parts right. Concepts: ${right} of ${qs.length} right (${tried} tried)</div></div>`; }).join('');
+  const rows = CALC_ORDER.map(k => { const r = store.calc[k]; return `<tr><td>${esc(wkShort(CALC[k].wk))}</td><td>${esc(CALC[k].name)}</td><td>${r ? r.tasks : 0}</td><td>${r ? Math.round(100 * r.good / r.parts) + '%' : '<span class="meta">not tried</span>'}</td></tr>`; }).join('');
+  $('#view').innerHTML = `<div class="grid">${wk}</div><div class="card" style="margin-top:14px"><b>Problem types</b><table><tr><th>Week</th><th>Type</th><th>Problems</th><th>Parts right</th></tr>${rows}</table></div>
+  <div class="card"><b>Session summary for your study record</b><p class="meta">Copy this into the Campus Mathematics inbox (or paste it to Claude) so the next session continues from here.</p><textarea id="sum" readonly></textarea><div class="row"><button class="btn" id="cp">Copy</button><button class="btn ghost" id="rs">Reset all progress</button></div></div><p class="note">Progress is saved in this browser when storage is available. The summary is your backup.</p>`;
+  $('#sum').value = summaryText();
+  $('#cp').onclick = () => { const t = $('#sum'); t.select(); const done = ok => { $('#cp').textContent = ok ? 'Copied' : 'Selected, press Cmd C'; }; try { navigator.clipboard.writeText(t.value).then(() => done(true), () => done(false)); } catch (e) { done(false); } };
+  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm) { store = { mc: {}, calc: {}, study: {}, mocks: [], past: {} }; save(); progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
+}
+function summaryText() {
+  let s = 'Mathematics Midterm 1 trainer, summary ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '\n';
+  CALC_ORDER.forEach(k => { const r = store.calc[k]; if (r) s += `${wkShort(CALC[k].wk)} | ${CALC[k].name}: ${r.tasks} problems, ${Math.round(100 * r.good / r.parts)}% parts right, last ${r.last || '?'}\n`; });
+  const miss = BANK.filter(q => store.mc[q.id] && store.mc[q.id].last === 0).map(q => q.id); if (miss.length) s += 'Concept questions currently missed: ' + miss.join(', ') + '\n';
+  Object.keys(store.past).forEach(id => { const p = PAST.find(x => x.id === id); s += `Past paper ${p ? p.title : id}: best ${store.past[id].best}% (${store.past[id].n} attempts)\n`; });
+  if (store.mocks.length) { const m = store.mocks[store.mocks.length - 1]; s += `Last mock ${m.date}: ${m.total}/15 (${m.pts.join(' + ')}), ${store.mocks.length} mocks total\n`; }
+  const weak = CALC_ORDER.filter(k => store.calc[k] && store.calc[k].good / store.calc[k].parts < 0.7).map(k => CALC[k].name); if (weak.length) s += 'Weak types (under 70%): ' + weak.join('; ') + '\n';
+  return s;
+}
+renderTabs(); show(); countdown(); setInterval(countdown, 30000);
+
+</script>
+</body>
+</html>
