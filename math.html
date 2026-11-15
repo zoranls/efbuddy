@@ -12,6 +12,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple
 .wrap{max-width:900px;margin:0 auto;padding:20px 16px 80px}
 header h1{font-size:1.45rem;margin:0 0 2px}header p{margin:0;color:var(--muted);font-size:.92rem}
 #cd{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:600;background:var(--warn-bg);border-radius:8px;padding:4px 10px}
+#sync{margin-top:8px;font-size:.8rem;color:var(--muted)}#sync::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:7px;vertical-align:1px}
+#sync.ok::before{background:var(--good)}#sync.warn::before{background:#d08a00}
+#resume{display:none;margin-top:8px;font-size:.88rem;background:var(--good-bg);border-radius:8px;padding:6px 10px}
+.story{background:var(--warn-bg);border-radius:8px;padding:12px 14px;margin:0 0 14px;font-size:.95rem}.story b{display:block;margin-bottom:2px}.story p{margin:0 0 10px}.story ol{margin:4px 0 0;padding-left:22px}.story li{margin-bottom:5px}
+details.why{margin-top:10px}details.why summary{cursor:pointer;color:var(--muted);font-size:.9rem}details.why .story{margin-top:8px;margin-bottom:0}
+.mapt{border-top:1px solid var(--line);padding:12px 0 2px}.mapt:first-of-type{border-top:0}.mapt .steps{margin-top:4px}
+.bridge{margin:2px 0 16px;padding:0 6px;font-weight:600;color:var(--accent)}
 nav{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
 nav button{background:none;border:1px solid transparent;border-radius:8px;padding:8px 13px;font:inherit;color:var(--muted);cursor:pointer}
 nav button[aria-selected=true]{background:var(--surface);border-color:var(--line);color:var(--ink);font-weight:600}
@@ -73,17 +80,23 @@ textarea{width:100%;min-height:180px;font-family:var(--mono);font-size:.85rem;ba
   <h1>Mathematics for Business and Economics: Midterm 1 practice</h1>
   <p>Scope from the Canvas announcement: functions of one variable, the derivative and its applications, functions of two variables. Lectures 1 to 6 (pages 1 to 7), exercises and seminars weeks 1 to 6, combinatorics and integrals excluded.</p>
   <span id="cd"></span>
+  <div id="sync" class="sync" role="status" aria-live="polite"></div>
+  <div id="resume" class="resume" role="status"></div>
 </header>
 <nav role="tablist" id="tabs"></nav>
 <main id="view"></main>
 </div>
 <script>
 /* ===== Engine: random, number formatting, answer parser, math layout helpers, sketches ===== */
+let _seed = null;
+function rnd() { if (_seed === null) return Math.random(); _seed = (_seed + 0x6D2B79F5) | 0; let t = Math.imul(_seed ^ (_seed >>> 15), 1 | _seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
 const R = {
-  int(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); },
-  pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
-  sign() { return Math.random() < 0.5 ? -1 : 1; },
-  shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  int(a, b) { return a + Math.floor(rnd() * (b - a + 1)); },
+  pick(arr) { return arr[Math.floor(rnd() * arr.length)]; },
+  sign() { return rnd() < 0.5 ? -1 : 1; },
+  shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; },
+  newSeed() { return Math.floor(Math.random() * 2147483647) + 1; },
+  seeded(seed, fn) { const prev = _seed; _seed = seed | 0; try { return fn(); } finally { _seed = prev; } }
 };
 function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
 /* Number to a short exact looking string: integers, simple fractions, else rounded decimals */
@@ -216,10 +229,7 @@ function signLine(pts, signs, var_) {
   signs.forEach((sg, k) => { const x = k === 0 ? (L + X(0)) / 2 : k === n ? (X(n - 1) + W - Rr) / 2 : (X(k - 1) + X(k)) / 2; g += `<text x="${x}" y="22" text-anchor="middle" font-size="15" font-weight="700" fill="${sg === '+' ? '#14783c' : '#b3261e'}" font-family="system-ui">${sg === '+' ? '+' : '−'}</text>`; });
   return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px" role="img" aria-label="Sign table">${g}</svg>`;
 }
-
-
 /* ===== Problem generators. Each gen(o) returns {intro, parts, steps, sk, _chk}. o = fixed parameters for the class example. ===== */
-
 const N = (label, ans, extra) => Object.assign({ label, ans, kind: 'num' }, extra || {});
 const CH = (label, opts, ans) => ({ label, opts, ans, kind: 'ch' });
 const LS = (label, ans) => ({ label, ans, kind: 'list' });
@@ -238,11 +248,21 @@ function lineEq(k, x0s, x0, y0) {
   if (k === 0) return 'y = ' + fmt(y0);
   return 'y = ' + kc + inner + tail;
 }
+function subst(h, m) {
+  let s = String(h);
+  const keys = Object.keys(m);
+  keys.forEach((v, i) => { s = s.replace(new RegExp(v, 'g'), '·⟦' + i + '⟧·'); });
+  s = s.replace(/·(?=[²³⁴]|<sup>)/g, '').replace(/·{2,}/g, '·').replace(/(^|[\s(>−+\-=\/])·/g, '$1').replace(/·(?=$|[\s)<,+−\-=])/g, '');
+  keys.forEach((v, i) => { const x = m[v]; const t = typeof x === 'string' ? x : (x < 0 ? '(' + fmt(x) + ')' : fmt(x)); s = s.split('⟦' + i + '⟧').join(t); });
+  return s.replace(/·/g, ' · ');
+}
 function fixMinus(h) { return String(h).replace(/(^|[\s(\[,=:;{|])-(?=\d)/g, '$1−'); }
 function clean(t) { t.intro = fixMinus(t.intro); t.steps = t.steps.map(fixMinus); t.parts.forEach(p => { p.label = fixMinus(p.label); }); return t; }
 
 /* exp e^(...) display */
-const ex = e => 'e<sup>' + e + '</sup>';
+const VULG = { '1/2': '½', '1/3': '⅓', '2/3': '⅔', '1/4': '¼', '3/4': '¾', '1/5': '⅕' };
+const inl = h => String(h).replace(/<span class="fr"><span class="nu">([^<]*)<\/span><span class="de">([^<]*)<\/span><\/span>/g, (m, n, d) => VULG[n + '/' + d] || n + '/' + d);
+const ex = e => 'e<sup>' + inl(e) + '</sup>';
 function linStr(a, b, v) { return poly([[a, v], [b, '']]); } // a v + b
 
 const WEEKS = {
@@ -385,30 +405,83 @@ CALC.lindem = { wk: 'W4', name: 'Linear demand: formula, economic domain, elasti
 
 /* ---------- 5. Derivative rules ---------- */
 function derivTemplate(o) {
+  const X = v => v < 0 ? '(' + fmt(v) + ')' : fmt(v); // number inserted for x
+  const eP = k => Math.abs(k) < 1e-12 ? 'e⁰' : k === 1 ? 'e' : 'e<sup>' + fmt(k) + '</sup>';
+  const eV = k => Math.abs(k) < 1e-12 ? '1' : k === 1 ? 'e' : 'e<sup>' + fmt(k) + '</sup>';
+  const bx = b => b === 1 ? 'x' : b === -1 ? '−x' : fmt(b) + 'x';
   const T = [
     () => { const a = R.int(-3, 3), b = R.pick([1, 2, -1, 3]); const x0 = R.pick([0, 1]); const f = x => (x * x + a) * Math.exp(b * x), d = x => Math.exp(b * x) * (2 * x + b * (x * x + a));
-      return { fs: '(' + poly([[1, 'x²'], [a, '']]) + ')' + ex(fmt(b) === '1' ? 'x' : fmt(b).replace('−1', '−') + 'x'), rule: 'product rule and chain rule: (uv)′ = u′v + uv′', ds: ex(b === 1 ? 'x' : (b === -1 ? '−x' : fmt(b) + 'x')) + '(' + poly([[b, 'x²'], [2, 'x'], [a * b, '']]) + ')', f, d, x0 }; },
+      const u = poly([[1, 'x²'], [a, '']]), E = ex(bx(b));
+      return { fs: '(' + u + ')' + E, rule: 'product rule, and the chain rule inside v', f, d, x0,
+        det: [B('Structure') + ': f is a PRODUCT of u = ' + u + ' and v = ' + E + ', so use the product rule (uv)′ = u′v + uv′.',
+          B('u′') + ': u = ' + u + ' ⇒ u′ = 2x (power rule: (x²)′ = 2x, a constant gives 0).',
+          B('v′') + ': v = ' + E + ' is a composition (chain rule). Outside: e<sup>□</sup>, its derivative is e<sup>□</sup> again. Inside: □ = ' + bx(b) + ', its derivative is ' + fmt(b) + '. So v′ = ' + E + ' · ' + X(b) + ' = ' + term(b, '', true).replace(/^1$/, '').replace(/^−1$/, '−') + E + '.',
+          B('Product rule') + ': f′(x) = u′v + uv′ = 2x · ' + E + ' + (' + u + ') · ' + (b === 1 ? '' : X(b) + ' · ') + E,
+          B('Simplify') + ': both terms contain ' + E + ', factor it out: f′(x) = ' + E + '(2x + ' + (b === 1 ? '' : X(b)) + '(' + u + ')) = ' + E + '(' + poly([[b, 'x²'], [2, 'x'], [a * b, '']]) + ')'],
+        fsub: 'f(' + fmt(x0) + ') = (' + X(x0) + '² ' + sgn(a).trim().replace(/^\+ /, '+ ') + ') · ' + eP(b * x0) + ' = ' + fmt(x0 * x0 + a) + ' · ' + eV(b * x0),
+        dsub: 'f′(' + fmt(x0) + ') = ' + eP(b * x0) + ' · (' + fmt(b) + ' · ' + X(x0) + '² + 2 · ' + X(x0) + ' ' + sgn(a * b).trim() + ') = ' + eV(b * x0) + ' · ' + X(b * x0 * x0 + 2 * x0 + a * b) }; },
     () => { const a = R.int(-3, 3), b = R.int(1, 4); const x0 = R.int(-1, 2); const f = x => (x + a) / (x * x + b), d = x => (-x * x - 2 * a * x + b) / ((x * x + b) ** 2);
-      return { fs: fr(poly([[1, 'x'], [a, '']]), poly([[1, 'x²'], [b, '']])), rule: 'quotient rule: (u/v)′ = (u′v − uv′)/v²', ds: fr(poly([[1, 'x²'], [b, '']]) + ' − 2x(' + poly([[1, 'x'], [a, '']]) + ')', '(' + poly([[1, 'x²'], [b, '']]) + ')²') + ' = ' + fr(poly([[-1, 'x²'], [-2 * a, 'x'], [b, '']]), '(' + poly([[1, 'x²'], [b, '']]) + ')²'), f, d, x0 }; },
+      const u = poly([[1, 'x'], [a, '']]), v = poly([[1, 'x²'], [b, '']]);
+      return { fs: fr(u, v), rule: 'quotient rule', f, d, x0,
+        det: [B('Structure') + ': f is a QUOTIENT u/v with u = ' + u + ' and v = ' + v + ', so use the quotient rule (u/v)′ = ' + fr('u′v − uv′', 'v²') + '.',
+          B('u′ and v′') + ': u′ = 1,  v′ = 2x.',
+          B('Quotient rule') + ': f′(x) = ' + fr('1 · (' + v + ') − (' + u + ') · 2x', '(' + v + ')²'),
+          B('Simplify the numerator') + ': ' + v + ' − (' + poly([[2, 'x²'], [2 * a, 'x']]) + ') = ' + poly([[-1, 'x²'], [-2 * a, 'x'], [b, '']]) + '. Keep the denominator squared, do not expand it.',
+          'f′(x) = ' + fr(poly([[-1, 'x²'], [-2 * a, 'x'], [b, '']]), '(' + v + ')²')],
+        fsub: 'f(' + fmt(x0) + ') = ' + fr(X(x0) + (a ? ' ' + sgn(a).trim() : ''), X(x0) + '² + ' + b) + ' = ' + fr(fmt(x0 + a), fmt(x0 * x0 + b)),
+        dsub: 'f′(' + fmt(x0) + ') = ' + fr('−' + X(x0) + '²' + (a ? ' − ' + pn(2 * a) + ' · ' + X(x0) : '') + ' + ' + b, '(' + X(x0) + '² + ' + b + ')²') + ' = ' + fr(fmt(-x0 * x0 - 2 * a * x0 + b), fmt((x0 * x0 + b) ** 2)) }; },
     () => { const c = R.pick([[1, 9, 4], [1, 16, 3], [3, 1, 1], [1, 7, 3], [2, 1, 2], [5, 4, 3]]); const [a, b, x0] = c; const f = x => Math.sqrt(a * x * x + b), d = x => a * x / Math.sqrt(a * x * x + b);
-      return { fs: rt(poly([[a, 'x²'], [b, '']])), rule: 'chain rule: outside √u, inside u = ' + poly([[a, 'x²'], [b, '']]), ds: fr('1', '2' + rt(poly([[a, 'x²'], [b, '']]))) + ' · ' + fmt(2 * a) + 'x = ' + fr(term(a, 'x', true), rt(poly([[a, 'x²'], [b, '']]))), f, d, x0 }; },
+      const ins = poly([[a, 'x²'], [b, '']]);
+      return { fs: rt(ins), rule: 'chain rule', f, d, x0,
+        det: [B('Structure') + ': f is a COMPOSITION (chain rule). Outside: ' + rt('□') + ' = □<sup>1/2</sup>. Inside: □ = ' + ins + '.',
+          B('Outside derivative') + ': (' + rt('□') + ')′ = ½ □<sup>−1/2</sup> = ' + fr(1, '2' + rt('□')) + ', evaluated at the inside: ' + fr(1, '2' + rt(ins)) + '.',
+          B('Inside derivative') + ': (' + ins + ')′ = ' + term(2 * a, 'x', true) + '.',
+          B('Chain rule') + ': f′(x) = ' + fr(1, '2' + rt(ins)) + ' · ' + term(2 * a, 'x', true) + ' = ' + fr(term(a, 'x', true), rt(ins)) + ' (the 2 cancels).'],
+        fsub: 'f(' + x0 + ') = ' + rt((a === 1 ? '' : fmt(a) + ' · ') + x0 + '² + ' + b) + ' = ' + rt(fmt(a * x0 * x0 + b)),
+        dsub: 'f′(' + x0 + ') = ' + fr((a === 1 ? '' : fmt(a) + ' · ') + x0, rt(fmt(a * x0 * x0 + b))) + ' = ' + fr(fmt(a * x0), fmt(Math.sqrt(a * x0 * x0 + b)))
+      }; },
     () => { const a = R.int(-3, 3), b = R.int(1, 5); const x0 = R.int(0, 2); const f = x => Math.log(x * x + a * x + b), d = x => (2 * x + a) / (x * x + a * x + b);
-      if (x0 * x0 + a * x0 + b <= 0) return null;
-      return { fs: 'ln(' + poly([[1, 'x²'], [a, 'x'], [b, '']]) + ')', rule: 'chain rule: (ln u)′ = u′/u', ds: fr(poly([[2, 'x'], [a, '']]), poly([[1, 'x²'], [a, 'x'], [b, '']])), f, d, x0 }; },
-    () => { const n = R.int(2, 4); const x0 = R.pick([1, Math.E]); const f = x => x ** n * Math.log(x), d = x => x ** (n - 1) * (n * Math.log(x) + 1);
-      return { fs: sp('x', n) + ' ln x', rule: 'product rule', ds: fmt(n) + pw('x', n - 1) + ' ln x + ' + sp('x', n) + ' · ' + fr(1, 'x') + ' = ' + pw('x', n - 1) + '(' + n + ' ln x + 1)', f, d, x0, x0s: x0 === 1 ? '1' : 'e' }; },
+      if (x0 * x0 + a * x0 + b <= 0) return null; const ins = poly([[1, 'x²'], [a, 'x'], [b, '']]);
+      return { fs: 'ln(' + ins + ')', rule: 'chain rule', f, d, x0,
+        det: [B('Structure') + ': f is a COMPOSITION (chain rule). Outside: ln □. Inside: □ = ' + ins + '.',
+          B('Outside derivative') + ': (ln □)′ = ' + fr(1, '□') + ', so ' + fr(1, ins) + '.',
+          B('Inside derivative') + ': (' + ins + ')′ = ' + poly([[2, 'x'], [a, '']]) + '.',
+          B('Chain rule') + ': f′(x) = ' + fr(1, ins) + ' · (' + poly([[2, 'x'], [a, '']]) + ') = ' + fr(poly([[2, 'x'], [a, '']]), ins) + '. Short form: (ln u)′ = ' + fr('u′', 'u') + '.'],
+        fsub: 'f(' + x0 + ') = ln(' + x0 + '² ' + (a ? sgn(a).trim() + ' · ' + x0 + ' ' : '') + '+ ' + b + ') = ln ' + fmt(x0 * x0 + a * x0 + b),
+        dsub: 'f′(' + x0 + ') = ' + fr('2 · ' + x0 + ' ' + (a ? sgn(a).trim() : ''), fmt(x0 * x0 + a * x0 + b)) + ' = ' + fr(fmt(2 * x0 + a), fmt(x0 * x0 + a * x0 + b))
+      }; },
+    () => { const n = R.int(2, 4); const x0 = R.pick([1, Math.E]); const f = x => x ** n * Math.log(x), d = x => x ** (n - 1) * (n * Math.log(x) + 1); const xs = x0 === 1 ? '1' : 'e';
+      return { fs: sp('x', n) + ' ln x', rule: 'product rule', f, d, x0, x0s: xs,
+        det: [B('Structure') + ': f is a PRODUCT of u = ' + sp('x', n) + ' and v = ln x, so use the product rule (uv)′ = u′v + uv′.',
+          B('u′ and v′') + ': u′ = ' + n + pw('x', n - 1) + ' (power rule),  v′ = ' + fr(1, 'x') + ' (table).',
+          B('Product rule') + ': f′(x) = ' + n + pw('x', n - 1) + ' · ln x + ' + sp('x', n) + ' · ' + fr(1, 'x'),
+          B('Simplify') + ': ' + sp('x', n) + ' · ' + fr(1, 'x') + ' = ' + pw('x', n - 1) + ', so f′(x) = ' + pw('x', n - 1) + '(' + n + ' ln x + 1).'],
+        fsub: 'f(' + xs + ') = ' + sp(xs, n) + ' · ln ' + xs + ' = ' + (x0 === 1 ? '1 · 0 = 0' : sp('e', n) + ' · 1 = ' + sp('e', n)),
+        dsub: 'f′(' + xs + ') = ' + pw(xs, n - 1) + (n - 1 > 0 && xs === '1' ? '' : '') + ' · (' + n + ' ln ' + xs + ' + 1) = ' + (x0 === 1 ? '1 · (0 + 1) = 1' : pw('e', n - 1) + ' · (' + n + ' + 1) = ' + (n + 1) + pw('e', n - 1))
+      }; },
     () => { const a = R.pick([1, -1, 2, 0.5]), b = R.int(-3, 3); const x0 = R.pick([0, 1]); const f = x => Math.exp(a * x * x + b * x), d = x => (2 * a * x + b) * Math.exp(a * x * x + b * x);
-      return { fs: ex(poly([[a, 'x²'], [b, 'x']])), rule: 'chain rule: (e<sup>u</sup>)′ = e<sup>u</sup> · u′', ds: '(' + poly([[2 * a, 'x'], [b, '']]) + ')' + ex(poly([[a, 'x²'], [b, 'x']])), f, d, x0 }; }
+      const ins = poly([[a, 'x²'], [b, 'x']]), insD = poly([[2 * a, 'x'], [b, '']]); const E = ex(ins);
+      return { fs: E, rule: 'chain rule', f, d, x0,
+        det: [B('Structure') + ': f is a COMPOSITION (chain rule). Outside: e<sup>□</sup>. Inside: □ = ' + inl(ins) + '.',
+          B('Outside derivative') + ': (e<sup>□</sup>)′ = e<sup>□</sup>, so the exponential stays exactly as it is: ' + E + '.',
+          B('Inside derivative') + ': (' + ins + ')′ = ' + insD + '.',
+          B('Chain rule') + ': f′(x) = ' + E + ' · (' + insD + ') = ' + B('(' + insD + ')' + E) + '. Rule: (e<sup>u</sup>)′ = e<sup>u</sup> · u′.'],
+        fsub: 'f(' + x0 + ') = e<sup>' + inl(fq(a)) + ' · ' + x0 + '² ' + (b ? sgn(b).trim() + ' · ' + x0 : '') + '</sup> = ' + eV(a * x0 * x0 + b * x0),
+        dsub: 'f′(' + x0 + ') = (' + fmt(2 * a) + ' · ' + x0 + ' ' + (b ? sgn(b).trim() : '+ 0') + ') · ' + eV(a * x0 * x0 + b * x0) + ' = ' + fmt(2 * a * x0 + b) + ' · ' + eV(a * x0 * x0 + b * x0)
+      }; }
   ];
   for (;;) { const t = R.pick(T)(); if (t) return t; }
 }
+const valStr = v => { const f = toFrac(v); return f ? fmt(v) : '≈ ' + dec(v, 4); };
 CALC.deriv = { wk: 'W3', name: 'Derivative with the rules', src: 'Problems 2.1 to 2.4',
   gen() {
-    const t = derivTemplate(); const xs = t.x0s || fmt(t.x0);
+    const t = derivTemplate(); const xs = t.x0s || fmt(t.x0); const fv = t.f(t.x0), dv = t.d(t.x0);
+    const eq = (v, sub) => sub && sub.replace(/<[^>]+>/g, '').endsWith(' = ' + fmt(v).replace(/<[^>]+>/g, '')) ? '' : (toFrac(v) ? ' = ' : ' ') + valStr(v);
     return {
       intro: 'Let f(x) = ' + t.fs + '. Find f′(x) and evaluate f(' + xs + ') and f′(' + xs + '). Give decimals to 4 places where needed.',
-      parts: [N('f(' + xs + ')', t.f(t.x0)), N('f′(' + xs + ')', t.d(t.x0))],
-      steps: [B('Rule') + ': ' + t.rule + '.', FX + ' = ' + t.ds, 'f(' + xs + ') = ' + fmt(t.f(t.x0)), 'f′(' + xs + ') = ' + B(fmt(t.d(t.x0))) + (t.d(t.x0) > 0 ? ', positive, so f is increasing at ' + xs : t.d(t.x0) < 0 ? ', negative, so f is decreasing at ' + xs : ', zero, so ' + xs + ' is a stationary point') + '.'],
+      parts: [N('f(' + xs + ')', fv), N('f′(' + xs + ')', dv)],
+      steps: t.det.concat([B('Insert x = ' + xs + ' into f') + ': ' + t.fsub + eq(fv, t.fsub), B('Insert x = ' + xs + ' into f′') + ': ' + t.dsub + eq(dv, t.dsub),
+        B('Meaning') + ': f′(' + xs + ')' + (dv > 1e-12 ? ' > 0, so f is increasing at x = ' + xs : dv < -1e-12 ? ' < 0, so f is decreasing at x = ' + xs : ' = 0, so x = ' + xs + ' is a stationary point (horizontal tangent)') + '.']),
       sk: [], _chk: { f: t.f, d: t.d, x0: t.x0 }
     };
   } };
@@ -417,10 +490,14 @@ CALC.deriv = { wk: 'W3', name: 'Derivative with the rules', src: 'Problems 2.1 t
 CALC.tangent = { wk: 'W3', name: 'Tangent line', src: 'Problem 2.8; Lecture 3 p8',
   gen() {
     const t = derivTemplate(); const xs = t.x0s || fmt(t.x0); const k = t.d(t.x0), y0 = t.f(t.x0), n = y0 - k * t.x0;
+    const eq = (v, sub) => sub && sub.replace(/<[^>]+>/g, '').endsWith(' = ' + fmt(v).replace(/<[^>]+>/g, '')) ? '' : (toFrac(v) ? ' = ' : ' ') + valStr(v);
     return {
       intro: 'Find the tangent line to the graph of f(x) = ' + t.fs + ' at the point with x = ' + xs + '. Write it as y = kx + n.',
       parts: [N('k (slope)', k), N('n (intercept)', n)],
-      steps: [B('Formula') + ': y = f′(a)(x − a) + f(a), with a = ' + xs + '.', 'f(' + xs + ') = ' + fmt(y0), FX + ' = ' + t.ds + ' (' + t.rule + ')', 'k = f′(' + xs + ') = ' + fmt(k), lineEq(k, xs, t.x0, y0) + ' ⇒ ' + B('y = ' + poly([[k, 'x'], [n, '']]))],
+      steps: [B('Formula') + ': the tangent at x = a is y = f′(a)(x − a) + f(a). Here a = ' + xs + '. We need two numbers: f(a), the point, and f′(a), the slope.',
+        B('The point') + ': ' + t.fsub + eq(y0, t.fsub)].concat(t.det.map((s, i) => i === 0 ? B('The slope') + ', first f′(x). ' + s : s)).concat([
+        B('Slope') + ': k = ' + t.dsub + eq(k, t.dsub),
+        B('Tangent') + ': ' + lineEq(k, xs, t.x0, y0) + (t.x0 === 0 || Math.abs(k) < 1e-12 ? '' : '. Multiply out the bracket: ' + term(k, 'x', true) + (k * t.x0 >= 0 ? ' − ' : ' + ') + fmt(Math.abs(k * t.x0)) + (Math.abs(y0) < 1e-12 ? '' : (y0 < 0 ? ' − ' + fmt(-y0) : ' + ' + fmt(y0)))) + ' ⇒ ' + B('y = ' + poly([[k, 'x'], [n, '']]))]),
       sk: [{ plot: { f: t.f, x0: t.x0 - 2.5, x1: t.x0 + 2.5, y0: y0 - Math.max(4, Math.abs(k) * 1.6), y1: y0 + Math.max(4, Math.abs(k) * 1.6), ystep: Math.max(1, Math.round(Math.abs(k) * 3.2 / 8)), segs: [[t.x0 - 2.5, y0 - 2.5 * k, t.x0 + 2.5, y0 + 2.5 * k]], pts: [{ x: t.x0, y: y0, t: 'T' }], step: 1, lbl: 1 }, cap: 'The tangent touches the graph at T and has slope f′(a).' }],
       _chk: { f: t.f, d: t.d, x0: t.x0 }
     };
@@ -473,7 +550,7 @@ CALC.taylor = { wk: 'W4', name: 'Taylor polynomial (degree 2) and estimate', src
     return {
       intro: 'Find the Taylor polynomial of degree 2 of f(x) = ' + fs + ' about a = ' + a + ', and use it to estimate ' + name + '.',
       parts: [N('f(a)', fa), N('f′(a)', f1), N('f″(a)', f2), N('Estimate T₂' + pD(xt) + '', T2, { tol: 0.0005 })],
-      steps: [B('Formula') + ': T₂(x) = f(a) + f′(a)(x − a) + ' + fr('f″(a)', '2') + '(x − a)².', 'f(x) = ' + fs + ' ⇒ f(' + a + ') = ' + fq(fa), FX + ' = ' + d1s + ' ⇒ f′(' + a + ') = ' + fq(f1), FXX + ' = ' + d2s + ' ⇒ f″(' + a + ') = ' + fq(f2), 'T₂(x) = ' + poly([[fa, '']]) + term(f1, '(x' + (a ? ' − ' + a : '') + ')') + term(c2, '(x' + (a ? ' − ' + a : '') + ')²'), 'Estimate: T₂' + pD(xt) + ' = ' + B(dec(T2, 5)) + '. Exact: ' + dec(F(xt), 5) + '.'],
+      steps: [B('Formula') + ': T₂(x) = f(a) + f′(a)(x − a) + ' + fr('f″(a)', '2') + '(x − a)².', 'f(x) = ' + fs + ' ⇒ f(' + a + ') = ' + fq(fa), FX + ' = ' + d1s + ' ⇒ f′(' + a + ') = ' + fq(f1), FXX + ' = ' + d2s + ' ⇒ f″(' + a + ') = ' + fq(f2), 'T₂(x) = ' + poly([[fa, '']]) + term(f1, '(x' + (a ? ' − ' + a : '') + ')') + term(c2, '(x' + (a ? ' − ' + a : '') + ')²'), 'Estimate: insert x = ' + fD(xt) + ', so x − a = ' + fD(h) + ':  T₂ = ' + fq(fa) + ' + ' + pn(f1) + ' · ' + pD(h) + ' + ' + pn(c2) + ' · ' + pD(h) + '² = ' + B(dec(T2, 5)) + '. Exact: ' + dec(F(xt), 5) + '.'],
       sk: [], _chk: { F, a, fa, f1, f2 }
     };
   } };
@@ -495,6 +572,7 @@ CALC.localext = { wk: 'W4', name: 'Local extrema and inflection point', src: 'Le
         B('Stationary points') + ': f′(x) = 0 ⇒ x₁ = ' + s1 + ', x₂ = ' + s2,
         FXX + ' = ' + poly([[6 * c3, 'x'], [2 * c2, '']]),
         'f″(' + s1 + ') = ' + fmt(6 * c3 * s1 + 2 * c2) + (6 * c3 * s1 + 2 * c2 < 0 ? ' < 0 ⇒ maximum' : ' > 0 ⇒ minimum') + ',  f″(' + s2 + ') = ' + fmt(6 * c3 * s2 + 2 * c2) + (6 * c3 * s2 + 2 * c2 < 0 ? ' < 0 ⇒ maximum' : ' > 0 ⇒ minimum'),
+        'Values: f(' + s1 + ') = ' + subst(poly([[c3, 'x³'], [c2, 'x²'], [c1, 'x'], [r, '']]), { x: s1 }) + ' = ' + fmt(f(s1)) + ',  f(' + s2 + ') = ' + subst(poly([[c3, 'x³'], [c2, 'x²'], [c1, 'x'], [r, '']]), { x: s2 }) + ' = ' + fmt(f(s2)),
         B('Maximum M(' + fmt(xmax) + ', ' + fmt(f(xmax)) + '), minimum m(' + fmt(xmin) + ', ' + fmt(f(xmin)) + ')'),
         B('Inflection') + ': f″(x) = 0 ⇒ x = ' + fmt(xi) + ', f(' + fmt(xi) + ') = ' + fmt(f(xi)) + ' (f‴ = ' + fmt(6 * c3) + ' ≠ 0).',
         'Between the stationary points f′ has the sign of ' + fmt(3 * c3) + ' · (+) · (−), so f is ' + (sg > 0 ? 'decreasing' : 'increasing') + ' on (' + s1 + ', ' + s2 + ').'
@@ -519,10 +597,15 @@ CALC.analysis = { wk: 'W4', name: 'Function analysis: domain, derivatives, extre
       parts: [N('a) Domain is (−∞, b): b =', b), N('b) f′(' + x0 + ')', d(x0)), CH('b) At x = ' + x0 + ' the function is', ['increasing', 'decreasing'], d(x0) > 0 ? 0 : 1), N('c) Minimum: x', 0), N('c) Minimum: f(x)', f(0)), N('c) Maximum: x', r2), N('c) Maximum: f(x)', f(r2)), N('c) Inflection point: x', xi), N('c) Inflection point: f(x)', f(xi))],
       steps: [
         B('a)') + ' ln needs a positive argument: ' + fmt(b) + ' − x > 0 ⇔ x < ' + fmt(b) + '. ' + B('D<sub>f</sub> = (−∞, ' + fmt(b) + ')'),
-        FX + ' = −' + fr(fmt(A), fmt(b) + ' − x') + ' + 2(x + ' + cs + ') = ' + fr('2x(x − ' + fq(r2) + ')', 'x − ' + fmt(b)),
+        B('f′, first term') + ': ' + fmt(A) + ' ln(' + fmt(b) + ' − x) is a composition. Outside ln □ has derivative ' + fr(1, '□') + ', inside ' + fmt(b) + ' − x has derivative −1. So (' + fmt(A) + ' ln(' + fmt(b) + ' − x))′ = ' + fmt(A) + ' · ' + fr(1, fmt(b) + ' − x') + ' · (−1) = −' + fr(fmt(A), fmt(b) + ' − x') + '.',
+        B('f′, second term') + ': ((x + ' + cs + ')²)′ = 2(x + ' + cs + ') · 1 (chain rule, the inner derivative is 1).',
+        FX + ' = −' + fr(fmt(A), fmt(b) + ' − x') + ' + 2(x + ' + cs + ')',
+        B('One fraction') + ': f′(x) = ' + fr('−' + fmt(A) + ' + 2(x + ' + cs + ')(' + fmt(b) + ' − x)', fmt(b) + ' − x') + ' = ' + fr(poly([[-2, 'x²'], [2 * (b - c), 'x'], [2 * b * c - A, '']]), fmt(b) + ' − x') + ' (the constants cancel: 2 · ' + fq(b) + ' · ' + cs + ' − ' + fmt(A) + ' = 0) = ' + fr('2x(x − ' + fq(r2) + ')', 'x − ' + fmt(b)),
+        B('f″') + ': (−' + fmt(A) + ' (' + fmt(b) + ' − x)<sup>−1</sup>)′ = −' + fmt(A) + ' · (−1)(' + fmt(b) + ' − x)<sup>−2</sup> · (−1) = −' + fr(fmt(A), '(' + fmt(b) + ' − x)²') + ',  (2(x + ' + cs + '))′ = 2',
         FXX + ' = −' + fr(fmt(A), '(' + fmt(b) + ' − x)²') + ' + 2 = ' + fr('2(x − ' + fq(xi) + ')(x − ' + fq(b + q) + ')', '(x − ' + fmt(b) + ')²'),
-        B('b)') + ' f′(' + x0 + ') = ' + fq(d(x0)) + (d(x0) < 0 ? ' < 0, the function is decreasing' : ' > 0, the function is increasing'),
-        B('c)') + ' f′(x) = 0 ⇒ x₁ = 0, x₂ = ' + fq(r2) + '.  f″(0) = ' + fq(dd(0)) + ' > 0 ⇒ minimum; f″(' + fq(r2) + ') = ' + fq(dd(r2)) + ' < 0 ⇒ maximum.',
+        B('b)') + ' f′(' + x0 + ') = −' + fr(fmt(A), fmt(b) + ' − ' + pn(x0)) + ' + 2(' + x0 + ' + ' + cs + ') = ' + fq(-A / (b - x0)) + ' + ' + pn(2 * (x0 + c)) + ' = ' + fq(d(x0)) + (d(x0) < 0 ? ' < 0, the function is decreasing' : ' > 0, the function is increasing'),
+        B('c)') + ' f′(x) = 0 ⇔ numerator 2x(x − ' + fq(r2) + ') = 0 ⇒ x₁ = 0, x₂ = ' + fq(r2) + ' (both < ' + fmt(b) + ', in the domain).', 'Classify with f″: f″(0) = −' + fr(fmt(A), fmt(b) + '²') + ' + 2 = ' + fq(dd(0)) + ' > 0 ⇒ minimum;  f″(' + fq(r2) + ') = −' + fr(fmt(A), '(' + fq(c) + ')²') + ' + 2 = ' + fq(dd(r2)) + ' < 0 ⇒ maximum.',
+        'Values: f(0) = ' + fmt(A) + ' ln ' + fmt(b) + ' + ' + (c % 1 ? '(' + cs + ')' : cs) + '² = ' + dec(f(0), 4) + ',  f(' + fq(r2) + ') = ' + fmt(A) + ' ln(' + fmt(b) + ' − ' + fq(r2) + ') + (' + fq(r2) + ' + ' + cs + ')² = ' + fmt(A) + ' ln ' + fq(c) + ' + ' + fmt(b * b) + ' = ' + dec(f(r2), 4),
         B('E₁(0, ' + fmt(A) + ' ln ' + fmt(b) + ' + ' + fq(c * c) + ') minimum') + ' ≈ (0, ' + dec(f(0), 3) + ');  ' + B('E₂(' + fq(r2) + ', ' + fq(r2 + c === b ? b * b : (r2 + c) ** 2) + (Math.abs(c - 1) < 1e-9 ? '' : ' + ' + fmt(A) + ' ln ' + fq(c)) + ') maximum') + ' ≈ (' + fmt(r2) + ', ' + dec(f(r2), 3) + ')',
         B('Inflection') + ': f″(x) = 0 ⇒ (' + fmt(b) + ' − x)² = ' + fmt(b * c) + ' ⇒ x = ' + fq(xi) + ' (the other root ' + fq(b + q) + ' is outside D<sub>f</sub>). ' + B('I(' + fq(xi) + ', ' + dec(f(xi), 3) + ')')
       ],
@@ -591,7 +674,7 @@ CALC.elast = { wk: 'W4', name: 'Price elasticity of demand', src: 'Seminar 26 Oc
     return {
       intro: 'The demand function for a product is D(P) = ' + dsym + '. a) Find the price elasticity of demand and evaluate it at P = ' + P0 + '. b) Estimate the percentage change in demand if the current price of ' + P0 + ' ' + (pc > 0 ? 'increases' : 'decreases') + ' by ' + Math.abs(pc) + '%. c) Find the price at which the demand is unit elastic. d) Is the demand elastic or inelastic at P = ' + P0 + '?',
       parts: [N('a) E at P = ' + P0, e0), N('b) Percentage change in demand (%)', dD, { show: dec(dD, 2) + ' %' }), N('c) Unit elastic at P =', Pu), CH('d) At P = ' + P0 + ' the demand is', ['elastic', 'inelastic', 'unit elastic'], Math.abs(Math.abs(e0) - 1) < 1e-9 ? 2 : Math.abs(e0) > 1 ? 0 : 1)],
-      steps: [B('a)') + ' E<sub>D,P</sub> = ' + fr('P', 'D') + ' · D′.  ' + ds, 'E<sub>D,P</sub> = ' + Es, 'E(' + P0 + ') = ' + B(dec(e0, 4)) + '. Meaning: if the price rises by 1%, demand changes by about ' + dec(e0, 2) + '%.', B('b)') + ' ΔD% ≈ E · ΔP% = ' + dec(e0, 4) + ' · ' + pD(pc) + ' = ' + B(dec(dD, 2) + '%'), B('c)') + ' |E| = 1: ' + us, B('d)') + ' |E(' + P0 + ')| = ' + dec(Math.abs(e0), 3) + (Math.abs(e0) > 1 ? ' > 1 ⇒ elastic' : Math.abs(e0) < 1 ? ' < 1 ⇒ inelastic' : ' = 1 ⇒ unit elastic')],
+      steps: [B('a)') + ' E<sub>D,P</sub> = ' + fr('P', 'D') + ' · D′.  ' + ds, 'E<sub>D,P</sub> = ' + Es, 'Insert P = ' + P0 + ': E(' + P0 + ') = ' + subst(Es.split(' = ').pop(), { P: P0 }) + ' = ' + B(dec(e0, 4)) + '. Meaning: if the price rises by 1%, demand changes by about ' + dec(e0, 2) + '%.', B('b)') + ' ΔD% ≈ E · ΔP% = ' + dec(e0, 4) + ' · ' + pD(pc) + ' = ' + B(dec(dD, 2) + '%'), B('c)') + ' |E| = 1: ' + us, B('d)') + ' |E(' + P0 + ')| = ' + dec(Math.abs(e0), 3) + (Math.abs(e0) > 1 ? ' > 1 ⇒ elastic' : Math.abs(e0) < 1 ? ' < 1 ⇒ inelastic' : ' = 1 ⇒ unit elastic')],
       sk: [], _chk: { D, E, Pu, P0 }
     };
   } };
@@ -606,7 +689,7 @@ CALC.optim1 = { wk: 'W5', name: 'Profit maximisation (one variable)', src: 'Exer
       return {
         intro: 'A firm faces the demand (price) function P(Q) = ' + poly([[a, ''], [-b, 'Q']]) + ' and has the total cost TC(Q) = ' + TC + '. a) How many units should it produce to maximize profit? Check the second order condition. b) At what price does it sell? c) What is the maximum profit?',
         parts: [N('a) Q*', Q), N('a) π″(Q*)', -2 * (b + c)), N('b) P*', P), N('c) π*', Pi)],
-        steps: [B('Profit') + ': π = TR − TC = P · Q − TC', 'π(Q) = (' + poly([[a, ''], [-b, 'Q']]) + ')Q − (' + TC + ') = ' + poly([[-(b + c), 'Q²'], [a - d, 'Q'], [-F, '']]), 'π′(Q) = ' + poly([[-2 * (b + c), 'Q'], [a - d, '']]) + ' = 0 ⇒ ' + B('Q* = ' + fmt(Q)) + ' (stationary point)', B('Classification') + ': π″(Q) = ' + fmt(-2 * (b + c)) + ' < 0 ⇒ maximum', 'P* = ' + poly([[a, ''], [-b, 'Q']]).replace('Q', '·' + Q) + ' = ' + B(fmt(P)), 'π* = π(' + Q + ') = ' + B(fmt(Pi))],
+        steps: [B('Profit') + ': π = TR − TC = P · Q − TC', 'TR(Q) = P · Q = (' + poly([[a, ''], [-b, 'Q']]) + ')Q = ' + poly([[a, 'Q'], [-b, 'Q²']]), 'π(Q) = TR − TC = ' + poly([[a, 'Q'], [-b, 'Q²']]) + ' − (' + TC + ') = ' + poly([[-(b + c), 'Q²'], [a - d, 'Q'], [-F, '']]) + '  (collect: Q² terms ' + fq(-b) + ' − ' + pn(c) + ', Q terms ' + a + ' − ' + d + ')', 'π′(Q) = ' + poly([[-2 * (b + c), 'Q'], [a - d, '']]) + ' (power rule: (Q²)′ = 2Q, the constant ' + (-F) + ' gives 0)', 'π′(Q) = 0 ⇒ ' + fmt(2 * (b + c)) + 'Q = ' + fmt(a - d) + ' ⇒ ' + B('Q* = ' + fmt(Q)) + ' (stationary point)', B('Classification') + ': π″(Q) = ' + fmt(-2 * (b + c)) + ' < 0 ⇒ maximum', 'P* = ' + poly([[a, ''], [-b, 'Q']]).replace('Q', '·' + Q) + ' = ' + B(fmt(P)), 'π* = π(' + Q + ') = ' + subst(poly([[-(b + c), 'Q²'], [a - d, 'Q'], [-F, '']]), { Q }) + ' = ' + B(fmt(Pi))],
         sk: [{ plot: { f: x => -(b + c) * x * x + (a - d) * x - F, x0: 0, x1: 2 * Q + 1, y0: Math.min(-F, 0) - 5, y1: Pi + Math.max(10, Pi * 0.2), ystep: Math.max(1, Math.round((Pi + F + 20) / 8)), step: Math.max(1, Math.round(Q / 4)), xl: 'Q', yl: 'π', pts: [{ x: Q, y: Pi, t: 'max' }] }, cap: 'The profit parabola opens downward, the vertex is the maximum.' }],
         _chk: { pi: x => (a - b * x) * x - (c * x * x + d * x + F), Q, Pi }
       };
@@ -616,7 +699,7 @@ CALC.optim1 = { wk: 'W5', name: 'Profit maximisation (one variable)', src: 'Exer
     return {
       intro: 'The demand for a product is Q(P) = ' + poly([[a, ''], [-b, 'P']]) + '. Each unit costs €' + c + ' to produce' + (F ? ' and the fixed cost is €' + F : '') + '. a) Find the price that maximizes profit (check the second order condition). b) How many units are sold? c) What is the maximum profit?',
       parts: [N('a) P*', P), N('a) π″(P*)', -2 * b), N('b) Q*', Qs), N('c) π*', Pi)],
-      steps: [B('Profit as a function of the price') + ': π(P) = (P − ' + c + ') · Q(P)' + (F ? ' − ' + F : '') + ' = (P − ' + c + ')(' + poly([[a, ''], [-b, 'P']]) + ')' + (F ? ' − ' + F : ''), 'π′(P) = (' + poly([[a, ''], [-b, 'P']]) + ') + (P − ' + c + ')(−' + b + ') = ' + poly([[-2 * b, 'P'], [a + b * c, '']]) + ' = 0 ⇒ ' + B('P* = ' + fmt(P)), B('Classification') + ': π″(P) = ' + fmt(-2 * b) + ' < 0 ⇒ maximum', 'Q* = ' + a + ' − ' + b + ' · ' + P + ' = ' + B(fmt(Qs)), 'π* = (' + P + ' − ' + c + ') · ' + Qs + (F ? ' − ' + F : '') + ' = ' + B(fmt(Pi))],
+      steps: [B('Profit as a function of the price') + ': π(P) = (P − ' + c + ') · Q(P)' + (F ? ' − ' + F : '') + ' = (P − ' + c + ')(' + poly([[a, ''], [-b, 'P']]) + ')' + (F ? ' − ' + F : ''), 'π′(P) = (' + poly([[a, ''], [-b, 'P']]) + ') + (P − ' + c + ')(−' + b + ') = ' + poly([[-2 * b, 'P'], [a + b * c, '']]) + ' (product rule: u = P − ' + c + ', v = ' + poly([[a, ''], [-b, 'P']]) + ', u′ = 1, v′ = −' + b + ')', 'π′(P) = 0 ⇒ ' + fmt(2 * b) + 'P = ' + fmt(a + b * c) + ' ⇒ ' + B('P* = ' + fmt(P)), B('Classification') + ': π″(P) = ' + fmt(-2 * b) + ' < 0 ⇒ maximum', 'Q* = ' + a + ' − ' + b + ' · ' + P + ' = ' + B(fmt(Qs)), 'π* = (' + P + ' − ' + c + ') · ' + Qs + (F ? ' − ' + F : '') + ' = ' + B(fmt(Pi))],
       sk: [], _chk: { pi: x => (x - c) * (a - b * x) - F, Q: P, Pi }
     };
   } };
@@ -625,12 +708,16 @@ CALC.optim1 = { wk: 'W5', name: 'Profit maximisation (one variable)', src: 'Exer
 function twoVarTemplate() {
   const T = [
     () => { const A = R.pick([1, 2, -1, 3]), Bc = R.pick([1, 2, -2, 3]), C = R.int(-5, 5); return { fs: poly([[A, 'x³y'], [Bc, 'xy²'], [C, 'y']]), f: (x, y) => A * x ** 3 * y + Bc * x * y * y + C * y, fx: (x, y) => 3 * A * x * x * y + Bc * y * y, fy: (x, y) => A * x ** 3 + 2 * Bc * x * y + C, fxx: (x, y) => 6 * A * x * y, fyy: (x, y) => 2 * Bc * x, fxy: (x, y) => 3 * A * x * x + 2 * Bc * y,
+      how: { fx: '(' + term(A, 'x³y', true) + ')<sub>x</sub> = ' + term(3 * A, 'x²y', true) + ' (y is a constant factor),  (' + term(Bc, 'xy²', true) + ')<sub>x</sub> = ' + term(Bc, 'y²', true) + (C ? ',  (' + term(C, 'y', true) + ')<sub>x</sub> = 0 (no x in it)' : ''), fy: '(' + term(A, 'x³y', true) + ')<sub>y</sub> = ' + term(A, 'x³', true) + ' (x³ is a constant factor),  (' + term(Bc, 'xy²', true) + ')<sub>y</sub> = ' + term(2 * Bc, 'xy', true) + (C ? ',  (' + term(C, 'y', true) + ')<sub>y</sub> = ' + fmt(C) : '') },
       s: { fx: poly([[3 * A, 'x²y'], [Bc, 'y²']]), fy: poly([[A, 'x³'], [2 * Bc, 'xy'], [C, '']]), fxx: poly([[6 * A, 'xy']]), fyy: poly([[2 * Bc, 'x']]), fxy: poly([[3 * A, 'x²'], [2 * Bc, 'y']]) }, pt: [R.int(-2, 2), R.int(-2, 2)] }; },
     () => { const a = R.pick([1, 2, -1]), b = R.pick([1, -1, 2, 3]); return { fs: 'x' + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(b, 'x²y'), f: (x, y) => x * Math.exp(a * y) + b * x * x * y, fx: (x, y) => Math.exp(a * y) + 2 * b * x * y, fy: (x, y) => a * x * Math.exp(a * y) + b * x * x, fxx: (x, y) => 2 * b * y, fyy: (x, y) => a * a * x * Math.exp(a * y), fxy: (x, y) => a * Math.exp(a * y) + 2 * b * x,
+      how: { fx: '(x' + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ')<sub>x</sub> = ' + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ' (the exponential only contains y, so it is a constant factor),  (' + term(b, 'x²y', true) + ')<sub>x</sub> = ' + term(2 * b, 'xy', true), fy: '(x' + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ')<sub>y</sub> = x · ' + term(a, '', true).replace(/^1$/, '').replace(/^−1$/, '−') + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ' (chain rule in y: the inner derivative of ' + (a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ' is ' + fmt(a) + '),  (' + term(b, 'x²y', true) + ')<sub>y</sub> = ' + term(b, 'x²', true), fyy: 'differentiate ' + term(a, 'x', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + ' by y once more: the factor ' + fmt(a) + ' comes down again' },
       s: { fx: ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(2 * b, 'xy'), fy: term(a, 'x', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(b, 'x²'), fxx: poly([[2 * b, 'y']]), fyy: term(a * a, 'x', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y'), fxy: term(a, '', true) + ex(a === 1 ? 'y' : a === -1 ? '−y' : a + 'y') + term(2 * b, 'x') }, pt: [R.int(-2, 2), 0] }; },
     () => { return { fs: 'y ln(x² + y)', f: (x, y) => y * Math.log(x * x + y), fx: (x, y) => 2 * x * y / (x * x + y), fy: (x, y) => Math.log(x * x + y) + y / (x * x + y), fxx: (x, y) => 2 * y * (y - x * x) / (x * x + y) ** 2, fyy: (x, y) => (2 * x * x + y) / (x * x + y) ** 2, fxy: (x, y) => 2 * x ** 3 / (x * x + y) ** 2,
+      how: { fx: 'y is a constant factor. Chain rule: (ln(x² + y))<sub>x</sub> = ' + fr(1, 'x² + y') + ' · 2x. So f<sub>x</sub> = y · ' + fr('2x', 'x² + y'), fy: 'product rule in y with u = y and v = ln(x² + y): u<sub>y</sub> = 1, v<sub>y</sub> = ' + fr(1, 'x² + y') + ' (inner derivative of x² + y by y is 1). So f<sub>y</sub> = 1 · ln(x² + y) + y · ' + fr(1, 'x² + y'), fxx: 'quotient rule in x on ' + fr('2xy', 'x² + y') + ': ' + fr('2y(x² + y) − 2xy · 2x', '(x² + y)²') + ', simplify the top: 2y² − 2x²y = 2y(y − x²)', fyy: '(ln(x² + y))<sub>y</sub> = ' + fr(1, 'x² + y') + ' and (' + fr('y', 'x² + y') + ')<sub>y</sub> = ' + fr('(x² + y) − y', '(x² + y)²') + ' = ' + fr('x²', '(x² + y)²') + '. Common denominator: ' + fr('x² + y + x²', '(x² + y)²'), fxy: '(' + fr('2xy', 'x² + y') + ')<sub>y</sub>, quotient rule in y: ' + fr('2x(x² + y) − 2xy · 1', '(x² + y)²') + ' = ' + fr('2x³', '(x² + y)²') },
       s: { fx: fr('2xy', 'x² + y'), fy: 'ln(x² + y) + ' + fr('y', 'x² + y'), fxx: fr('2y(y − x²)', '(x² + y)²'), fyy: fr('2x² + y', '(x² + y)²'), fxy: fr('2x³', '(x² + y)²') }, pt: R.pick([[1, 0], [1, 1], [2, 1], [0, 1], [1, 3]]) }; },
     () => { const a = R.pick([1, 2, 3]), b = R.int(-4, 4), c = R.pick([1, -1, 2]); return { fs: poly([[a, 'x²y³'], [b, 'xy'], [c, 'y²']]), f: (x, y) => a * x * x * y ** 3 + b * x * y + c * y * y, fx: (x, y) => 2 * a * x * y ** 3 + b * y, fy: (x, y) => 3 * a * x * x * y * y + b * x + 2 * c * y, fxx: (x, y) => 2 * a * y ** 3, fyy: (x, y) => 6 * a * x * x * y + 2 * c, fxy: (x, y) => 6 * a * x * y * y + b,
+      how: { fx: '(' + term(a, 'x²y³', true) + ')<sub>x</sub> = ' + term(2 * a, 'xy³', true) + ' (y³ is a constant factor)' + (b ? ',  (' + term(b, 'xy', true) + ')<sub>x</sub> = ' + term(b, 'y', true) : '') + ',  (' + term(c, 'y²', true) + ')<sub>x</sub> = 0 (no x)', fy: '(' + term(a, 'x²y³', true) + ')<sub>y</sub> = ' + term(3 * a, 'x²y²', true) + ' (x² is a constant factor)' + (b ? ',  (' + term(b, 'xy', true) + ')<sub>y</sub> = ' + term(b, 'x', true) : '') + ',  (' + term(c, 'y²', true) + ')<sub>y</sub> = ' + term(2 * c, 'y', true) },
       s: { fx: poly([[2 * a, 'xy³'], [b, 'y']]), fy: poly([[3 * a, 'x²y²'], [b, 'x'], [2 * c, 'y']]), fxx: poly([[2 * a, 'y³']]), fyy: poly([[6 * a, 'x²y'], [2 * c, '']]), fxy: poly([[6 * a, 'xy²'], [b, '']]) }, pt: [R.int(-2, 2), R.int(-1, 2)] }; }
   ];
   return R.pick(T)();
@@ -641,7 +728,18 @@ CALC.partials = { wk: 'W5', name: 'First and second partial derivatives', src: '
     return {
       intro: 'Consider the function f(x, y) = ' + t.fs + '. Find its first and second partial derivatives and evaluate them at the point ' + P + '.',
       parts: [N('f<sub>x</sub>' + P, t.fx(x, y)), N('f<sub>y</sub>' + P, t.fy(x, y)), N('f<sub>xx</sub>' + P, t.fxx(x, y)), N('f<sub>yy</sub>' + P, t.fyy(x, y)), N('f<sub>xy</sub>' + P, t.fxy(x, y))],
-      steps: [B('Rule') + ': for f<sub>x</sub> treat y as a constant, for f<sub>y</sub> treat x as a constant.', 'f<sub>x</sub>(x, y) = ' + t.s.fx + ',   f<sub>y</sub>(x, y) = ' + t.s.fy, 'f<sub>xx</sub> = ' + t.s.fxx + ',   f<sub>yy</sub> = ' + t.s.fyy + ',   f<sub>xy</sub> = f<sub>yx</sub> = ' + t.s.fxy, 'At ' + P + ': f<sub>x</sub> = ' + fmt(t.fx(x, y)) + ', f<sub>y</sub> = ' + fmt(t.fy(x, y)) + ', f<sub>xx</sub> = ' + fmt(t.fxx(x, y)) + ', f<sub>yy</sub> = ' + fmt(t.fyy(x, y)) + ', f<sub>xy</sub> = ' + fmt(t.fxy(x, y)), 'Check: the mixed derivatives f<sub>xy</sub> and f<sub>yx</sub> are always equal for these functions, so compute the easier one.'],
+      steps: [B('Rule') + ': for f<sub>x</sub> differentiate by x and treat y as a constant NUMBER; for f<sub>y</sub> differentiate by y and treat x as a constant. Work term by term.',
+        B('f<sub>x</sub>') + ': ' + t.how.fx + '  ⇒  f<sub>x</sub>(x, y) = ' + B(t.s.fx),
+        B('f<sub>y</sub>') + ': ' + t.how.fy + '  ⇒  f<sub>y</sub>(x, y) = ' + B(t.s.fy),
+        B('f<sub>xx</sub> = (f<sub>x</sub>)<sub>x</sub>') + ': differentiate f<sub>x</sub> by x again' + (t.how.fxx ? ' (' + t.how.fxx + ')' : '') + '  ⇒  f<sub>xx</sub> = ' + t.s.fxx,
+        B('f<sub>yy</sub> = (f<sub>y</sub>)<sub>y</sub>') + ': differentiate f<sub>y</sub> by y again' + (t.how.fyy ? ' (' + t.how.fyy + ')' : '') + '  ⇒  f<sub>yy</sub> = ' + t.s.fyy,
+        B('f<sub>xy</sub> = (f<sub>x</sub>)<sub>y</sub>') + ': differentiate f<sub>x</sub> by y' + (t.how.fxy ? ' (' + t.how.fxy + ')' : '') + '  ⇒  f<sub>xy</sub> = ' + t.s.fxy + '. Check: (f<sub>y</sub>)<sub>x</sub> gives the same.',
+        B('Insert ' + P) + ':',
+        'f<sub>x</sub>' + P + ' = ' + subst(t.s.fx, { x, y }) + ' = ' + B(fmt(t.fx(x, y))),
+        'f<sub>y</sub>' + P + ' = ' + subst(t.s.fy, { x, y }) + ' = ' + B(fmt(t.fy(x, y))),
+        'f<sub>xx</sub>' + P + ' = ' + subst(t.s.fxx, { x, y }) + ' = ' + B(fmt(t.fxx(x, y))),
+        'f<sub>yy</sub>' + P + ' = ' + subst(t.s.fyy, { x, y }) + ' = ' + B(fmt(t.fyy(x, y))),
+        'f<sub>xy</sub>' + P + ' = ' + subst(t.s.fxy, { x, y }) + ' = ' + B(fmt(t.fxy(x, y)))],
       sk: [], _chk: t
     };
   } };
@@ -649,16 +747,17 @@ CALC.partials = { wk: 'W5', name: 'First and second partial derivatives', src: '
 /* ---------- 15. Total differential (problems 4.14, 4.15, 4.18; old Midterm 2 2022) ---------- */
 CALC.totdiff = { wk: 'W5', name: 'Total differential: estimate a change', src: 'Seminar 2 Nov: problem 4.14; 4.15, 4.18; old Midterm 2 2022 Problem 2',
   gen() {
-    const v = R.int(0, 2); let Q, QK, QL, K0, L0, fs, sK, sL, xn = 'K', yn = 'L';
-    if (v === 0) { const a = R.pick([1, 2, 3]), m = R.pick([6, 3, 5, 7]); const sq = R.pick([3, 4, 5]); L0 = sq * sq - m; K0 = R.pick([1, 2, 3, 4]); Q = (K, L) => K ** a * L * Math.sqrt(L + m); QK = (K, L) => a * K ** (a - 1) * L * Math.sqrt(L + m); QL = (K, L) => K ** a * (Math.sqrt(L + m) + L / (2 * Math.sqrt(L + m))); fs = pw('K', a) + 'L' + rt('L + ' + m); sK = (a === 1 ? '' : mono(a, [['K', a - 1]])) + 'L' + rt('L + ' + m); sL = pw('K', a) + '(' + rt('L + ' + m) + ' + ' + fr('L', '2' + rt('L + ' + m)) + ')'; }
-    else if (v === 1) { xn = 'x'; yn = 'y'; const x0 = R.int(1, 5); K0 = x0; L0 = (x0 + 1) / 2; if (L0 % 1) { K0 = x0 + 1; L0 = (K0 + 1) / 2; } Q = (x, y) => x * Math.log(2 * y - x); QK = (x, y) => Math.log(2 * y - x) - x / (2 * y - x); QL = (x, y) => 2 * x / (2 * y - x); fs = 'x ln(2y − x)'; sK = 'ln(2y − x) − ' + fr('x', '2y − x'); sL = fr('2x', '2y − x'); }
-    else { xn = 'x'; yn = 'y'; const c = R.pick([[3, 3], [2, 2], [1, 8], [2, 16], [4, 4]]); [K0, L0] = c; Q = (x, y) => Math.cbrt(x * x * y); QK = (x, y) => 2 * Math.cbrt(y) / (3 * Math.cbrt(x)); QL = (x, y) => Math.cbrt(x * x) / (3 * Math.cbrt(y * y)); fs = '∛(x²y)'; sK = fr('2', '3') + sp('x', '−1/3') + sp('y', '1/3'); sL = fr('1', '3') + sp('x', '2/3') + sp('y', '−2/3'); }
+    const v = R.int(0, 2); let Q, QK, QL, K0, L0, fs, sK, sL, how = '', xn = 'K', yn = 'L';
+    if (v === 0) { const a = R.pick([1, 2, 3]), m = R.pick([6, 3, 5, 7]); const sq = R.pick([3, 4, 5]); L0 = sq * sq - m; K0 = R.pick([1, 2, 3, 4]); Q = (K, L) => K ** a * L * Math.sqrt(L + m); QK = (K, L) => a * K ** (a - 1) * L * Math.sqrt(L + m); QL = (K, L) => K ** a * (Math.sqrt(L + m) + L / (2 * Math.sqrt(L + m))); fs = pw('K', a) + 'L' + rt('L + ' + m); sK = (a === 1 ? '' : mono(a, [['K', a - 1]])) + 'L' + rt('L + ' + m); sL = pw('K', a) + '(' + rt('L + ' + m) + ' + ' + fr('L', '2' + rt('L + ' + m)) + ')'; how = 'Q<sub>K</sub>: L' + rt('L + ' + m) + ' is a constant factor, ' + (a === 1 ? 'K′ = 1' : '(' + sp('K', a) + ')′ = ' + mono(a, [['K', a - 1]])) + '.  Q<sub>L</sub>: ' + pw('K', a) + ' is a constant factor; product rule in L with u = L, v = ' + rt('L + ' + m) + ': u′ = 1, v′ = ' + fr(1, '2' + rt('L + ' + m)) + '.'; }
+    else if (v === 1) { xn = 'x'; yn = 'y'; const x0 = R.int(1, 5); K0 = x0; L0 = (x0 + 1) / 2; if (L0 % 1) { K0 = x0 + 1; L0 = (K0 + 1) / 2; } Q = (x, y) => x * Math.log(2 * y - x); QK = (x, y) => Math.log(2 * y - x) - x / (2 * y - x); QL = (x, y) => 2 * x / (2 * y - x); fs = 'x ln(2y − x)'; sK = 'ln(2y − x) − ' + fr('x', '2y − x'); sL = fr('2x', '2y − x'); how = 'Q<sub>x</sub>: product rule with u = x, v = ln(2y − x): u′ = 1, v′ = ' + fr(1, '2y − x') + ' · (−1) (chain rule, the inner derivative of 2y − x by x is −1).  Q<sub>y</sub>: x is a constant factor, (ln(2y − x))<sub>y</sub> = ' + fr(1, '2y − x') + ' · 2.'; }
+    else { xn = 'x'; yn = 'y'; const c = R.pick([[3, 3], [2, 2], [1, 8], [2, 16], [4, 4]]); [K0, L0] = c; Q = (x, y) => Math.cbrt(x * x * y); QK = (x, y) => 2 * Math.cbrt(y) / (3 * Math.cbrt(x)); QL = (x, y) => Math.cbrt(x * x) / (3 * Math.cbrt(y * y)); fs = '∛(x²y)'; sK = fr('2', '3') + sp('x', '−1/3') + sp('y', '1/3'); sL = fr('1', '3') + sp('x', '2/3') + sp('y', '−2/3'); how = 'Write Q = ' + sp('x', '2/3') + sp('y', '1/3') + ' and use the power rule in one variable at a time: (' + sp('x', '2/3') + ')′ = ' + fr(2, 3) + sp('x', '−1/3') + ', (' + sp('y', '1/3') + ')′ = ' + fr(1, 3) + sp('y', '−2/3') + '.'; }
     let dK, dL; do { dK = R.pick([0.2, 0.1, -0.1, 0.5, -0.2]); dL = R.pick([-0.3, 0.3, -0.1, 0.2, -0.2]); } while (!isFinite(Q(K0 + dK, L0 + dL)) || (v === 1 && 2 * (L0 + dL) - (K0 + dK) < 0.5));
     const q0 = Q(K0, L0), qk = QK(K0, L0), ql = QL(K0, L0); const est = q0 + qk * dK + ql * dL; const reqL = -qk * dK / ql;
     return {
       intro: 'The production function of a company is Q(' + xn + ', ' + yn + ') = ' + fs + '. At the moment the company uses ' + xn + '₀ = ' + fD(K0) + ' and ' + yn + '₀ = ' + fD(L0) + '. Use the total differential to estimate a) the new production level if ' + xn + ' changes to ' + fD(K0 + dK) + ' and ' + yn + ' changes to ' + fD(L0 + dL) + '; b) the required change in ' + yn + ' if ' + xn + ' changes to ' + fD(K0 + dK) + ' and production must stay unchanged.',
       parts: [N('Q(' + xn + '₀, ' + yn + '₀)', q0), N('Q<sub>' + xn + '</sub>(' + xn + '₀, ' + yn + '₀)', qk), N('Q<sub>' + yn + '</sub>(' + xn + '₀, ' + yn + '₀)', ql), N('a) New production ≈', est, { tol: Math.max(0.011, Math.abs(est) * 0.002) }), N('b) Required Δ' + yn + ' ≈', reqL, { tol: 0.006 })],
       steps: [B('a)') + ' Q(' + xn + '₀ + Δ' + xn + ', ' + yn + '₀ + Δ' + yn + ') ≈ Q(' + xn + '₀, ' + yn + '₀) + Q<sub>' + xn + '</sub> Δ' + xn + ' + Q<sub>' + yn + '</sub> Δ' + yn + '   (new value ≈ old value + total differential)',
+        B('Partial derivatives') + ': ' + how,
         'Q<sub>' + xn + '</sub> = ' + sK + ',   Q<sub>' + yn + '</sub> = ' + sL,
         'Q(' + fD(K0) + ', ' + fD(L0) + ') = ' + fmt(q0) + ',  Q<sub>' + xn + '</sub> = ' + fmt(qk) + ',  Q<sub>' + yn + '</sub> = ' + fmt(ql) + ',  Δ' + xn + ' = ' + fD(dK) + ',  Δ' + yn + ' = ' + fD(dL),
         'Q ≈ ' + fmt(q0) + ' + ' + pn(qk) + ' · ' + pD(dK) + ' + ' + pn(ql) + ' · ' + pD(dL) + ' = ' + B(dec(est, 4)) + '   (exact ' + dec(Q(K0 + dK, L0 + dL), 4) + ')',
@@ -705,7 +804,12 @@ CALC.hessq = { wk: 'W6', name: 'Stationary point and Hessian (quadratic)', src: 
     return {
       intro: 'Find and classify the stationary points of f(x, y) = ' + poly([[a, 'x²'], [b, 'xy'], [c, 'y²'], [d, 'x'], [e, 'y'], [g, '']]) + '.',
       parts: [N('Stationary point x₀', x0), N('Stationary point y₀', y0), N('f(x₀, y₀)', f(x0, y0)), N('Hessian H(x₀, y₀)', H), CH('Type', TYPES3, type)],
-      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[2 * a, 'x'], [b, 'y'], [d, '']]) + ' = 0,   f<sub>y</sub> = ' + poly([[b, 'x'], [2 * c, 'y'], [e, '']]) + ' = 0', 'Solve the linear system ⇒ ' + B('T(' + x0 + ', ' + y0 + ', ' + fmt(f(x0, y0)) + ')'), 'f<sub>xx</sub> = ' + fmt(2 * a) + ',  f<sub>yy</sub> = ' + fmt(2 * c) + ',  f<sub>xy</sub> = ' + fmt(b), B('Hessian') + ': H = f<sub>xx</sub> f<sub>yy</sub> − f<sub>xy</sub>² = ' + pn(2 * a) + ' · ' + pn(2 * c) + ' − ' + pn(b) + '² = ' + fmt(H), H < 0 ? 'H < 0 ⇒ neither convex nor concave ⇒ ' + B('saddle point') : 'H > 0 and f<sub>xx</sub> = ' + fmt(2 * a) + (a > 0 ? ' > 0 ⇒ strictly convex ⇒ ' + B('local minimum') : ' < 0 ⇒ strictly concave ⇒ ' + B('local maximum'))],
+      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[2 * a, 'x'], [b, 'y'], [d, '']]) + ' = 0,   f<sub>y</sub> = ' + poly([[b, 'x'], [2 * c, 'y'], [e, '']]) + ' = 0', 'Write them as a linear system: ' + poly([[2 * a, 'x'], [b, 'y']]) + ' = ' + fmt(-d) + ',   ' + poly([[b, 'x'], [2 * c, 'y']]) + ' = ' + fmt(-e),
+        'Solve it (Cramer\'s rule; substitution gives the same): Δ = ' + pn(2 * a) + ' · ' + pn(2 * c) + ' − ' + pn(b) + ' · ' + pn(b) + ' = ' + fmt(H),
+        'x₀ = ' + fr(pn(-d) + ' · ' + pn(2 * c) + ' − ' + pn(b) + ' · ' + pn(-e), fmt(H)) + ' = ' + fr(fmt(-d * 2 * c + b * e), fmt(H)) + ' = ' + B(fmt(x0)) + ',   y₀ = ' + fr(pn(2 * a) + ' · ' + pn(-e) + ' − ' + pn(-d) + ' · ' + pn(b), fmt(H)) + ' = ' + fr(fmt(-2 * a * e + d * b), fmt(H)) + ' = ' + B(fmt(y0)),
+        'Check: ' + subst(poly([[2 * a, 'x'], [b, 'y'], [d, '']]), { x: x0, y: y0 }) + ' = 0 ✓.  z value: f(' + x0 + ', ' + y0 + ') = ' + subst(poly([[a, 'x²'], [b, 'xy'], [c, 'y²'], [d, 'x'], [e, 'y'], [g, '']]), { x: x0, y: y0 }) + ' = ' + fmt(f(x0, y0)) + '  ⇒  ' + B('T(' + x0 + ', ' + y0 + ', ' + fmt(f(x0, y0)) + ')'),
+        'Second derivatives: f<sub>xx</sub> = (f<sub>x</sub>)<sub>x</sub>, f<sub>yy</sub> = (f<sub>y</sub>)<sub>y</sub>, f<sub>xy</sub> = (f<sub>x</sub>)<sub>y</sub>. For a quadratic they are constants.',
+        'f<sub>xx</sub> = ' + fmt(2 * a) + ',  f<sub>yy</sub> = ' + fmt(2 * c) + ',  f<sub>xy</sub> = ' + fmt(b), B('Hessian') + ': H = f<sub>xx</sub> f<sub>yy</sub> − f<sub>xy</sub>² = ' + pn(2 * a) + ' · ' + pn(2 * c) + ' − ' + pn(b) + '² = ' + fmt(H), H < 0 ? 'H < 0 ⇒ neither convex nor concave ⇒ ' + B('saddle point') : 'H > 0 and f<sub>xx</sub> = ' + fmt(2 * a) + (a > 0 ? ' > 0 ⇒ strictly convex ⇒ ' + B('local minimum') : ' < 0 ⇒ strictly concave ⇒ ' + B('local maximum'))],
       sk: [], _chk: { f, x0, y0 }
     };
   } };
@@ -720,7 +824,7 @@ CALC.hessc = { wk: 'W6', name: 'Extrema of two variables (two stationary points)
     return {
       intro: 'Find and classify the stationary points of f(x, y) = ' + poly([[a, 'x³'], [b, 'y²'], [c, 'xy']]) + '.',
       parts: [N('Second stationary point x₂ (≠ 0)', x2), N('y₂', y2), N('H(0, 0)', H(0, 0)), CH('Type at (0, 0)', TYPES3, 2), N('H(x₂, y₂)', H2), CH('Type at (x₂, y₂)', TYPES3, t2), N('f(x₂, y₂)', f(x2, y2))],
-      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[3 * a, 'x²'], [c, 'y']]) + ' = 0,   f<sub>y</sub> = ' + poly([[2 * b, 'y'], [c, 'x']]) + ' = 0', 'From f<sub>y</sub>: y = ' + term(-c / (2 * b), 'x', true) + '. Insert into f<sub>x</sub>: ' + poly([[3 * a, 'x²'], [-c * c / (2 * b), 'x']]) + ' = 0 ⇒ x(' + poly([[3 * a, 'x'], [-c * c / (2 * b), '']]) + ') = 0', 'Stationary points ' + B('T₁(0, 0, 0)') + ' and ' + B('T₂(' + fmt(x2) + ', ' + fmt(y2) + ', ' + fmt(f(x2, y2)) + ')'), 'f<sub>xx</sub> = ' + fmt(6 * a) + 'x,  f<sub>yy</sub> = ' + fmt(2 * b) + ',  f<sub>xy</sub> = ' + fmt(c) + ';  H = ' + fmt(12 * a * b) + 'x − ' + fmt(c * c), 'At T₁: H(0, 0) = ' + fmt(H(0, 0)) + ' < 0 ⇒ ' + B('saddle point'), 'At T₂: H = ' + fmt(H2) + ' > 0 and f<sub>xx</sub> = ' + fmt(6 * a * x2) + (6 * a * x2 > 0 ? ' > 0 ⇒ ' + B('local minimum') : ' < 0 ⇒ ' + B('local maximum'))],
+      steps: [B('Stationary points') + ': f<sub>x</sub> = ' + poly([[3 * a, 'x²'], [c, 'y']]) + ' = 0,   f<sub>y</sub> = ' + poly([[2 * b, 'y'], [c, 'x']]) + ' = 0', 'From f<sub>y</sub>: y = ' + term(-c / (2 * b), 'x', true) + '. Insert into f<sub>x</sub>: ' + poly([[3 * a, 'x²'], [-c * c / (2 * b), 'x']]) + ' = 0 ⇒ x(' + poly([[3 * a, 'x'], [-c * c / (2 * b), '']]) + ') = 0', 'x = 0 ⇒ y = 0.  Or ' + poly([[3 * a, 'x'], [-c * c / (2 * b), '']]) + ' = 0 ⇒ x = ' + fr(fq(c * c / (2 * b)), fq(3 * a)) + ' = ' + fmt(x2) + ' ⇒ y = ' + term(-c / (2 * b), '', true) + (Math.abs(c / (2 * b)) === 1 ? '1' : '') + ' · ' + pn(x2) + ' = ' + fmt(y2), 'z value: f(' + fmt(x2) + ', ' + fmt(y2) + ') = ' + subst(poly([[a, 'x³'], [b, 'y²'], [c, 'xy']]), { x: x2, y: y2 }) + ' = ' + fmt(f(x2, y2)), 'Stationary points ' + B('T₁(0, 0, 0)') + ' and ' + B('T₂(' + fmt(x2) + ', ' + fmt(y2) + ', ' + fmt(f(x2, y2)) + ')'), 'f<sub>xx</sub> = ' + fmt(6 * a) + 'x,  f<sub>yy</sub> = ' + fmt(2 * b) + ',  f<sub>xy</sub> = ' + fmt(c) + ';  H = ' + fmt(12 * a * b) + 'x − ' + fmt(c * c), 'At T₁: H(0, 0) = ' + fmt(H(0, 0)) + ' < 0 ⇒ ' + B('saddle point'), 'At T₂: H = ' + fmt(12 * a * b) + ' · ' + pn(x2) + ' − ' + fmt(c * c) + ' = ' + fmt(H2) + ' > 0 and f<sub>xx</sub> = ' + fmt(6 * a * x2) + (6 * a * x2 > 0 ? ' > 0 ⇒ ' + B('local minimum') : ' < 0 ⇒ ' + B('local maximum'))],
       sk: [], _chk: { f, x2, y2 }
     };
   } };
@@ -737,7 +841,9 @@ CALC.optim2 = { wk: 'W6', name: 'Two products: maximize revenue', src: 'Exercise
       return {
         intro: 'A company sells two substitute products with the joint demand Q₁ = ' + poly([[al, ''], [-be, 'P₁'], [ga, 'P₂']]) + ',  Q₂ = ' + poly([[de, ''], [ga, 'P₁'], [-ep, 'P₂']]) + '. a) Find the prices that maximize total revenue. b) How many products are sold and what is the maximized revenue?',
         parts: [N('a) P₁*', P1), N('a) P₂*', P2), N('Hessian H', H), N('b) Q₁', Q1), N('b) Q₂', Q2), N('b) Maximum revenue R*', Rv)],
-        steps: [B('Revenue') + ': R = P₁Q₁ + P₂Q₂ = ' + poly([[al, 'P₁'], [-be, 'P₁²'], [2 * ga, 'P₁P₂'], [de, 'P₂'], [-ep, 'P₂²']]), 'R<sub>P₁</sub> = ' + poly([[al, ''], [-2 * be, 'P₁'], [2 * ga, 'P₂']]) + ' = 0,   R<sub>P₂</sub> = ' + poly([[de, ''], [2 * ga, 'P₁'], [-2 * ep, 'P₂']]) + ' = 0', 'Solve the system ⇒ ' + B('P₁ = ' + P1 + ', P₂ = ' + P2), 'R<sub>P₁P₁</sub> = ' + fmt(-2 * be) + ',  R<sub>P₂P₂</sub> = ' + fmt(-2 * ep) + ',  R<sub>P₁P₂</sub> = ' + fmt(2 * ga) + ' ⇒ H = ' + fmt(H) + ' > 0 and R<sub>P₁P₁</sub> < 0 ⇒ concave ⇒ ' + B('maximum'), 'Q₁ = ' + fmt(Q1) + ',  Q₂ = ' + fmt(Q2) + ',  R* = ' + P1 + ' · ' + fmt(Q1) + ' + ' + P2 + ' · ' + fmt(Q2) + ' = ' + B(fmt(Rv))],
+        steps: [B('Revenue') + ': R = P₁Q₁ + P₂Q₂ = ' + poly([[al, 'P₁'], [-be, 'P₁²'], [2 * ga, 'P₁P₂'], [de, 'P₂'], [-ep, 'P₂²']]), 'R<sub>P₁</sub> = ' + poly([[al, ''], [-2 * be, 'P₁'], [2 * ga, 'P₂']]) + ' = 0,   R<sub>P₂</sub> = ' + poly([[de, ''], [2 * ga, 'P₁'], [-2 * ep, 'P₂']]) + ' = 0', 'As a system: ' + poly([[2 * be, 'P₁'], [-2 * ga, 'P₂']]) + ' = ' + fmt(al) + ',   ' + poly([[-2 * ga, 'P₁'], [2 * ep, 'P₂']]) + ' = ' + fmt(de),
+          'Cramer\'s rule: Δ = ' + fmt(2 * be) + ' · ' + fmt(2 * ep) + ' − ' + pn(-2 * ga) + ' · ' + pn(-2 * ga) + ' = ' + fmt(4 * be * ep - 4 * ga * ga) + ',   P₁ = ' + fr(fmt(al) + ' · ' + fmt(2 * ep) + ' − ' + pn(-2 * ga) + ' · ' + fmt(de), fmt(4 * be * ep - 4 * ga * ga)) + ' = ' + B(fmt(P1)) + ',   P₂ = ' + fr(fmt(2 * be) + ' · ' + fmt(de) + ' − ' + fmt(al) + ' · ' + pn(-2 * ga), fmt(4 * be * ep - 4 * ga * ga)) + ' = ' + B(fmt(P2)),
+          'R<sub>P₁P₁</sub> = ' + fmt(-2 * be) + ',  R<sub>P₂P₂</sub> = ' + fmt(-2 * ep) + ',  R<sub>P₁P₂</sub> = ' + fmt(2 * ga) + ' ⇒ H = ' + fmt(H) + ' > 0 and R<sub>P₁P₁</sub> < 0 ⇒ concave ⇒ ' + B('maximum'), 'Q₁ = ' + fmt(al) + ' − ' + fmt(be) + ' · ' + P1 + ' + ' + fmt(ga) + ' · ' + P2 + ' = ' + fmt(Q1) + ',  Q₂ = ' + fmt(de) + ' + ' + fmt(ga) + ' · ' + P1 + ' − ' + fmt(ep) + ' · ' + P2 + ' = ' + fmt(Q2) + ',  R* = ' + P1 + ' · ' + fmt(Q1) + ' + ' + P2 + ' · ' + fmt(Q2) + ' = ' + B(fmt(Rv))],
         sk: [], _chk: { R: (p, q) => p * (al - be * p + ga * q) + q * (de + ga * p - ep * q), P1, P2 }
       };
     }
@@ -745,8 +851,6 @@ CALC.optim2 = { wk: 'W6', name: 'Two products: maximize revenue', src: 'Exercise
 
 Object.values(CALC).forEach(c => { const g = c.gen; c.gen = o => clean(g(o)); });
 const CALC_ORDER = ['graph', 'rational', 'lndom', 'deriv', 'tangent', 'approx', 'taylor', 'localext', 'analysis', 'global', 'lindem', 'elast', 'optim1', 'partials', 'totdiff', 'mrs', 'hessq', 'hessc', 'optim2'];
-
-
 /* ===== Concept questions (Practice tab). t = week key, a = index of the correct option ===== */
 const BANK = [
 { id:'w1a', t:'W12', src:'Lecture 1 p4', q:'What is the domain of f(x) = √(x − 2) / (x − 5)?', o:['[2, ∞)','(2, 5) ∪ (5, ∞)','[2, 5) ∪ (5, ∞)','ℝ \\ {5}','(5, ∞)'], a:2, e:'Two conditions: under the square root x − 2 ≥ 0, so x ≥ 2 (2 itself is allowed). The denominator cannot be 0, so x ≠ 5. Together [2, 5) ∪ (5, ∞).' },
@@ -968,19 +1072,402 @@ const RULES = [
   ['Mixed derivatives are equal: ' + sub('f', 'xy') + ' = ' + sub('f', 'yx') + ' (compute the easier one, use the other to check)', 'L6 p2'],
   ['Optimisation: write the objective (revenue, profit) as one function of two variables, set both partial derivatives to 0, classify with H', 'L6 p7, problem 4.24']]]
 ];
+/* ===== Why we do each type, and how it builds on the earlier lectures. One sentence per step, each sentence uses the one before. ===== */
+const STORY = {
+  graph: {
+    why: 'Everything later in the course is a statement about a graph. Before you calculate anything you must be able to read values, zeros, sign and growth straight from the picture.',
+    build: [
+      'A function value f(a) is the height of the graph above x = a (Lecture 1).',
+      'The zeros are the x values where the graph meets the x axis, and between two zeros the sign of f does not change.',
+      'Where the graph rises f is increasing and where it falls f is decreasing, which is exactly what the first derivative will measure with a number in week 3.',
+      'The peaks and valleys you read here become local extrema in week 4.'
+    ]
+  },
+  rational: {
+    why: 'Demand, cost and average cost models are fractions of polynomials. Zeros, poles and asymptotes tell you the shape of the graph and where the formula breaks, before any calculus.',
+    build: [
+      'A polynomial factors into brackets, and every bracket gives a zero (Lecture 1).',
+      'A fraction is zero when the top is zero and breaks when the bottom is zero, so the zeros of the bottom are the poles.',
+      'Even multiplicity touches the axis and odd multiplicity crosses it, which decides the sign of f on every interval.',
+      'The limit at infinity (Lecture 2) gives the horizontal asymptote, and the same sign line idea returns in week 4 for f′ and f″.'
+    ]
+  },
+  lndom: {
+    why: 'A model only makes sense where prices and quantities are not negative. The economic domain is the interval you must stay inside in every later step: elasticity, optimum and global extrema.',
+    build: [
+      'First the mathematical domain: no zero in a denominator, no negative number under a root, only positive numbers inside ln.',
+      'Then add the two economic conditions P ≥ 0 and Q(P) ≥ 0, where Q = 0 is allowed.',
+      'The result is an interval for P, and that interval is the world of the whole problem.',
+      'In week 4 elasticity and global extrema are only asked inside it, and in week 5 an optimum outside it is rejected.'
+    ]
+  },
+  deriv: {
+    why: 'The derivative is the rate of change, the slope of the graph at one point. Elasticity, marginal values, the conditions for an optimum and every partial derivative are built from it.',
+    build: [
+      'The slope of a line is the same everywhere (Lecture 1), but for a curve the slope changes, so we need it at one chosen point.',
+      'The limit of the difference quotient (Lecture 2) gives that slope, and the rules (power, product, quotient, chain) are shortcuts for that limit.',
+      'The chain rule is the one to master: (e^u)′ = u′e^u and (ln u)′ = u′/u.',
+      'Next the tangent line uses f′(a), and from week 5 a partial derivative is this same derivative with the other variable held constant.'
+    ]
+  },
+  tangent: {
+    why: 'A tangent line replaces a curve by the best straight line at one point. A line is easy to compute with, which is how we estimate values in the next steps.',
+    build: [
+      'You need two numbers at the point x = a: the height f(a) from the function and the slope f′(a) from the derivative.',
+      'A line with a known slope through a known point is y = f′(a)(x − a) + f(a), straight from the line equation of Lecture 1.',
+      'The tangent touches the curve at that point and follows it closely nearby.',
+      'That closeness is the linear approximation next, and its two variable version is the total differential in week 5.'
+    ]
+  },
+  approx: {
+    why: 'It answers one question: if x moves a little, how much does f change? The change is estimated with the slope instead of recomputing the whole function.',
+    build: [
+      'On the tangent line from the previous step the height changes by slope times the step.',
+      'So Δf ≈ f′(a)·Δx, written df = f′(a)dx, and this is the differential.',
+      'The estimate is good for small Δx because the tangent stays close to the curve.',
+      'When it is not good enough, Taylor in week 4 adds a bend term, and in week 5 the total differential adds the second variable.'
+    ]
+  },
+  taylor: {
+    why: 'The tangent line ignores that the curve bends. The second degree Taylor polynomial adds one term for the bend and gives a much better estimate.',
+    build: [
+      'Start from the tangent line f(a) + f′(a)(x − a) from week 3, which gives the first two terms.',
+      'Add f″(a)/2 · (x − a)², where f″ measures how fast the slope itself changes, that is the bend.',
+      'Compute f(a), f′(a) and f″(a) at the point, substitute them, then insert x to get the estimate.',
+      'The same f″ decides whether a stationary point is a minimum or a maximum, which is the next step.'
+    ]
+  },
+  localext: {
+    why: 'Maximum profit and minimum cost are extrema. This is the method that finds them and says which kind each one is.',
+    build: [
+      'At a peak or a valley the tangent is horizontal, so f′(x) = 0 (the slope from week 3).',
+      'Solving f′(x) = 0 gives the stationary points, which are the only candidates.',
+      'Then f″ tells the bend: f″ > 0 bends up (minimum) and f″ < 0 bends down (maximum), exactly the bend term of Taylor.',
+      'Where f″ changes sign is an inflection point, and the same two step recipe returns with the Hessian in week 6.'
+    ]
+  },
+  analysis: {
+    why: 'This is the standard exam problem. It uses every earlier tool on one function: domain, derivatives, extrema, inflection and the behaviour at the ends.',
+    build: [
+      'Start with the domain, the same conditions as in the economic domain step but without the economic part.',
+      'Differentiate twice with the rules from week 3.',
+      'Use f′ = 0 and the sign of f″ from the previous step to find and classify the extrema, and f″ = 0 for the inflection.',
+      'A sign line of f′ shows where the function rises and falls, so you can sketch the graph you learned to read in weeks 1 and 2.'
+    ]
+  },
+  global: {
+    why: 'A business variable lives on a bounded interval, so the best value may sit at an endpoint and not at a stationary point. Global extrema compares all candidates.',
+    build: [
+      'Find the stationary points inside the interval with f′ = 0 (previous step).',
+      'Add the two endpoints, because the interval is closed and the economic domain has edges.',
+      'Compute f at every candidate and compare: the largest value is the global maximum and the smallest the global minimum.',
+      'Profit maximisation in week 5 is this same problem with a profit function.'
+    ]
+  },
+  lindem: {
+    why: 'Linear demand is the simplest model of how the quantity falls when the price rises. From two data points you get the formula, then the economic domain, then the elasticity.',
+    build: [
+      'A line through two points (Lecture 1) gives Q = a − bP.',
+      'The economic domain keeps P ≥ 0 and Q ≥ 0, so P runs from 0 to a/b.',
+      'The derivative Q′ = −b is the slope, and elasticity uses it: E = (P/Q)·Q′.',
+      'Revenue R = P·Q(P) is then the function that gets maximised in optimisation.'
+    ]
+  },
+  elast: {
+    why: 'Elasticity measures the percentage change of the demand when the price rises by one percent. It has no units, so it shows whether a price rise raises or lowers revenue.',
+    build: [
+      'Take the derivative of the demand function Q(P) (week 3).',
+      'Elasticity is E = (P/Q)·Q′, the slope scaled by P/Q.',
+      '|E| > 1 means elastic demand, |E| < 1 inelastic, and |E| = 1 unit elastic.',
+      'Because R′ = Q(1 + E), a stationary point of revenue has E = −1, which links elasticity to optimisation in week 5.'
+    ]
+  },
+  optim1: {
+    why: 'This is the main application of one variable calculus: choose the quantity or the price that gives the biggest profit.',
+    build: [
+      'Profit is revenue minus cost, and revenue comes from the demand function (linear demand step).',
+      'Setting the derivative of profit to zero is the same as marginal revenue equals marginal cost.',
+      'Check with the second derivative that it is a maximum, and check that the answer lies in the economic domain.',
+      'The two product problem in week 6 repeats this recipe with two partial derivatives.'
+    ]
+  },
+  partials: {
+    why: 'When a quantity depends on two things, like capital and labour or two prices, we ask what one of them does while the other is held still.',
+    build: [
+      'A function f(x, y) gives a height for every point of a plane.',
+      'Hold y fixed as if it were a number and derive in x with the usual rules: that is f_x. Do the opposite for f_y.',
+      'The second partials f_xx, f_yy and f_xy are the same step applied again, and f_xy = f_yx.',
+      'f_x and f_y feed the total differential and MRS this week, and the stationary points and the Hessian in week 6.'
+    ]
+  },
+  totdiff: {
+    why: 'It estimates the total change when both variables move a little, for example when capital and labour both change.',
+    build: [
+      'In one variable df = f′dx (week 3).',
+      'In two variables each variable adds its own part, so df = f_x dx + f_y dy, using the partials from the previous step.',
+      'Evaluate f_x and f_y at the starting point and multiply by the small changes.',
+      'Setting df = 0 asks which changes keep f constant, and that is the next step, MRS.'
+    ]
+  },
+  mrs: {
+    why: 'It is the exchange rate between two inputs: how much of one you need to replace the other so that output or utility stays the same.',
+    build: [
+      'From the total differential df = f_x dx + f_y dy require df = 0, which means no change in f.',
+      'Then dx and dy move in a fixed ratio decided by the two partial derivatives.',
+      'In the lecture notation MRS_y = U_y / U_x and MRTS_y = Q_y / Q_x.',
+      'This ratio is the slope of the curve along which f stays constant, and next week the focus returns to maxima and minima, now with two variables.'
+    ]
+  },
+  hessq: {
+    why: 'With two variables you can no longer just look at the sign of one second derivative. The Hessian combines the second partials to classify a stationary point.',
+    build: [
+      'A stationary point of f(x, y) has f_x = 0 and f_y = 0, the two variable form of f′ = 0 (week 4).',
+      'Compute the second partials at that point (week 5).',
+      'Form H = f_xx f_yy − f_xy²: H > 0 with f_xx > 0 is a minimum, H > 0 with f_xx < 0 is a maximum, and H < 0 is a saddle point.',
+      'H = 0 is beyond this course, and the same recipe solves the two product problem.'
+    ]
+  },
+  hessc: {
+    why: 'Real functions often have several stationary points. Solve the system once, then test every point separately with the Hessian.',
+    build: [
+      'Set f_x = 0 and f_y = 0 and solve the pair of equations for all solutions.',
+      'Compute f_xx, f_yy and f_xy as functions, because their values change from point to point.',
+      'Put each stationary point into H and into f_xx and classify each one on its own.',
+      'This is the two variable counterpart of local extrema in week 4, with the Hessian replacing the sign of f″.'
+    ]
+  },
+  optim2: {
+    why: 'A firm that sells two products chooses two prices or two quantities. This is the full two variable optimisation problem of the course.',
+    build: [
+      'Build the revenue function R(P1, P2) from the demand equations, as in the linear demand step.',
+      'Set both partial derivatives to zero and solve the pair of equations (partials, week 5).',
+      'Confirm with the Hessian that the stationary point is a maximum (week 6).',
+      'Insert the optimal prices to get the revenue, and check that prices and quantities are not negative.'
+    ]
+  }
+};
 
+const ARC = {
+  idea: 'The whole course is one idea used three times. Near a point a curve looks like a straight line (the tangent). The bend of the curve is measured by the second derivative. The best value sits where the slope is zero, and the bend tells you whether it is a maximum or a minimum. Two variables repeat the same three moves with partial derivatives and the Hessian.',
+  weeks: {
+    W12: { q: 'What does a function look like, and where does it make sense?', to: 'Weeks 1 and 2 gave you functions and their domains. Week 3 measures how they change.' },
+    W3: { q: 'How fast does f change at one point?', to: 'Week 3 gave you the slope. Week 4 uses the slope to find the best values.' },
+    W4: { q: 'Where is f largest or smallest, and how sensitive is demand to the price?', to: 'Week 4 found the best value of one variable. Week 5 lets two variables move at once.' },
+    W5: { q: 'What changes when there are two variables?', to: 'Week 5 gave you the partial derivatives. Week 6 sets them to zero and classifies the result.' },
+    W6: { q: 'How do you find and classify the extrema of two variables?', to: '' }
+  },
+  cram: [
+    'Read this page once from top to bottom, about 10 minutes. You only need to see the chain, not memorise it.',
+    'Then work through Study in this order: week 5, week 6, week 4. These are the weeks you missed, and week 6 only makes sense after week 5.',
+    'Finish with weeks 1 to 3 as a refresh, then the past papers and one mock, and on the last morning only a mixed round and the Formulas tab.'
+  ]
+};
+/* ===== Saving: every action is kept on this device and synced to your account database ===== */
+const KEY = 'mabe_mid1_2026_v2', KEY_OLD = 'mabe_mid1_2026_v1', SKEY = 'mabe_mid1_2026_sess', DKEY = 'mabe_mid1_2026_dev';
+const EMPTY = () => ({ mc: {}, calc: {}, study: {}, mocks: [], past: {}, epoch: 0, ts: 0 });
+let store = EMPTY();
+let sess = { ts: 0, tab: 'study', inp: {} };
+let DEV = ''; try { DEV = localStorage.getItem(DKEY) || ''; } catch (e) {}
+if (!DEV) { DEV = 'd' + Math.random().toString(36).slice(2, 10); try { localStorage.setItem(DKEY, DEV); } catch (e) {} }
+const SYNC = { db: null, state: 'local', at: 0, dirty: { store: false, sess: false }, first: 0, busy: false, again: false, timer: null, retry: null, lastSig: '', touched: false, pending: null, subs: [] };
 
+/* ---- merge rules for the statistics: commutative, so two devices never destroy each other ---- */
+function cnt(o, f) { return o ? f(o) : -1; }
+function mergeStore(a, b) {
+  a = Object.assign(EMPTY(), a); b = Object.assign(EMPTY(), b);
+  if ((a.epoch || 0) !== (b.epoch || 0)) return (a.epoch || 0) > (b.epoch || 0) ? a : b; // a reset beats older data
+  const o = EMPTY(); o.epoch = a.epoch || 0; o.ts = Math.max(a.ts || 0, b.ts || 0);
+  const pickBy = (x, y, f) => !x ? y : !y ? x : (f(x) >= f(y) ? x : y);
+  const keys = (m1, m2) => Array.from(new Set(Object.keys(m1 || {}).concat(Object.keys(m2 || {}))));
+  keys(a.mc, b.mc).forEach(k => { o.mc[k] = pickBy(a.mc[k], b.mc[k], r => r.r + r.w); });
+  keys(a.calc, b.calc).forEach(k => { o.calc[k] = pickBy(a.calc[k], b.calc[k], r => r.tasks * 1e9 + Number(String(r.last || '').replace(/\D/g, '') || 0)); });
+  keys(a.study, b.study).forEach(k => { o.study[k] = pickBy(a.study[k], b.study[k], r => r.done); });
+  keys(a.past, b.past).forEach(k => { const x = a.past[k], y = b.past[k]; const m = pickBy(x, y, r => r.n); o.past[k] = Object.assign({}, m, { best: Math.max(x ? x.best : 0, y ? y.best : 0) }); });
+  const seen = {}; o.mocks = [];
+  (a.mocks || []).concat(b.mocks || []).forEach(m => { const id = m.date + '|' + m.pts.join(',') + '|' + m.total; if (!seen[id]) { seen[id] = 1; o.mocks.push(m); } });
+  o.mocks.sort((p, q) => p.date < q.date ? -1 : p.date > q.date ? 1 : 0);
+  return o;
+}
+function canon(v) { return JSON.stringify(v, (k, x) => (x && typeof x === 'object' && !Array.isArray(x)) ? Object.keys(x).sort().reduce((o, key) => { o[key] = x[key]; return o; }, {}) : x); }
+function eqStore(a, b) { const f = o => { const c = Object.assign({}, o); delete c.ts; return canon(c); }; return f(a) === f(b); }
+function sameJson(a, b) { return canon(a) === canon(b); }
+
+/* ---- local copy ---- */
+function persistLocal() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(SKEY, JSON.stringify(sess)); } catch (e) {} }
+(function loadLocal() {
+  try { const s = localStorage.getItem(KEY); if (s) store = mergeStore(store, JSON.parse(s)); } catch (e) {}
+  try { const s = localStorage.getItem(KEY_OLD); if (s) store = mergeStore(store, JSON.parse(s)); } catch (e) {}
+  try { const s = localStorage.getItem(SKEY); if (s) sess = Object.assign(sess, JSON.parse(s)); } catch (e) {}
+})();
+function save() { store.ts = Date.now(); persistLocal(); queueSync('store'); }
+
+/* ---- status line ---- */
+function hhmm(t) { const d = new Date(t); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+function setStatus(s, extra) {
+  SYNC.state = s; if (s === 'saved') SYNC.at = Date.now();
+  const el = document.getElementById('sync'); if (!el) return;
+  const m = {
+    saving: ['', 'Saving…'],
+    saved: ['ok', 'Saved to your account at ' + hhmm(SYNC.at) + '. It follows you to every device.'],
+    local: ['warn', 'Saved on this device only. Open the artifact in claude.ai, signed in, to sync across devices.'],
+    error: ['warn', 'Saved on this device. Could not reach your account (' + (extra || 'offline') + '), retrying.'],
+    readonly: ['warn', 'Read only view: progress stays on this device and is not synced.']
+  }[s] || ['', ''];
+  el.className = 'sync ' + m[0]; el.textContent = m[1];
+}
+
+/* ---- writing to the database ---- */
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({ code: 'timeout' }), ms))]);
+function queueSync(kind) {
+  SYNC.dirty[kind] = true; if (!SYNC.first) SYNC.first = Date.now();
+  if (!SYNC.db) { setStatus(SYNC.state === 'readonly' ? 'readonly' : 'local'); return; }
+  setStatus('saving'); clearTimeout(SYNC.timer);
+  const wait = Date.now() - SYNC.first > 4000 ? 0 : (kind === 'store' ? 250 : 800);
+  SYNC.timer = setTimeout(flush, wait);
+}
+async function flush() {
+  if (!SYNC.db) return;
+  if (SYNC.busy) { SYNC.again = true; return; }
+  SYNC.busy = true; SYNC.first = 0;
+  try {
+    if (SYNC.dirty.store) {
+      SYNC.dirty.store = false;
+      const ref = SYNC.db.doc('progress/stats');
+      try { const snap = await withTimeout(ref.get(), 8000); if (snap.exists) { const r = JSON.parse(snap.data().data); store = mergeStore(store, r); } } catch (e) { if (e && e.code === 'timeout') throw e; }
+      store.ts = Date.now(); persistLocal();
+      await withTimeout(ref.set({ ts: store.ts, dev: DEV, data: JSON.stringify(store) }), 10000);
+    }
+    if (SYNC.dirty.sess) {
+      SYNC.dirty.sess = false;
+      await withTimeout(SYNC.db.doc('progress/session').set({ ts: sess.ts, dev: DEV, data: JSON.stringify(sess) }), 10000);
+    }
+    setStatus('saved');
+  } catch (e) {
+    SYNC.dirty.store = SYNC.dirty.store || true; SYNC.dirty.sess = true;
+    const code = e && e.code || 'offline';
+    if (code === 'invalid_argument' || code === 'revoked' || code === 'not_granted') { SYNC.db = null; setStatus('readonly'); }
+    else { setStatus('error', code); clearTimeout(SYNC.retry); SYNC.retry = setTimeout(flush, 15000); }
+  } finally {
+    SYNC.busy = false; if (SYNC.again) { SYNC.again = false; flush(); }
+  }
+}
+function flushNow() { if (SYNC.db && (SYNC.dirty.store || SYNC.dirty.sess)) { clearTimeout(SYNC.timer); flush(); } }
+
+/* ---- reading from the database ---- */
+function parseDoc(snap) { try { if (snap && snap.exists) { const d = snap.data(); return { ts: d.ts || 0, dev: d.dev, data: JSON.parse(d.data) }; } } catch (e) {} return null; }
+function takeStats(r, force) {
+  if (!r || (!force && r.dev === DEV)) return;
+  const merged = mergeStore(store, r.data);
+  if (!eqStore(merged, store)) {
+    store = merged; persistLocal();
+    if (typeof tab !== 'undefined') { if (tab === 'progress') progress(); else if (tab === 'study' && S.stage === 'pick') study(); }
+  }
+  if (!eqStore(merged, r.data)) queueSync('store');
+}
+function takeSession(r, force) {
+  if (!r || (!force && r.dev === DEV)) return;
+  if (r.ts <= (sess.ts || 0)) return;
+  if (!force && SYNC.touched) { SYNC.pending = r; return; }   // do not pull the page away from what you are typing
+  applySession(r.data, r.ts);
+}
+function applySession(x, ts) {
+  sess = Object.assign({ tab: 'study', inp: {} }, x); sess.ts = ts; SYNC.pending = null;
+  unpackSess(sess); persistLocal(); renderTabs(); show(); SYNC.lastSig = sigOf(); showResume('Continued from your other device');
+}
+async function initSync() {
+  let db = null;
+  try { if (typeof claude !== 'undefined' && claude && claude.use) db = await withTimeout(claude.use('db'), 10000); } catch (e) { db = null; }
+  if (!db) { setStatus('local'); return; }
+  SYNC.db = db;
+  try {
+    const st = db.doc('progress/stats'), se = db.doc('progress/session');
+    const [a, b] = await Promise.all([withTimeout(st.get(), 10000), withTimeout(se.get(), 10000)]);
+    takeStats(parseDoc(a), true); takeSession(parseDoc(b), !SYNC.touched);
+    if (SYNC.dirty.store || SYNC.dirty.sess) flush(); else setStatus('saved');
+    SYNC.subs.push(st.onSnapshot(s => { if (!s.metadata.hasPendingWrites) takeStats(parseDoc(s)); }, () => {}));
+    SYNC.subs.push(se.onSnapshot(s => { if (!s.metadata.hasPendingWrites) { const r = parseDoc(s); if (r && r.dev !== DEV && r.ts > (sess.ts || 0)) SYNC.pending = r; } }, () => {}));
+  } catch (e) {
+    const code = e && e.code || 'offline';
+    if (code === 'invalid_argument' || code === 'revoked' || code === 'not_granted') { SYNC.db = null; setStatus('readonly'); }
+    else setStatus('error', code);
+  }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { commitSess(); flushNow(); }
+  else if (SYNC.db) { SYNC.db.doc('progress/session').get().then(s => { const r = parseDoc(s); if (r) SYNC.pending = (r.dev !== DEV && r.ts > (sess.ts || 0)) ? r : SYNC.pending; if (SYNC.pending && SYNC.pending.ts > (sess.ts || 0)) { const r2 = SYNC.pending; SYNC.pending = null; applySession(r2.data, r2.ts); } }).catch(() => {}); }
+});
+window.addEventListener('pagehide', () => { commitSess(); flushNow(); });
+
+/* ---- session: where you are, the current problem (by seed) and what you typed ---- */
+function packSess() {
+  sess.tab = tab;
+  sess.S = { wk: S.wk, key: S.key, stage: S.stage, i: S.i, good: S.good, total: S.total, mix: S.mix, mixN: S.mixN, checked: S.checked, res: S.res, ws: S.ws, ts: S.ts };
+  sess.L = { wk: L.wk, key: L.key, seed: L.seed, checked: L.checked, res: L.res };
+  sess.P = { wk: P.wk, i: P.i, ans: P.ans, q: P.queue.map(q => ({ id: q.id, o: q._o.map(x => x.i) })) };
+  sess.M = { state: M.state, keys: M.probs.map(p => p.k), seeds: M.probs.map(p => p.seed), vals: M.probs.map(p => p.vals || null), start: M.start, res: M.res };
+  sess.PP = { id: PP.id, checked: PP.checked, res: PP.res };
+}
+function sigOf() { packSess(); return JSON.stringify(sess, (k, v) => k === 'ts' ? undefined : v); }
+function commitSess() {
+  const sg = sigOf(); if (sg === SYNC.lastSig) return;
+  SYNC.lastSig = sg; sess.ts = Date.now(); SYNC.touched = true; persistLocal(); queueSync('sess');
+}
+function unpackSess(x) {
+  try {
+    if (x.tab) tab = x.tab;
+    if (x.S && x.S.key !== undefined) {
+      Object.assign(S, x.S);
+      if (S.key && CALC[S.key]) {
+        if (S.ws && (S.stage === 'study' || S.stage === 'recall')) S.worked = R.seeded(S.ws, () => CALC[S.key].gen(CALC[S.key].book));
+        if (S.stage === 'try' && S.ts) S.task = R.seeded(S.ts, () => CALC[S.key].gen());
+        if (S.stage === 'done') { /* nothing to regenerate */ }
+        if ((S.stage === 'study' || S.stage === 'recall') && !S.worked || (S.stage === 'try' && !S.task)) { S.stage = 'pick'; }
+      } else if (S.stage !== 'pick') { S.stage = 'pick'; }
+    }
+    if (x.L && x.L.key) { Object.assign(L, x.L); if (CALC[L.key] && L.seed) L.t = R.seeded(L.seed, () => CALC[L.key].gen()); else L.t = null; }
+    if (x.P && x.P.q && x.P.q.length) {
+      const qs = x.P.q.map(e => { const q = BANK.find(b => b.id === e.id); return q ? Object.assign({}, q, { _o: e.o.map(i => ({ t: q.o[i], i })) }) : null; });
+      if (qs.every(Boolean)) { P.wk = x.P.wk; P.queue = qs; P.i = x.P.i; P.ans = x.P.ans; }
+    }
+    if (x.M && x.M.state && x.M.state !== 'idle') {
+      clearInterval(M.timer);
+      M = { state: x.M.state, probs: x.M.keys.map((k, i) => ({ k, seed: x.M.seeds[i], t: R.seeded(x.M.seeds[i], () => CALC[k].gen()), vals: x.M.vals[i] || undefined })), start: x.M.start, res: x.M.res, timer: null };
+      if (M.state === 'run') M.timer = setInterval(tick, 1000);
+    }
+    if (x.PP && x.PP.id) { PP = { id: x.PP.id, checked: x.PP.checked, res: x.PP.res }; }
+  } catch (e) { /* a damaged record must never stop the page: start clean */ }
+}
+function clearInp(kind) {
+  const re = { s: /^s\d+$/, l: /^l\d+$/, k: /^k\d/, p: /^p\d/ }[kind]; if (!re) return;
+  Object.keys(sess.inp || {}).forEach(id => { if (re.test(id)) delete sess.inp[id]; });
+}
+function restoreInp() {
+  const inp = sess.inp || {};
+  Object.keys(inp).forEach(id => { const el = document.getElementById(id); if (el && el.value !== inp[id]) el.value = inp[id]; });
+}
+function onInp(e) {
+  const t = e.target; if (!t || !t.id || !/^[slkp]\d/.test(t.id)) return;
+  if (!sess.inp) sess.inp = {}; sess.inp[t.id] = t.value; commitSess();
+}
+function showResume(msg) {
+  const el = document.getElementById('resume'); if (!el) return;
+  el.textContent = msg; el.style.display = 'block'; clearTimeout(showResume.t); showResume.t = setTimeout(() => { el.style.display = 'none'; }, 9000);
+}
+function whereText() {
+  const wk = k => (CALC[k] ? CALC[k].name : '');
+  if (tab === 'study' && S.key && S.stage !== 'pick') return 'Study, ' + wk(S.key) + (S.stage === 'try' ? (S.mix ? ', mixed round problem ' + (S.mixN + 1) : ', problem ' + S.i + ' of 3') : S.stage === 'recall' ? ', recall step' : S.stage === 'done' ? ', finished' : ', worked example');
+  if (tab === 'lab' && L.key) return 'Calculation lab, ' + wk(L.key);
+  if (tab === 'mock' && M.state === 'run') return 'Mock midterm in progress';
+  if (tab === 'past' && PP.id) return 'Past midterm ' + PP.id;
+  return '';
+}
 /* ===== UI ===== */
 const $ = s => document.querySelector(s);
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-const KEY = 'mabe_mid1_2026_v1';
-let store = { mc: {}, calc: {}, study: {}, mocks: [], past: {} };
-try { const s = localStorage.getItem(KEY); if (s) store = Object.assign(store, JSON.parse(s)); } catch (e) {}
-function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} }
-const TABS = [['study', 'Study'], ['practice', 'Practice'], ['lab', 'Calculation lab'], ['mock', 'Mock midterm'], ['past', 'Past midterms'], ['methods', 'Method sheet'], ['formulas', 'Formulas'], ['progress', 'Progress']];
+const TABS = [['study', 'Study'], ['map', 'Big picture'], ['practice', 'Practice'], ['lab', 'Calculation lab'], ['mock', 'Mock midterm'], ['past', 'Past midterms'], ['methods', 'Method sheet'], ['formulas', 'Formulas'], ['progress', 'Progress']];
 let tab = 'study';
 function renderTabs() { $('#tabs').innerHTML = TABS.map(t => `<button role="tab" aria-selected="${tab === t[0]}" data-t="${t[0]}">${t[1]}</button>`).join(''); $('#tabs').querySelectorAll('button').forEach(b => b.onclick = () => { tab = b.dataset.t; renderTabs(); show(); window.scrollTo(0, 0); }); }
-function show() { ({ study, practice, lab, mock, past, methods, formulas, progress })[tab](); }
+function show() { ({ study, map, practice, lab, mock, past, methods, formulas, progress })[tab](); }
 function countdown() {
   const t = new Date('2026-11-18T17:15:00+01:00') - new Date(); const el = $('#cd'); if (!el) return;
   if (t <= 0) { el.textContent = 'Midterm 1 has started or is over.'; return; }
@@ -991,6 +1478,21 @@ const WK_KEYS = Object.keys(WEEKS);
 const wkShort = k => ({ W12: 'Weeks 1 to 2', W3: 'Week 3', W4: 'Week 4', W5: 'Week 5', W6: 'Week 6' }[k]);
 function chips(cur, set, all) { return `<div class="chips">${(all ? ['ALL'] : []).concat(WK_KEYS).map(k => `<button class="chip" aria-pressed="${cur === k}" data-w="${k}">${k === 'ALL' ? 'All weeks' : wkShort(k)}</button>`).join('')}</div>`; }
 function bindChips(fn) { document.querySelectorAll('.chip[data-w]').forEach(b => b.onclick = () => fn(b.dataset.w)); }
+
+/* ---------- why we do it, and how it builds ---------- */
+function storyBox(k, full) { const s = STORY[k]; if (!s) return ''; return `<div class="story"><b>Why we do this</b><p>${esc(s.why)}</p>${full ? `<b>How it builds, one step at a time</b><ol>${s.build.map(x => `<li>${esc(x)}</li>`).join('')}</ol>` : ''}</div>`; }
+function map() {
+  let html = `<div class="card"><b>The one idea</b><p class="q" style="line-height:1.6">${esc(ARC.idea)}</p></div><div class="card"><b>How to use this page for the cram</b><ol class="steps">${ARC.cram.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`;
+  WK_KEYS.forEach((w, wi) => {
+    const keys = CALC_ORDER.filter(k => CALC[k].wk === w);
+    html += `<h3 class="wkh">${esc(WEEKS[w])}</h3><div class="card"><p class="meta" style="margin-top:0">The question of this week</p><p class="q" style="margin:2px 0 6px"><b>${esc(ARC.weeks[w].q)}</b></p>`;
+    keys.forEach(k => { const r = store.study[k]; html += `<div class="mapt"><div class="row" style="justify-content:space-between"><b>${esc(CALC[k].name)}</b><button class="btn ghost" data-go="${k}">${r ? 'Study again' : 'Study'}</button></div><p class="meta" style="margin:2px 0 4px">${esc(STORY[k].why)}</p><ol class="steps">${STORY[k].build.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>`; });
+    html += `</div>`;
+    if (ARC.weeks[w].to) html += `<p class="bridge">${esc(ARC.weeks[w].to)}</p>`;
+  });
+  $('#view').innerHTML = html;
+  document.querySelectorAll('button[data-go]').forEach(b => b.onclick = () => { tab = 'study'; S.wk = 'ALL'; renderTabs(); stBegin(b.dataset.go); });
+}
 
 /* ---------- shared problem rendering ---------- */
 function skHtml(sk) {
@@ -1013,10 +1515,10 @@ function recCalc(k, good, n) { const c = store.calc[k] || { tasks: 0, good: 0, p
 const INPUT_NOTE = '<p class="note">Type numbers, fractions or expressions: 3/2, −0.25, sqrt(32), 2ln2 + 1/4, e^2. Decimals with a dot (a comma works only for a single number). For lists separate with ; and type none if there are none. Answers are accepted within about 0.01.</p>';
 
 /* ---------- Study: worked example, recall, three new versions, mixed round ---------- */
-let S = { wk: 'ALL', key: null, stage: 'pick', worked: null, i: 0, task: null, good: 0, total: 0, mix: false, mixN: 0, checked: false };
+let S = { wk: 'ALL', key: null, stage: 'pick', worked: null, i: 0, task: null, good: 0, total: 0, mix: false, mixN: 0, checked: false, res: null, ws: 0, ts: 0 };
 function studyKeys() { return CALC_ORDER.filter(k => S.wk === 'ALL' || CALC[k].wk === S.wk); }
-function stBegin(k) { S.key = k; S.mix = false; const c = CALC[k]; S.worked = c.gen(c.book); S.stage = 'study'; S.i = 0; S.good = 0; S.total = 0; study(); window.scrollTo(0, 0); }
-function stNext() { S.task = CALC[S.key].gen(); S.checked = false; }
+function stBegin(k) { S.key = k; S.mix = false; const c = CALC[k]; S.ws = R.newSeed(); S.worked = R.seeded(S.ws, () => c.gen(c.book)); S.stage = 'study'; S.i = 0; S.good = 0; S.total = 0; S.checked = false; S.res = null; clearInp('s'); study(); window.scrollTo(0, 0); }
+function stNext() { S.ts = R.newSeed(); const k = S.key; S.task = R.seeded(S.ts, () => CALC[k].gen()); S.checked = false; S.res = null; clearInp('s'); }
 function study() {
   const v = $('#view');
   if (S.stage === 'pick') {
@@ -1032,24 +1534,26 @@ function study() {
   }
   const c = CALC[S.key]; const back = `<button class="btn ghost" id="bk">Back to the list</button>`; const bindBack = () => { $('#bk').onclick = () => { S.stage = 'pick'; study(); }; };
   if (S.stage === 'study') {
-    v.innerHTML = `<div class="card"><p class="meta">Step 1 of 3, Study · ${esc(wkShort(c.wk))} · ${esc(c.name)} · ${esc(c.src)}</p>${qHtml(S.worked)}<div class="fb"><b>Worked solution</b>${solHtml(S.worked)}</div><p class="note">Read it slowly. For every line ask: why does this step come next, which rule does it use? When you could explain it to a friend, continue.</p><div class="row"><button class="btn" id="go">I understand it, hide it</button>${back}</div></div>`;
+    v.innerHTML = `<div class="card"><p class="meta">Step 1 of 3, Study · ${esc(wkShort(c.wk))} · ${esc(c.name)} · ${esc(c.src)}</p>${storyBox(S.key, true)}${qHtml(S.worked)}<div class="fb"><b>Worked solution</b>${solHtml(S.worked)}</div><p class="note">Read it slowly. For every line ask: why does this step come next, which rule does it use? When you could explain it to a friend, continue.</p><div class="row"><button class="btn" id="go">I understand it, hide it</button>${back}</div></div>`;
     $('#go').onclick = () => { S.stage = 'recall'; study(); window.scrollTo(0, 0); }; bindBack(); return;
   }
   if (S.stage === 'recall') {
-    v.innerHTML = `<div class="card"><p class="meta">Step 2 of 3, Recall · ${esc(c.name)}</p>${qHtml(S.worked)}<div class="fb"><b>On a blank page, without looking:</b> write the full solution of this same problem, line by line, in the same layout. About 3 to 5 minutes. Then reveal and compare.</div><div class="row" style="margin-top:12px"><button class="btn" id="rv">Reveal and compare</button>${back}</div><div id="rvs"></div></div>`;
+    v.innerHTML = `<div class="card"><p class="meta">Step 2 of 3, Recall · ${esc(c.name)}</p>${storyBox(S.key, false)}${qHtml(S.worked)}<div class="fb"><b>On a blank page, without looking:</b> write the full solution of this same problem, line by line, in the same layout. About 3 to 5 minutes. Then reveal and compare.</div><div class="row" style="margin-top:12px"><button class="btn" id="rv">Reveal and compare</button>${back}</div><div id="rvs"></div></div>`;
     $('#rv').onclick = () => { $('#rvs').innerHTML = `<div class="fb"><b>Worked solution</b>${solHtml(S.worked)}</div><p class="note">Which line did you miss? Write it on your error list. Missed more than one line: study it again.</p><div class="row"><button class="btn ghost" id="again">Study it again</button><button class="btn" id="ok">I got it, give me new numbers</button></div>`; $('#again').onclick = () => { S.stage = 'study'; study(); }; $('#ok').onclick = () => { S.stage = 'try'; S.i = 1; stNext(); study(); window.scrollTo(0, 0); }; };
     bindBack(); return;
   }
   if (S.stage === 'try') {
     const t = S.task; const head = S.mix ? `Mixed round, problem ${S.mixN + 1} of 5 (type hidden until you check)` : `Step 3 of 3, New numbers ${S.i} of 3 · ${esc(c.name)}`;
     v.innerHTML = `<div class="card"><p class="meta">${head}</p>${qHtml(t)}<div id="parts">${partsHtml(t, 's', S.checked)}</div><div class="row"><button class="btn" id="chk">Check my answers</button><button class="btn ghost" id="sk">Give up, show solution</button>${back}</div><div id="sol"></div>${INPUT_NOTE}</div>`;
-    const fin = good => { S.checked = true; S.good += good; S.total += t.parts.length; recCalc(S.key, good, t.parts.length); $('#chk').disabled = true; $('#sk').disabled = true;
+    const showRes = good => { $('#chk').disabled = true; $('#sk').disabled = true;
       const last = S.mix ? S.mixN >= 4 : S.i >= 3; const nm = S.mix ? `<div class="meta">This was: ${esc(CALC[S.key].name)} (${esc(wkShort(CALC[S.key].wk))})</div>` : '';
       $('#sol').innerHTML = `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b> ${good === t.parts.length ? '' : 'Find the first line where your paper differs from this solution.'}</div>${nm}<div class="fb"><b>Worked solution</b>${solHtml(t)}</div><div class="row"><button class="btn" id="nx">${last ? 'Finish' : 'Next problem'}</button></div>`;
       $('#nx').onclick = () => { if (S.mix) { if (last) S.stage = 'done'; else { S.mixN++; S.key = R.pick(studyKeys()); stNext(); } } else { if (last) { const r = store.study[S.key] || { done: 0, good: 0, parts: 0 }; r.done++; r.good += S.good; r.parts += S.total; store.study[S.key] = r; save(); S.stage = 'done'; } else { S.i++; stNext(); } } study(); window.scrollTo(0, 0); }; };
+    const fin = good => { S.checked = true; S.res = good; S.good += good; S.total += t.parts.length; recCalc(S.key, good, t.parts.length); showRes(good); commitSess(); };
     $('#chk').onclick = () => fin(gradeParts(t, 's'));
     $('#sk').onclick = () => { gradeParts(t, 's'); fin(0); };
     $('#parts').onkeydown = e => { if (e.key === 'Enter' && !S.checked) $('#chk').click(); };
+    if (S.checked) { restoreInp(); gradeParts(t, 's'); showRes(S.res || 0); }
     bindBack(); return;
   }
   if (S.stage === 'done') {
@@ -1077,68 +1581,74 @@ function practice() {
 }
 
 /* ---------- Calculation lab: unlimited practice of one type ---------- */
-let L = { wk: 'W5', key: 'partials', t: null, checked: false };
+let L = { wk: 'W5', key: 'partials', t: null, checked: false, seed: 0, res: null };
 function lab() {
   const keys = CALC_ORDER.filter(k => CALC[k].wk === L.wk); if (!keys.includes(L.key)) { L.key = keys[0]; L.t = null; }
-  if (!L.t) { L.t = CALC[L.key].gen(); L.checked = false; }
+  if (!L.t) { L.seed = R.newSeed(); const kk = L.key; L.t = R.seeded(L.seed, () => CALC[kk].gen()); L.checked = false; L.res = null; clearInp('l'); }
   const t = L.t; const r = store.calc[L.key];
-  $('#view').innerHTML = chips(L.wk) + `<div class="card"><div class="row"><select id="ty">${keys.map(k => `<option value="${k}" ${k === L.key ? 'selected' : ''}>${esc(CALC[k].name)}</option>`).join('')}</select><span class="meta">${esc(CALC[L.key].src)}${r ? ' · ' + r.tasks + ' done, ' + Math.round(100 * r.good / r.parts) + '% parts right' : ''}</span></div></div>
+  $('#view').innerHTML = chips(L.wk) + `<div class="card"><div class="row"><select id="ty">${keys.map(k => `<option value="${k}" ${k === L.key ? 'selected' : ''}>${esc(CALC[k].name)}</option>`).join('')}</select><span class="meta">${esc(CALC[L.key].src)}${r ? ' · ' + r.tasks + ' done, ' + Math.round(100 * r.good / r.parts) + '% parts right' : ''}</span></div><details class="why"><summary>Why we do this and how it builds</summary>${storyBox(L.key, true)}</details></div>
   <div class="card">${qHtml(t)}<div id="parts">${partsHtml(t, 'l', L.checked)}</div><div class="row"><button class="btn" id="chk" ${L.checked ? 'disabled' : ''}>Check</button><button class="btn ghost" id="sol">Show solution</button><button class="btn ghost" id="nw">New problem</button></div><div id="out"></div>${INPUT_NOTE}</div>`;
   bindChips(w => { L.wk = w; L.key = null; L.t = null; lab(); });
   $('#ty').onchange = e => { L.key = e.target.value; L.t = null; lab(); };
   $('#nw').onclick = () => { L.t = null; lab(); };
   const showSol = good => { $('#out').innerHTML = (good != null ? `<div class="fb ${good === t.parts.length ? 'good' : 'bad'}"><b>${good} of ${t.parts.length} parts correct.</b></div>` : '') + `<div class="fb"><b>Worked solution</b>${solHtml(t)}</div><div class="row"><button class="btn" id="nw2">Next problem of this type</button></div>`; $('#nw2').onclick = () => { L.t = null; lab(); window.scrollTo(0, 0); }; };
-  $('#chk').onclick = () => { const g = gradeParts(t, 'l'); L.checked = true; $('#chk').disabled = true; recCalc(L.key, g, t.parts.length); showSol(g); };
-  $('#sol').onclick = () => { if (!L.checked) { gradeParts(t, 'l'); L.checked = true; $('#chk').disabled = true; recCalc(L.key, 0, t.parts.length); } showSol(null); };
+  $('#chk').onclick = () => { const g = gradeParts(t, 'l'); L.checked = true; L.res = g; $('#chk').disabled = true; recCalc(L.key, g, t.parts.length); showSol(g); commitSess(); };
+  $('#sol').onclick = () => { if (!L.checked) { gradeParts(t, 'l'); L.checked = true; L.res = null; $('#chk').disabled = true; recCalc(L.key, 0, t.parts.length); } showSol(L.res == null ? null : L.res); commitSess(); };
   $('#parts').onkeydown = e => { if (e.key === 'Enter' && !L.checked) $('#chk').click(); };
+  if (L.checked) { restoreInp(); gradeParts(t, 'l'); $('#chk').disabled = true; showSol(L.res == null ? null : L.res); }
 }
 
 /* ---------- Mock midterm: 30 minutes, 3 problems of 5 points ---------- */
 const MOCK_POOLS = [['lindem', 'lndom', 'elast', 'optim1'], ['analysis', 'global', 'localext', 'taylor', 'approx'], ['partials', 'totdiff', 'mrs', 'hessq', 'hessc', 'optim2']];
-let M = { state: 'idle', probs: [], left: 1800, timer: null, res: null };
+let M = { state: 'idle', probs: [], timer: null, res: null, start: 0 };
+const mockLeft = () => Math.max(0, 1800 - Math.floor((Date.now() - M.start) / 1000));
 function mock() {
   const v = $('#view');
   if (M.state === 'idle') {
     const last = store.mocks.slice(-5).reverse().map(m => `<tr><td>${esc(m.date)}</td><td>${m.pts.join(' + ')}</td><td><b>${m.total} / 15</b></td></tr>`).join('');
-    v.innerHTML = `<div class="card"><h2 style="margin-top:0">Mock midterm, 30 minutes</h2><p>Three problems of 5 points: ① a demand or optimisation problem, ② a one variable analysis problem, ③ a two variable problem. New numbers every time. Only a simple calculator, no notes, everything on paper first.</p><p class="meta">The real Midterm 1 had 2 problems in 2024 and 2025 (5 + 5 and 6 + 9 points). This year's scope adds functions of two variables, so this mock covers all three areas.</p><button class="btn" id="go">Start the 30 minute mock</button></div>${last ? `<div class="card"><b>Recent mocks</b><table><tr><th>Date</th><th>Points per problem</th><th>Total</th></tr>${last}</table></div>` : ''}`;
-    $('#go').onclick = () => { M = { state: 'run', probs: MOCK_POOLS.map(p => { const k = R.pick(p); return { k, t: CALC[k].gen() }; }), left: 1800, timer: null, res: null }; M.timer = setInterval(tick, 1000); mock(); window.scrollTo(0, 0); };
+    v.innerHTML = `<div class="card"><h2 style="margin-top:0">Mock midterm, 30 minutes</h2><p>Three problems of 5 points: ① a demand or optimisation problem, ② a one variable analysis problem, ③ a two variable problem. New numbers every time. Only a simple calculator, no notes, everything on paper first.</p><p class="meta">The real Midterm 1 had 2 problems in 2024 and 2025 (5 + 5 and 6 + 9 points). This year's scope adds functions of two variables, so this mock covers all three areas. The clock runs on real time, so leaving the page does not pause it.</p><button class="btn" id="go">Start the 30 minute mock</button></div>${last ? `<div class="card"><b>Recent mocks</b><table><tr><th>Date</th><th>Points per problem</th><th>Total</th></tr>${last}</table></div>` : ''}`;
+    $('#go').onclick = () => { clearInp('k'); M = { state: 'run', probs: MOCK_POOLS.map(p => { const k = R.pick(p), seed = R.newSeed(); return { k, seed, t: R.seeded(seed, () => CALC[k].gen()) }; }), timer: null, res: null, start: Date.now() }; M.timer = setInterval(tick, 1000); mock(); window.scrollTo(0, 0); };
     return;
   }
   if (M.state === 'run') {
-    v.innerHTML = `<div class="card row bar2"><span>Time left <span class="timer" id="tm">${mmss(M.left)}</span></span><button class="btn" id="fin">Submit</button></div>` + M.probs.map((p, i) => `<div class="card"><div class="meta">Problem ${i + 1} (5 points)</div>${qHtml(p.t)}${partsHtml(p.t, 'k' + i + '_', false)}</div>`).join('') + INPUT_NOTE;
+    v.innerHTML = `<div class="card row bar2"><span>Time left <span class="timer" id="tm">${mmss(mockLeft())}</span></span><button class="btn" id="fin">Submit</button></div>` + M.probs.map((p, i) => `<div class="card"><div class="meta">Problem ${i + 1} (5 points)</div>${qHtml(p.t)}${partsHtml(p.t, 'k' + i + '_', false)}</div>`).join('') + INPUT_NOTE;
     $('#fin').onclick = () => { const b = $('#fin'); if (b.dataset.arm) finishMock(); else { b.dataset.arm = 1; b.textContent = 'Click again to submit'; setTimeout(() => { if (b.isConnected) { delete b.dataset.arm; b.textContent = 'Submit'; } }, 4000); } };
+    restoreInp(); if (mockLeft() <= 0) finishMock();
     return;
   }
   const r = M.res;
   v.innerHTML = `<div class="card"><h2 style="margin-top:0">Result: ${r.total} / 15</h2><p>${r.pts.map((x, i) => 'Problem ' + (i + 1) + ': ' + x + ' / 5').join(' · ')}</p><p class="meta">Points here = 5 × share of correct parts, rounded to half points. A real marker gives method points too, so compare your paper with every line below.</p><button class="btn" id="re">Back to start</button></div>` + M.probs.map((p, i) => `<div class="card"><div class="meta">Problem ${i + 1} · ${esc(CALC[p.k].name)}</div>${qHtml(p.t)}${partsHtml(p.t, 'k' + i + '_', true)}<div class="fb"><b>Solution</b>${solHtml(p.t)}</div></div>`).join('');
-  M.probs.forEach((p, i) => p.t.parts.forEach((q, j) => { const el = document.getElementById('k' + i + '_' + j); if (el) el.value = p.vals[j]; const ok = okPart(q, p.vals[j]); document.getElementById('k' + i + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('k' + i + '_m' + j).textContent = ok ? '✓' : '✗'; }));
-  $('#re').onclick = () => { M.state = 'idle'; mock(); };
+  M.probs.forEach((p, i) => p.t.parts.forEach((q, j) => { const val = (p.vals || [])[j] || ''; const el = document.getElementById('k' + i + '_' + j); if (el) el.value = val; const ok = okPart(q, val); document.getElementById('k' + i + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('k' + i + '_m' + j).textContent = ok ? '✓' : '✗'; }));
+  $('#re').onclick = () => { M.state = 'idle'; clearInp('k'); mock(); };
 }
 function mmss(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
-function tick() { M.left--; const el = $('#tm'); if (el) { el.textContent = mmss(M.left); if (M.left < 300) el.classList.add('low'); } if (M.left <= 0) finishMock(); }
+function tick() { const left = mockLeft(); const el = $('#tm'); if (el) { el.textContent = mmss(left); if (left < 300) el.classList.add('low'); } if (left <= 0) finishMock(); }
 function finishMock() {
   clearInterval(M.timer); if (M.state !== 'run') return;
-  const pts = M.probs.map((p, i) => { p.vals = p.t.parts.map((q, j) => { const el = document.getElementById('k' + i + '_' + j); return el ? el.value : ''; }); const g = p.t.parts.filter((q, j) => okPart(q, p.vals[j])).length; recCalc(p.k, g, p.t.parts.length); return Math.round(10 * g / p.t.parts.length) / 2; });
-  const total = pts.reduce((a, b) => a + b, 0); M.res = { pts, total }; store.mocks.push({ date: new Date().toISOString().slice(0, 10), pts, total }); save(); M.state = 'done'; if (tab === 'mock') mock();
+  restoreInp();
+  const pts = M.probs.map((p, i) => { p.vals = p.t.parts.map((q, j) => { const el = document.getElementById('k' + i + '_' + j); return el ? el.value : (sess.inp && sess.inp['k' + i + '_' + j]) || ''; }); const g = p.t.parts.filter((q, j) => okPart(q, p.vals[j])).length; recCalc(p.k, g, p.t.parts.length); return Math.round(10 * g / p.t.parts.length) / 2; });
+  const total = pts.reduce((a, b) => a + b, 0); M.res = { pts, total }; store.mocks.push({ date: new Date().toISOString().slice(0, 10), pts, total }); save(); M.state = 'done'; if (tab === 'mock') mock(); else commitSess();
 }
 
 /* ---------- Past midterms ---------- */
-let PP = { id: null, checked: false };
+let PP = { id: null, checked: false, res: null };
 function past() {
   const v = $('#view');
   if (!PP.id) {
     v.innerHTML = `<div class="card"><b>The real papers, problem by problem</b><p class="meta">Official Canvas files from the professor, with her solutions. Do each one timed (30 minutes) on paper first, then type the results and check. Version A and B of the same year are the same problems with other numbers: do A, check, then B as a fresh test.</p></div>` + PAST.map(p => { const b = store.past[p.id]; return `<div class="card row" style="justify-content:space-between"><div><b>${esc(p.title)}</b><div class="meta">${esc(p.note)}</div>${b ? `<div class="meta">Best: ${b.best}% of parts, ${b.n} attempt(s)</div>` : ''}</div><button class="btn ghost" data-p="${p.id}">Open</button></div>`; }).join('');
-    v.querySelectorAll('button[data-p]').forEach(b => b.onclick = () => { PP = { id: b.dataset.p, checked: false }; past(); window.scrollTo(0, 0); });
+    v.querySelectorAll('button[data-p]').forEach(b => b.onclick = () => { clearInp('p'); PP = { id: b.dataset.p, checked: false, res: null }; past(); window.scrollTo(0, 0); });
     return;
   }
   const p = PAST.find(x => x.id === PP.id);
   v.innerHTML = `<div class="card"><b>${esc(p.title)}</b><div class="meta">${esc(p.note)}</div></div>` + p.probs.map(q => `<div class="card"><div class="meta">Problem ${q.n} (${q.pts} points)</div><div class="q">${q.text}</div>${q.sk ? skHtml([{ plot: q.sk, cap: 'P on the vertical axis!' }]) : ''}${partsHtml(q, 'p' + q.n + '_', PP.checked)}${PP.checked ? `<div class="fb"><b>Official solution</b>${paperSteps(q.sol)}<div class="meta" style="margin-top:8px">Final answers</div>${finalAns(q)}</div>` : ''}</div>`).join('') + `<div class="card row"><button class="btn" id="chk" ${PP.checked ? 'disabled' : ''}>Check my answers</button><button class="btn ghost" id="bk">Back to the papers</button></div>${INPUT_NOTE}`;
   $('#bk').onclick = () => { PP = { id: null }; past(); };
-  $('#chk').onclick = () => { const vals = {}; p.probs.forEach(q => q.parts.forEach((x, j) => { vals[q.n + '_' + j] = (document.getElementById('p' + q.n + '_' + j) || {}).value; }));
-    PP.checked = true; past(); let good = 0, n = 0;
-    p.probs.forEach(q => q.parts.forEach((x, j) => { const el = document.getElementById('p' + q.n + '_' + j); el.value = vals[q.n + '_' + j] || ''; const ok = okPart(x, el.value); if (ok) good++; n++; document.getElementById('p' + q.n + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('p' + q.n + '_m' + j).textContent = ok ? '✓' : '✗'; }));
-    const b = store.past[p.id] || { best: 0, n: 0 }; b.n++; b.best = Math.max(b.best, Math.round(100 * good / n)); store.past[p.id] = b; save();
-    document.querySelector('#view').insertAdjacentHTML('afterbegin', `<div class="card fb ${good === n ? 'good' : 'bad'}"><b>${good} of ${n} parts correct.</b> Compare your paper with the official solution under each problem.</div>`); window.scrollTo(0, 0); };
+  const mark = () => { let good = 0, n = 0; p.probs.forEach(q => q.parts.forEach((x, j) => { const el = document.getElementById('p' + q.n + '_' + j); const ok = okPart(x, el.value); if (ok) good++; n++; document.getElementById('p' + q.n + '_row' + j).className = 'part ' + (ok ? 'ok' : 'no'); document.getElementById('p' + q.n + '_m' + j).textContent = ok ? '✓' : '✗'; })); return { good, n }; };
+  const banner = r => document.querySelector('#view').insertAdjacentHTML('afterbegin', `<div class="card fb ${r.good === r.n ? 'good' : 'bad'}"><b>${r.good} of ${r.n} parts correct.</b> Compare your paper with the official solution under each problem.</div>`);
+  $('#chk').onclick = () => { restoreInp(); const vals = {}; p.probs.forEach(q => q.parts.forEach((x, j) => { vals[q.n + '_' + j] = (document.getElementById('p' + q.n + '_' + j) || {}).value; }));
+    PP.checked = true; past(); p.probs.forEach(q => q.parts.forEach((x, j) => { document.getElementById('p' + q.n + '_' + j).value = vals[q.n + '_' + j] || ''; }));
+    const r = mark(); PP.res = r; const b = store.past[p.id] || { best: 0, n: 0 }; b.n++; b.best = Math.max(b.best, Math.round(100 * r.good / r.n)); store.past[p.id] = b; save();
+    banner(r); window.scrollTo(0, 0); commitSess(); };
+  if (PP.checked) { restoreInp(); const r = mark(); banner(PP.res || r); }
 }
 
 /* ---------- Method sheet and formulas ---------- */
@@ -1161,7 +1671,7 @@ function progress() {
   <div class="card"><b>Session summary for your study record</b><p class="meta">Copy this into the Campus Mathematics inbox (or paste it to Claude) so the next session continues from here.</p><textarea id="sum" readonly></textarea><div class="row"><button class="btn" id="cp">Copy</button><button class="btn ghost" id="rs">Reset all progress</button></div></div><p class="note">Progress is saved in this browser when storage is available. The summary is your backup.</p>`;
   $('#sum').value = summaryText();
   $('#cp').onclick = () => { const t = $('#sum'); t.select(); const done = ok => { $('#cp').textContent = ok ? 'Copied' : 'Selected, press Cmd C'; }; try { navigator.clipboard.writeText(t.value).then(() => done(true), () => done(false)); } catch (e) { done(false); } };
-  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm) { store = { mc: {}, calc: {}, study: {}, mocks: [], past: {} }; save(); progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
+  $('#rs').onclick = () => { const b = $('#rs'); if (b.dataset.arm) { store = EMPTY(); store.epoch = Date.now(); save(); progress(); } else { b.dataset.arm = 1; b.textContent = 'Click again to delete all progress'; } };
 }
 function summaryText() {
   let s = 'Mathematics Midterm 1 trainer, summary ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + '\n';
@@ -1172,7 +1682,15 @@ function summaryText() {
   const weak = CALC_ORDER.filter(k => store.calc[k] && store.calc[k].good / store.calc[k].parts < 0.7).map(k => CALC[k].name); if (weak.length) s += 'Weak types (under 70%): ' + weak.join('; ') + '\n';
   return s;
 }
+/* ---------- boot: restore the last session, then wire saving ---------- */
+['study', 'map', 'practice', 'lab', 'mock', 'past', 'methods', 'formulas', 'progress'].forEach(n => { const f = window[n]; window[n] = function () { f.apply(this, arguments); restoreInp(); commitSess(); }; });
+document.getElementById('view').addEventListener('input', onInp);
+document.getElementById('view').addEventListener('change', onInp);
+unpackSess(sess);
+SYNC.lastSig = sigOf();
 renderTabs(); show(); countdown(); setInterval(countdown, 30000);
+{ const w = whereText(); if (w) showResume('Resumed where you left off: ' + w); }
+setStatus('local'); initSync();
 
 </script>
 </body>
