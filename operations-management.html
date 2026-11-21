@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Management: Midterm prep</title>
+<style>
+:root{--bg:#f6f5f1;--surface:#fff;--ink:#1d1f24;--muted:#5d6470;--line:#dedbd2;--accent:#1f4fd8;--accent-ink:#fff;--good:#14783c;--good-bg:#e3f4ea;--bad:#b3261e;--bad-bg:#fbe7e5;--warn-bg:#fdf0d5;--info-bg:#e6eefc;--radius:10px;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#14161a;--surface:#1d2026;--ink:#ecebe6;--muted:#a1a7b2;--line:#323741;--accent:#7fa2ff;--accent-ink:#0d1220;--good:#6fd39a;--good-bg:#17382a;--bad:#ff9a93;--bad-bg:#432220;--warn-bg:#3b3015;--info-bg:#1b2742}}
+*{box-sizing:border-box}html{font-size:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:20px 16px 90px}
+header h1{font-size:1.45rem;margin:0 0 2px}header p{margin:0;color:var(--muted);font-size:.92rem}
+#cd{display:inline-block;margin-top:8px;font-size:.88rem;font-weight:600;background:var(--warn-bg);border-radius:8px;padding:4px 10px}
+#sync{margin-top:8px;font-size:.8rem;color:var(--muted)}#sync::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:7px;vertical-align:1px}
+#sync.ok::before{background:var(--good)}#sync.warn::before{background:#d08a00}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 16px;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav button{background:none;border:1px solid transparent;border-radius:8px;padding:8px 13px;font:inherit;color:var(--muted);cursor:pointer}
+nav button[aria-selected=true]{background:var(--surface);border-color:var(--line);color:var(--ink);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.card h2{margin:0 0 6px;font-size:1.2rem}.card h3{margin:14px 0 4px;font-size:1.02rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bar2{position:sticky;top:8px;z-index:5;justify-content:space-between}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.meta{font-size:.82rem;color:var(--muted)}
+.q{font-size:1.02rem;margin:6px 0 12px}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}.opt .k{display:inline-block;width:1.6em;font-weight:700;color:var(--muted)}
+.opt.good{background:var(--good-bg);border-color:var(--good)}.opt.bad{background:var(--bad-bg);border-color:var(--bad)}
+.opt.sel{border-color:var(--accent);border-width:2px}
+.fb{margin-top:10px;padding:12px;border-radius:8px;background:var(--warn-bg);font-size:.95rem}.fb.good{background:var(--good-bg)}.fb.bad{background:var(--bad-bg)}.fb>b:first-child{display:block;margin-bottom:4px}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.stat{padding:12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}.stat b{font-size:1.4rem;display:block}
+.part{display:grid;grid-template-columns:1fr 200px 90px;gap:10px;align-items:center;margin-bottom:8px}
+.part input,.part select{width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-family:var(--mono)}
+.part .m{font-size:1.1rem;text-align:center}.part.ok input,.part.ok select{border-color:var(--good);border-width:2px}.part.no input,.part.no select{border-color:var(--bad);border-width:2px}
+table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}th{color:var(--muted);font-weight:600;font-size:.82rem}
+.tbx td,.tbx th{border:1px solid var(--line)}.tbx th{background:var(--bg)}.tbx{margin:8px 0}
+select{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;max-width:100%}
+input[type=number],input[type=text]{padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-family:var(--mono);width:90px}
+input[type=range]{width:200px}
+.timer{font-family:var(--mono);font-size:1.3rem;font-weight:700}.timer.low{color:var(--bad)}
+textarea{width:100%;min-height:160px;font-family:var(--mono);font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px}
+.note{font-size:.85rem;color:var(--muted);margin-top:10px}
+@media (max-width:600px){.part{grid-template-columns:1fr;gap:4px}.part .m{text-align:left}}
+/* theory components */
+details.mod{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px}
+details.mod>summary{cursor:pointer;padding:14px 16px;font-weight:700;font-size:1.05rem;list-style:none}
+details.mod>summary::before{content:"▸ ";color:var(--accent)}details.mod[open]>summary::before{content:"▾ "}
+details.mod .inner{padding:0 16px 16px}
+.blk{border-top:1px solid var(--line);padding:12px 0 4px}.blk>h3{margin:0 0 6px;font-size:1rem}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin:10px 0}
+.nd{background:var(--info-bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.9rem;flex:1 1 130px;text-align:center}
+.nd.hot{background:var(--warn-bg)}.nd.ok{background:var(--good-bg)}.nd.no{background:var(--bad-bg)}
+.ar{align-self:center;color:var(--muted);font-weight:700}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:10px 0}
+.bx{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg);font-size:.92rem}.bx>b:first-child{display:block;margin-bottom:3px}
+.co{border-radius:8px;padding:10px 12px;margin:10px 0;font-size:.92rem}.co>b:first-child{display:block;margin-bottom:2px}
+.co.know{background:var(--info-bg)}.co.trap{background:var(--bad-bg)}.co.say{background:var(--good-bg)}.co.calc{background:var(--warn-bg)}
+.slref{font-size:.8rem;color:var(--muted);margin:6px 0}
+.eq{font-family:var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;margin:6px 0;display:block;overflow-x:auto;font-size:.9rem}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;margin-right:6px;vertical-align:1px}
+.tag.v{background:var(--good-bg);color:var(--good)}.tag.f{background:var(--bad-bg);color:var(--bad)}.tag.l{background:var(--warn-bg)}.tag.u{background:var(--info-bg)}
+
+/* paper style math */
+.mf,.mi{font-family:"Cambria Math","STIX Two Math","Latin Modern Math",Cambria,Georgia,"Times New Roman",serif}
+.mf{font-size:1.22rem;line-height:1.5;margin:10px 0;padding:10px 16px;overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:6px}
+.mi{font-size:1.12em;white-space:nowrap}
+.mf i,.mi i{font-style:italic}.mf .tx,.mi .tx{font-style:normal}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .25em;line-height:1.3}
+.fr>.nu{border-bottom:1.5px solid currentColor;padding:0 .35em .12em}.fr>.de{padding:.12em .35em 0}
+.ce{position:relative;display:inline-block;padding:0 .6em;margin:0 .1em;vertical-align:middle}.ce::before,.ce::after{content:"";position:absolute;top:0;bottom:0;width:.3em;border:1.5px solid currentColor}.ce::before{left:0;border-right:0;border-bottom:0}.ce::after{right:0;border-left:0;border-bottom:0}
+.mf sub,.mf sup,.mi sub,.mi sup{font-size:.68em;line-height:0}
+table.mfa{border-collapse:collapse;width:auto;font-size:inherit}table.mfa td{border:0;padding:3px 6px;vertical-align:middle;white-space:nowrap}
+table.mfa td:first-child{text-align:right}table.mfa td.eqs{text-align:center;padding:3px 4px}table.mfa td:last-child{text-align:left}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:10px;align-items:center;border-top:1px solid var(--line);padding:6px 0}
+.mrow .mf{margin:2px 0}.mrow .meta{font-size:.82rem}
+@media (max-width:600px){.mrow{grid-template-columns:1fr}}
+.tag.f{background:var(--bad-bg);color:var(--bad)}
+svg text{font-family:system-ui,sans-serif}
+.svgw{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px;margin:10px 0;overflow-x:auto}
+.svgw svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.recall{margin:10px 0;padding:10px 12px;border:1px dashed var(--accent);border-radius:8px}.recall summary{cursor:pointer;font-weight:600}
+.chk{display:flex;gap:8px;align-items:flex-start;margin:6px 0}.chk input{margin-top:5px}
+.sol ol{margin:6px 0 0;padding-left:20px}.sol li{margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Operations Management: Midterm prep</h1>
+  <p>Modules 1 to 4: strategy, process analysis, process selection and layout, demand forecasting. Regression (Exercise 4.2) is excluded by the professor.</p>
+  <span id="cd"></span>
+  <div id="sync" role="status" aria-live="polite"></div>
+</header>
+<nav role="tablist" id="tabs"></nav>
+<main id="view"></main>
+</div>
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const FL=(...a)=>'<div class="flow">'+a.map((x,i)=>(i?'<span class="ar">→</span>':'')+'<div class="nd">'+x+'</div>').join('')+'</div>';
+const FLC=(a)=>'<div class="flow">'+a.map((x,i)=>(i?'<span class="ar">→</span>':'')+'<div class="nd '+(x[1]||'')+'">'+x[0]+'</div>').join('')+'</div>';
+const BX=(t,b)=>'<div class="bx"><b>'+t+'</b>'+b+'</div>';
+const GR=(...a)=>'<div class="gr">'+a.join('')+'</div>';
+const CO=(k,t,b)=>'<div class="co '+k+'"><b>'+t+'</b>'+b+'</div>';
+
+/* math helpers: write formulas the way they look on paper */
+const V=s=>'<i>'+s+'</i>',TX=s=>'<span class="tx">'+s+'</span>';
+const FR=(n,d)=>'<span class="fr"><span class="nu">'+n+'</span><span class="de">'+d+'</span></span>';
+const SB=(a,b)=>a+'<sub>'+b+'</sub>',SP=(a,b)=>a+'<sup>'+b+'</sup>';
+const EQ=h=>'<div class="mf">'+h+'</div>';
+const EQA=rows=>'<div class="mf"><table class="mfa">'+rows.map(r=>'<tr><td>'+r[0]+'</td><td class="eqs">=</td><td>'+r[1]+'</td></tr>').join('')+'</table></div>';
+const IM=h=>'<span class="mi">'+h+'</span>';
+const SM='\u03A3',MN='\u2212',TM='\u00D7';
+
+const TB=(h,rows)=>'<div style="overflow-x:auto"><table class="tbx"><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div>';
+const SL=(f,n)=>'<div class="slref">Original: <b>'+f+'</b>, slides '+n+'</div>';
+const SV=s=>'<div class="svgw">'+s+'</div>';
+const r1=x=>Math.round(x*10)/10,r2=x=>Math.round(x*100)/100;
+function fm(x,d){if(!isFinite(x))return'?';d=d==null?2:d;return(Math.round(x*10**d)/10**d).toFixed(d).replace(/\.?0+$/,'')}
+</script>
+<script>
+/* ===== SVG diagrams ===== */
+function svgPPM(){
+  const x0=200,y0=62,cw=160,rh=58,W=720,H=y0+rh*4+60;
+  const cols=[['Low volume','High variety'],['Medium volume','Medium variety'],['High volume','Small variety']];
+  const rows=[['Project / Unit','production'],['Batch production /','Job shop'],['Mass','production'],['Continuous','production']];
+  let g='';
+  g+=`<text x="${x0+cw*1.5}" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">Product <tspan font-weight="400">(volume, variety)</tspan></text>`;
+  cols.forEach((c,i)=>{g+=`<rect x="${x0+i*cw}" y="26" width="${cw}" height="34" fill="none" stroke="#9aa0aa"/><text x="${x0+i*cw+cw/2}" y="40" text-anchor="middle" font-size="11" fill="currentColor">${c[0]}</text><text x="${x0+i*cw+cw/2}" y="53" text-anchor="middle" font-size="11" fill="currentColor">${c[1]}</text>`});
+  rows.forEach((r,j)=>{g+=`<rect x="${x0-110}" y="${y0+j*rh}" width="110" height="${rh}" fill="none" stroke="#9aa0aa"/><text x="${x0-55}" y="${y0+j*rh+rh/2-2}" text-anchor="middle" font-size="11" fill="currentColor">${r[0]}</text><text x="${x0-55}" y="${y0+j*rh+rh/2+12}" text-anchor="middle" font-size="11" fill="currentColor">${r[1]}</text>`});
+  g+=`<rect x="${x0}" y="${y0}" width="${cw*3}" height="${rh*4}" fill="none" stroke="#9aa0aa"/>`;
+  g+=`<text x="16" y="${y0+rh*2}" font-size="13" font-weight="700" fill="#c0392b" text-anchor="middle" transform="rotate(-90 16 ${y0+rh*2})">Process <tspan font-weight="400">(production type)</tspan></text>`;
+  const el=(fx,fy,t1,t2)=>{const cx=x0+fx*cw,cy=y0+fy*rh;return`<ellipse cx="${cx}" cy="${cy}" rx="68" ry="24" fill="#f2b8b5" fill-opacity=".9"/><text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="12" fill="#222">${t1}</text><text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="12" fill="#222">${t2}</text>`};
+  g+=el(.45,.5,'Projects','Surgery')+el(1.2,1.5,'Auto repair shop','Small bakery')+el(1.85,2.5,'Auto industry','McDonald\'s')+el(2.55,3.5,'Oil refineries','Sugar plants');
+  g+=`<defs><marker id="pa1" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="2" refY="9" orient="auto"><path d="M0,0 L18,9 L0,18 z" fill="#1f9bd7"/></marker><marker id="pa2" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" refX="2" refY="9" orient="auto"><path d="M0,0 L18,9 L0,18 z" fill="#e08a00"/></marker></defs>`;
+  g+=`<line x1="${x0+14}" y1="${y0+rh*4-10}" x2="${x0+14}" y2="${y0+rh*1.3}" stroke="#1f9bd7" stroke-width="7" marker-end="url(#pa1)"/><text x="${x0+30}" y="${y0+rh*2.55}" font-size="11" font-weight="700" fill="#1f9bd7" transform="rotate(-90 ${x0+30} ${y0+rh*2.55})" text-anchor="middle">Flexibility dimension</text>`;
+  g+=`<line x1="${x0+24}" y1="${y0+rh*4-14}" x2="${x0+cw*1.9}" y2="${y0+rh*4-14}" stroke="#e08a00" stroke-width="7" marker-end="url(#pa2)"/><text x="${x0+cw*1.0}" y="${y0+rh*4-20}" font-size="11" font-weight="700" fill="#e08a00" text-anchor="middle">Cost dimension</text>`;
+  return`<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Product process matrix, Hayes and Wheelwright">${g}</svg>`;
+}
+function svgPrec(colored){
+  const N={A:[40,95,10],B:[115,95,11],C:[200,40,5],D:[200,120,4],E:[115,180,12],F:[285,80,3],G:[360,80,7],H:[285,180,11],I:[445,130,3]};
+  const E=[['A','B'],['A','E'],['B','C'],['B','D'],['C','F'],['D','F'],['F','G'],['G','I'],['E','H'],['H','I']];
+  const st={A:1,B:2,C:3,D:3,F:3,E:4,H:5,G:6,I:6};
+  const col=['','#ffd9a0','#c9e7ff','#d8f0c8','#f6c8e8','#e4d6ff','#c9f1ee'];
+  let g=`<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#555"/></marker></defs>`;
+  E.forEach(([a,b])=>{const p=N[a],q=N[b];const dx=q[0]-p[0],dy=q[1]-p[1],L=Math.hypot(dx,dy);g+=`<line x1="${p[0]+dx/L*20}" y1="${p[1]+dy/L*20}" x2="${q[0]-dx/L*22}" y2="${q[1]-dy/L*22}" stroke="#555" stroke-width="1.6" marker-end="url(#ah)"/>`});
+  Object.keys(N).forEach(k=>{const p=N[k];g+=`<circle cx="${p[0]}" cy="${p[1]}" r="19" fill="${colored?col[st[k]]:'#fde'}" stroke="#444"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-size="13" font-weight="700" fill="#222">${k}</text><text x="${p[0]}" y="${p[1]-24}" text-anchor="middle" font-size="10.5" fill="currentColor">${p[2]}</text>`});
+  if(colored){[['1','A',10],['2','B',11],['3','C D F',12],['4','E',12],['5','H',11],['6','G I',10]].forEach((s,i)=>{g+=`<rect x="${12+i*84}" y="222" width="78" height="30" rx="6" fill="${col[i+1]}" stroke="#444"/><text x="${12+i*84+39}" y="235" text-anchor="middle" font-size="10.5" fill="#222">Station ${s[0]}</text><text x="${12+i*84+39}" y="247" text-anchor="middle" font-size="10.5" fill="#222">${s[1]} = ${s[2]} min</text>`})}
+  return`<svg viewBox="0 0 520 260" width="520" role="img" aria-label="Precedence diagram">${g}</svg>`;
+}
+function svgPatterns(){
+  const W=230,H=100;const noise=i=>Math.sin(i*12.9898)*0.5+Math.sin(i*4.1)*0.5;
+  const mk=(t,fn,cap)=>{let d='';for(let i=0;i<40;i++){const x=10+i*(W-20)/39,y=H-15-fn(i)*(H-30);d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' '}return`<div style="flex:1 1 230px"><svg viewBox="0 0 ${W} ${H+14}" width="100%"><rect x="1" y="1" width="${W-2}" height="${H+12}" fill="none" stroke="#9aa0aa"/><path d="${d}" fill="none" stroke="#1f4fd8" stroke-width="1.8"/><text x="8" y="14" font-size="10.5" font-weight="700" fill="currentColor">${t}</text><text x="${W/2}" y="${H+10}" text-anchor="middle" font-size="9.5" fill="currentColor">${cap}</text></svg></div>`};
+  return'<div class="flow" style="gap:8px">'+mk('Level',i=>.5+noise(i)*.12,'fluctuates around a stable mean')+mk('Trend',i=>.15+i*.017+noise(i)*.06,'steady rise (or fall)')+mk('Seasonality',i=>.5+Math.sin(i*Math.PI/2.5)*.28+noise(i)*.04,'repeats at a fixed interval')+mk('Cycle',i=>.5+Math.sin(i*Math.PI/10)*.28+i*.004+noise(i)*.04,'long, irregular waves')+'</div>';
+}
+function qCurve(m,cva,cvp){
+  const W=420,H=230,L=40,B=26,T=12;let d='',max=20;
+  const f=r=>Math.pow(r,Math.sqrt(2*(m+1)))/(1-r)*(cva*cva+cvp*cvp)/2;
+  for(let k=0;k<=95;k++){const r=k/100;let y=Math.min(f(r),max);const px=L+r*(W-L-10),py=T+(1-y/max)*(H-T-B);d+=(k?'L':'M')+px.toFixed(1)+' '+py.toFixed(1)+' '}
+  let g=`<line x1="${L}" y1="${H-B}" x2="${W-6}" y2="${H-B}" stroke="#777"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#777"/><path d="${d}" fill="none" stroke="#1f4fd8" stroke-width="2"/>`;
+  for(let r=0;r<=1;r+=.25)g+=`<text x="${L+r*(W-L-10)}" y="${H-10}" font-size="10" text-anchor="middle" fill="currentColor">${Math.round(r*100)}%</text>`;
+  for(let y=0;y<=20;y+=5)g+=`<text x="${L-5}" y="${T+(1-y/max)*(H-T-B)+4}" font-size="10" text-anchor="end" fill="currentColor">${y}</text>`;
+  g+=`<text x="${W/2+20}" y="${H-1}" font-size="10.5" text-anchor="middle" fill="currentColor">Utilization ρ</text><text x="${L+6}" y="${T+10}" font-size="10.5" fill="currentColor">Customers waiting in queue (Iq)</text>`;
+  return`<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Queue length versus utilization">${g}</svg>`;
+}
+</script>
+<script>
+const THEORY=[];
+THEORY.push({id:'m1',title:'Module 1: Operations strategy and the process view',time:'about 60 minutes',file:'OM 2026 1.pdf',
+intro:'Mostly concepts and frameworks, so this is where the multiple choice questions are easiest to lose. Learn the diagrams as pictures with labels.',
+blocks:[
+{h:'1. The process view: what every company actually does',html:`
+${FLC([['<b>Inputs</b><br>Transformed: materials, information, customers<br>Transforming: facilities, people','ok'],['<b>Transformation process</b><br>the activities that add value',''],['<b>Outputs</b><br>goods and/or services','hot']])}
+<p><b>The logic of the picture.</b> Resources go in, a process changes them, and customers receive goods or services. Operations managers do not manage "the product". They design and run the process that creates it, because the process is where cost, time and quality are decided.</p>
+${CO('say','Why focus on processes?','All goods and services are the result of a process. The big potential to improve goods, services and customer satisfaction lies in improving the process itself. The slide quotes W. Edwards Deming (founder of "Quality" and "Lean"): if you cannot describe what you do as a process, you do not know what you are doing.')}
+${SL('OM 2026 1.pdf','6 to 8')}`},
+{h:'2. Goods or services? The spectrum',html:`
+${FLC([['PURE GOODS<br>tangible, can be stored, production precedes consumption, low customer contact, can be transported, quality is "evident"','ok'],['Crude oil production, aluminium smelting, specialist machine tool maker, restaurant, computer systems services, management consultancy, psychotherapy clinic',''],['PURE SERVICES<br>intangible, cannot be stored, production and consumption are simultaneous, high customer contact, cannot be transported, quality is difficult to judge','hot']])}
+<p><b>How to read it.</b> The slide lists seven examples from left (almost pure goods) to right (almost pure services). Most real companies sit in the middle. The slide calls "goods OR services" the <b>traditional (outdated) view</b> of a company's output. The modern view is <b>goods AND services</b>: the Hilti fleet management example shows a tool maker selling a service around its tools (customers care about delivery to the job site and on site solutions).</p>
+${CO('trap','Exam trap','If a question asks which view is outdated, the answer is "output is either goods or services". If it asks which has simultaneous production and consumption, the answer is services.')}
+${SL('OM 2026 1.pdf','9 to 10')}`},
+{h:'3. What OM is and why it matters',html:`
+<p><b>Production</b> is the creation of goods and services. <b>Operations management (OM)</b> focuses on designing and structuring the processes and effectively managing the resources and inputs to produce and deliver the goods and services of a business, with the goal of a <b>sustainable competitive advantage</b>. The phases of effective OM are <b>planning, execution and control</b>.</p>
+${GR(BX('Why study OM (4 reasons)','1) it is one of the major functions of any organization; 2) we need to know how goods and services are produced; 3) to understand what operations managers do; 4) OM is a costly part of an organization.'),BX('Why OM matters for marketing and international business','A commercial decision always has an operations consequence. Promotion: demand may exceed stock or capacity. Wider assortment: more items to forecast, source and replenish. Next day delivery: inventory placement and delivery capacity become critical. New country: different lead times and sourcing. Easy returns: inspection, refunds and product recovery need a process.'))}
+${SL('OM 2026 1.pdf','11 to 13')}`},
+{h:'4. Three emerging priorities (new in 2026)',html:`
+${GR(BX('AI in operations','<b>Predictive AI</b> anticipates what will happen (forecast demand, spot supply risks, predict equipment failure). <b>Generative AI</b> interprets and creates information (summaries, drafts). <b>AI agents</b> act on information (coordinate routine tasks with defined limits and human oversight).'),BX('Resilient global supply chains','<b>Inventory buffers</b> absorb interruptions. <b>Alternative suppliers and locations</b> reduce dependence (backup suppliers, production closer to customers, evaluate total cost, lead times, shared disruption risks). <b>Visibility and flexibility</b> let you respond to change.'),BX('Sustainable and circular operations','<b>Resource efficiency</b> (less waste, energy, transport emissions, whole life cycle view). <b>Circular operations</b> (design for repair and reuse, take back, refurbishment, recycling). <b>Responsible sourcing</b> (verify suppliers, trace origins).'))}
+${CO('know','Discussion prompts on the slides','AI recommends more stock after a promotion: what should the manager check first? A nearby supplier costs 15% more but delivers in 1 week instead of 8: when is it better? A take back scheme: what evidence shows it reduces environmental impact? Think in terms of total cost, lead time and evidence.')}
+${SL('OM 2026 1.pdf','14 to 16')}`},
+{h:'5. Operations strategy: the four perspectives',html:`
+<div class="svgw"><svg viewBox="0 0 520 250" width="520" role="img" aria-label="Four perspectives"><rect x="170" y="10" width="180" height="52" rx="8" fill="#e6eefc" stroke="#667"/><text x="260" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="#222">TOP DOWN</text><text x="260" y="47" text-anchor="middle" font-size="10.5" fill="#222">interpret higher level strategy</text>
+<rect x="10" y="95" width="190" height="60" rx="8" fill="#e3f4ea" stroke="#667"/><text x="105" y="117" text-anchor="middle" font-size="12" font-weight="700" fill="#222">OPERATIONS CAPABILITIES</text><text x="105" y="136" text-anchor="middle" font-size="10.5" fill="#222">understand resources and processes</text>
+<rect x="320" y="95" width="190" height="60" rx="8" fill="#fdf0d5" stroke="#667"/><text x="415" y="117" text-anchor="middle" font-size="12" font-weight="700" fill="#222">MARKET REQUIREMENTS</text><text x="415" y="136" text-anchor="middle" font-size="10.5" fill="#222">understand and satisfy markets</text>
+<rect x="170" y="188" width="180" height="52" rx="8" fill="#f6c8e8" stroke="#667"/><text x="260" y="208" text-anchor="middle" font-size="12" font-weight="700" fill="#222">BOTTOM UP</text><text x="260" y="225" text-anchor="middle" font-size="10.5" fill="#222">learn from day to day experience</text>
+<path d="M205 62 Q150 70 110 95 M315 62 Q370 70 410 95 M110 155 Q150 185 170 205 M410 155 Q370 185 350 205" fill="none" stroke="#667" stroke-width="1.6"/></svg></div>
+<p><b>Reading the picture.</b> A good operations strategy is built from four directions at the same time. <b>Top down</b>: operations interprets the corporate and business strategy. <b>Market requirements</b>: operations satisfies what customers in the firm's markets need. <b>Bottom up</b>: strategy also emerges from what operations learns every day. <b>Operations capabilities</b>: operations builds process capabilities from the resources and processes it understands.</p>
+${SL('OM 2026 1.pdf','17')}
+<h3 style="margin-top:14px">Operations based strategy approach</h3>
+${FLC([['Market requirements<br><span class="meta">what customers want</span>',''],['Business strategy<br><span class="meta">how we compete</span>','hot'],['Operations decisions<br><span class="meta">how we deliver</span>','ok']])}
+<p>Around the chain sit <b>product/service characteristics</b> (they link to market requirements) and <b>performance measurement</b> (it links back to operations decisions). The Cookie Company exercise and the Elan sailboats example use this chain. The Elan slide shows a five spoke chart of <b>cost, speed, reliability, quality, flexibility</b>: a company chooses which spokes to stretch to fit its strategy.</p>
+${SL('OM 2026 1.pdf','18 to 19')}
+<h3 style="margin-top:14px">Horizontal perspective: matching supply and demand</h3>
+${FLC([['<b>Operations strategy decision areas</b><br>capacity, supply networks, process technology, development and organisation<br><span class="meta">built on understanding resources and processes</span>',''],['<b>STRATEGIC RECONCILIATION</b><br>MATCHING SUPPLY AND DEMAND','hot'],['<b>Performance objectives</b><br>quality, speed/dependability, flexibility, cost<br><span class="meta">built on understanding markets</span>','ok']])}
+<p>The four decision areas are what operations controls. The four performance objectives are what the market demands. Strategy is the reconciliation between them, and the central problem is always <b>matching supply and demand</b>.</p>
+${SL('OM 2026 1.pdf','20')}
+<h3 style="margin-top:14px">Vertical perspective: the strategic hierarchy</h3>
+${FL('<b>Corporate strategy</b><br>What business are you in? How are corporate resources allocated?','<b>Business unit strategy</b><br>Which segments? Strategic positioning.','<b>Operations strategy</b><br>What must operations do well? Which capabilities? How are processes and resources structured?')}
+<p>An arrow also points back up from <b>operational experience</b>: the strategy that actually emerges is the "emergent sense of what the strategy should be", not only what was planned.</p>
+${SL('OM 2026 1.pdf','21')}`},
+{h:'6. Competitive dimensions, order qualifiers and winners, OM levers',html:`
+${GR(BX('Competitive dimensions','<b>Cost</b>, <b>Quality</b> (product/service quality and process quality), <b>Flexibility</b>, <b>Delivery</b> (speed and reliability).'),BX('OM levers that influence them','<b>Capacity</b>, <b>material flows</b>, <b>information flows</b>, <b>quality / accuracy of the process</b>.'),BX('Order qualifiers and order winners','The slide only names these two terms under the dimensions. Standard meaning: an <b>order qualifier</b> is the minimum level you must reach to be considered at all. An <b>order winner</b> is the dimension that makes the customer pick you over rivals. <span class="tag u">standard definition</span>'))}
+${CO('say','How to use them in an answer','Name the dimension, say whether it wins or only qualifies, and name the lever. Example: "For the online trainer service, flexibility (personalised, group or individual) is the order winner; reliability of the booked session is an order qualifier that the company risks losing; the lever is capacity (trainer hours) and information flows (scheduling)."')}
+${SL('OM 2026 1.pdf','22')}`},
+{h:'7. Operations performance: opening the black box with I, R, T',html:`
+<p>Financial performance (absolute: revenue, cost, EBIT; relative: ROI, ROE, ROA, inventory turnover; survival: cash flow) and customer satisfaction are the outcomes, but operations sees only a "black box" between input and output. The three flow measures open the box.</p>
+${TB(['Symbol','Meaning','Shows up in','Business meaning'],[['<b>T</b> flow time','total time a flow unit spends in the process','customer satisfaction, marketing','responsiveness'],['<b>R</b> flow rate','rate at which flow units enter or leave the process','income statement','rate of revenue generation'],['<b>I</b> inventory','how many flow units are in the process','balance sheet','use of working capital']])}
+<div class="recall"><summary>Estimate I, R, T (slide exercise). Try first, then open.</summary><p style="margin:8px 0 0">Flow unit first, then the three numbers. <b>Undergraduate program</b>: unit = student, T about 3 years, R = students graduating per year, I = students enrolled. <b>Hairdresser</b>: unit = customer, T = waiting plus service time, R = customers per hour, I = customers in the shop. <b>Car production line</b>: unit = car, T = hours from first weld to final test, R = cars per hour, I = cars in progress on the line. <b>Retailer</b>: unit = item, R = cost of goods sold per period, I = inventory, T = days of supply. <span class="tag u">illustrative</span></p></div>
+${SL('OM 2026 1.pdf','23 to 25')}`},
+{h:'8. Wal-Mart and Costco: strategy to capabilities to structure, and inventory turns',html:`
+${FL('<b>Corporate strategy</b><br>everyday low prices on a broad assortment, anytime, anywhere','<b>Operational capabilities</b><br>short flow times, low inventory levels','<b>Operations structure</b><br>cross docking, EDI, fast transportation, information system')}
+<p><b>Cross docking</b> means goods arrive at a distribution center, are sorted, and leave again on outbound trucks without being stored. The slide shows Suppliers, Receiving, Sorting, Shipping, Customers. Result: shorter flow time and lower inventory.</p>
+${EQA([[TX('Annual inventory turns'),FR('COGS','Inventory')],[TX('Days of supply'),FR('Inventory',FR('COGS','365'))]])}
+${CO('trap','Trap on the slide','The flow rate R is COGS (cost of goods sold), not Sales. Inventory is measured at the cost paid for goods, so the matching flow must also be at cost. COGS is sometimes called "cost of sales".')}
+${TB(['','Costco','Walmart'],[['Sales ($m)','70,977','374,526'],['Gross margin / Sales','10.5%','23.5%'],['Net income / Sales','1.8%','3.4%'],['Inventory turns','12.6','8.1'],['SKUs per store','4,000','60,000'],['Sales per SKU ($m)','17.7','6.2'],['Sales per employee ($)','518,080','178,346'],['Sales per store ($m)','138.6','52.8']])}
+<p><b>Reading the table.</b> Costco earns a much smaller margin, so it must be hyper efficient: fewer SKUs, much higher volume per SKU, faster turns, more sales per employee. The scatter on the slide shows retailers with a high gross margin have low inventory turns and the reverse, so inventory turnover is the key efficiency measure for retailers. <span class="tag u">inferred from the chart</span></p>
+<p><b>Online retail slide.</b> Amazon's fulfillment plus shipping costs rose from 15.6% of net sales (2009) to 32.3% (2021), about $151.8b in 2021. The point: omnichannel and fast delivery make logistics a growing cost. The last slide asks "how many distribution centers do you need?", a network design question.</p>
+${SL('OM 2026 1.pdf','26 to 32')}`}
+],
+recall:['Draw the input, transformation, output picture and name transformed and transforming resources.','Give four properties of pure goods and four of pure services.','Name the four perspectives of operations strategy and the four decision areas.','List the competitive dimensions and the four OM levers.','What are T, R and I and where does each show up (customers, income statement, balance sheet)?','Why is R equal to COGS and not sales in the inventory turns formula?']});
+
+THEORY.push({id:'m2',title:'Module 2: Process flow analysis (capacity, flow time, Little\'s law)',time:'about 90 minutes',file:'OM 2026 2.pdf (your annotated copy: Lecture_2 2.pdf)',
+intro:'This module feeds most of the calculation exercises. Learn the capacity table method until you can do it on paper in two minutes.',
+blocks:[
+{h:'1. The three performance measures and the bottleneck',html:`
+<p>Process analysis asks: how fast can we produce (flow rate), how long does it take (flow time), and how much builds up inside (inventory)? Start with a <b>process flow chart</b> that "looks into the black box" and lists each activity and resource.</p>
+${FL('<b>Resource A</b><br>capacity 30 per h','<b>Resource B</b><br>capacity 24 per h<br><span class="meta">slowest = BOTTLENECK</span>','<b>Resource C</b><br>capacity 60 per h')}
+${EQ(TX('Process capacity')+' = '+TX('capacity of the bottleneck')+' = '+TX('smallest resource capacity'))}${EQ(TX('Utilization of a resource')+' = '+FR(TX('process capacity'),TX('capacity of that resource')))}${EQ(TX('Actual flow rate')+' = min ( '+TX('process capacity')+' , '+TX('demand rate')+' )')}
+<p><b>Bottle neck picture.</b> The cork in a bottle: the narrow neck decides how fast liquid leaves. Whatever is upstream of the neck waits, whatever is downstream starves.</p>
+${GR(BX('Capacity constrained','Capacity is below demand. The flow rate equals process capacity. Focus on managing resources and inputs.'),BX('Demand constrained','Demand is below capacity. The flow rate equals the demand rate. Focus on managing demand.'))}
+${CO('know','Definitions','<b>Flow rate (throughput rate)</b>: units flowing through a point per unit of time. <b>Capacity</b>: the maximum rate at which a resource can process units. <b>Bottleneck</b>: the slowest resource of the process.')}
+${SL('Lecture_2 2.pdf','5 to 7')}`},
+{h:'2. Cookie Company: the capacity table, step by step (your notes, verified)',html:`
+<p>Process: Order, Wash and Mix, Spoon, Load and Set, Bake (oven), Cooling, Pack, Payment. Workday 240 minutes (4 hours). Demand is plentiful, so the process is capacity constrained. Resources: Y (does order, wash and mix, spoon), RM, and the oven.</p>
+${TB(['Resource','Unit load (min per dozen)','Unit capacity = 240 / load','Units','Total capacity','Utilization'],[['Y','6 + 2 = 8','240/8 = 30','1','30','24/30 = 80%'],['RM','1 + 2 + 1 = 4','240/4 = 60','1','60','24/60 = 40%'],['Oven','1 + 9 = 10','240/10 = 24','1','<b>24 = BOTTLENECK</b>','24/24 = 100%']])}
+<p><b>Scenario 0</b> (initial): process capacity 24 dozen per 4 hours, bottleneck is the oven.</p>
+<p><b>Scenario 1</b>, add a second oven: oven capacity becomes 2 x 24 = 48, so Y with 30 is now the bottleneck. Process capacity rises only to <b>30 dozen</b>.</p>
+<p><b>Scenario 2</b>, balance the process by moving 2 minutes of work from Y to RM: Y load 6 min gives 40, RM load 6 min gives 40, two ovens give 48. Process capacity <b>40 dozen</b>, bottlenecks are Y and RM.</p>
+${CO('calc','Method in four lines','1) unit load = sum of minutes the resource spends on one unit. 2) unit capacity = available time / unit load. 3) total capacity = unit capacity x number of units. 4) smallest total capacity is the bottleneck and sets process capacity. Utilization = process capacity / resource capacity.')}
+<p><b>Takeaways (slide 13).</b> The bottleneck (oven) determines system capacity. The bottleneck can depend on product mix. Shortening non bottleneck activities (cooling, packing) lowers flow time and improves response time but does <b>not</b> raise capacity. Delivery times follow the bottleneck process. <b>Monetize the bottleneck</b>: think about the margin generated per unit of time at the bottleneck.</p>
+${SL('Lecture_2 2.pdf','9 to 13 (your handwriting is on slides 10 and 11)')}`},
+{h:'3. Flow time: theoretical, actual and efficiency',html:`
+${GR(BX('Three types of activity','<b>Value adding</b>: optimize. <b>Essential non value adding</b>: minimize. <b>Non value adding</b>: eliminate. This links to waste reduction.'),BX('Definitions','<b>TFT</b> (theoretical flow time): the minimal time to process a typical flow unit without non value adding activities. <b>AFT</b> (actual flow time): TFT plus the duration of all non value adding activities (waiting, rework). <b>Flow time efficiency = TFT / AFT</b>.'))}
+<p><b>Parallel branches.</b> When activities run in parallel, the flow time of the process follows the <b>longest path</b> (the critical path). Reducing an activity that is not on the critical path does not shorten the flow time. Hiring more workers for an activity does not change its duration, so TFT stays the same.</p>
+${TB(['Bottleneck?','Critical?','Effect of speeding the activity up'],[['yes','no','capacity up (until the next bottleneck), flow time unchanged'],['no','yes','flow time down, capacity unchanged'],['yes','yes','capacity up and flow time down'],['no','no','nothing changes']])}
+${CO('know','Check on the WR 5 exercise (Exercise 2 package)','A1 cutting 30, then A2 bending 20 and A3 drilling 40 in parallel, then A4 machining 20, then A5 assembly 50. TFT = 30 + 40 + 20 + 50 = 140 min (critical path through A3). Workers: W1 does A1 and A2 (50 min), W2 does A3 and A4 (60 min), W3 does A5 (50 min), 500 min per day. Capacity: 10, 8.33, 10 per day, so <b>8.33 per day</b> (W2 is the bottleneck). An extra worker for A3 gives W2 = 20 min and the new worker 40 min: capacity becomes <b>10 per day</b> (W1 and W3 now limit). TFT: reduce A2 gives N (not critical), increase A1 gives I (critical), extra worker for A3 gives N.')}
+${SL('Lecture_2 2.pdf','8')}`},
+{h:'4. Little\'s law and turnover',html:`
+${FL('<b>R</b> flow rate in<br>(units per time)','<b>Process</b><br>average time in it = <b>T</b><br>average units in it = <b>I</b>','<b>R</b> flow rate out')}
+${EQ(V('I')+' = '+V('R')+' '+TM+' '+V('T')+' &nbsp;&nbsp;&nbsp; so &nbsp;&nbsp;&nbsp; '+V('T')+' = '+FR(V('I'),V('R'))+' &nbsp;&nbsp;&nbsp; and &nbsp;&nbsp;&nbsp; '+V('R')+' = '+FR(V('I'),V('T')))}${EQ(TX('Inventory turnover')+' = '+FR(V('R'),V('I'))+' = '+FR('1',V('T')))}
+<p><b>Why it works.</b> If 100 customers arrive per hour and each stays 0.75 hours, there are always about 75 in the building. It is just units multiplied by time. Keep the time units the same on both sides.</p>
+${TB(['Slide example','Working','Answer'],[['Restaurant: 1500 customers per 15 hour day, 75 inside on average','R = 1500/15 = 100 per h; T = I/R = 75/100 h','45 minutes; turnover 100/75 = 1.33 per hour'],['Insurance: 10,000 claims per year, 3 weeks processing, 50 week year','R = 10,000/50 = 200 per week; I = R x T = 200 x 3','600 claims in process'],['Cafe (Exercise 2): 40 customers per hour stay 15 min','I = 40 x 0.25 h','10 seats; at +50% demand R = 60, so T = 10/60 h = 10 min limit']])}
+${CO('trap','Trap','In the customer service exercise, "3 customers waiting for the general operator" is an inventory figure. Waiting time = I / R = 3 / 20 per hour = 9 minutes. Do not add 3 minutes.')}
+${SL('Lecture_2 2.pdf','17 to 18')}`},
+{h:'5. Managing flow rate and flow time (lists you can be asked to sort)',html:`
+${GR(BX('Improve flow RATE','<b>Bottleneck capacity</b>: add resources (your note: "+ oven"), decrease unit load and increase flexibility (your note: balancing), avoid rework (quality), batching. <b>Bottleneck utilization</b>: match supply and demand, avoid bottleneck starvation or blocking, reduce set ups and set up times.'),BX('Improve flow TIME','<b>Reduce the work content of critical activities</b>: work smarter (redesign, remove non value adding), work faster, do it right the first time, change product mix. <b>Move work off the critical path</b> (parallel processing). <b>Reduce waiting time</b>.'))}
+<p>Your margin notes on slide 16 mark the first list as <b>TFT</b> and "reduce waiting time" as <b>AFT</b>: the work content lowers theoretical flow time, waiting lowers the gap between actual and theoretical.</p>
+${CO('say','Key ideas for process improvement (slide 14)','Focus on the bottleneck, which sets capacity and delivery times. Maximizing utilization of all resources can be counter productive: idle time at a non bottleneck resource is OK. Marketing, sales and operations must cooperate: quote due dates, choose the product mix, set prices and discounts.')}
+${SL('Lecture_2 2.pdf','14 to 16')}`},
+{h:'6. The trade offs tree (slide 21)',html:`
+${FLC([['<b>HIGH PROFITABILITY</b> (the goal)','hot']])}
+${GR(BX('Low costs','Low unit costs through high throughput, high utilization and low inventory. Needs <b>less variability</b>.'),BX('High sales','Quality product and high customer service: fast response, many products. Fast response wants short flow time, low utilization, high inventory, and tolerates more variability.'))}
+<p><b>The point.</b> Operations must manage trade offs: high utilization and low inventory (cheap) pull against fast response and variety (sales). The slide marks utilization in blue and inventory in red to show they appear on both sides with opposite signs. Your margin note on the slide: I = R x T and R is below capacity.</p>
+<p>Slide 19 and 20 frame the manager's dilemma: higher efficiency lowers cost, better customer service raises sales, less inventory yields cash, but retailers want small orders, frequent deliveries and last minute changes while manufacturers want large orders, less frequent deliveries and less variability. "Must reduce costs, must increase cash flow, must maintain customer service."</p>
+${SL('Lecture_2 2.pdf','19 to 23 (slide 22 process example, slide 23 value stream mapping)')}`},
+{h:'7. Variability and queues (file IL 2026 3.pdf)',html:`
+${CO('trap','Status: UNVERIFIED scope','This 40 slide lecture "Managing variability" is in your folder but is <b>not on Canvas</b>, and the announcement says modules 1 to 4 only. It sits after process analysis, so it may have been taught as part of Module 2. Learn the ideas below as a lower priority, and ask Klara or Marko whether it is examined.')}
+<p><b>Core idea.</b> Variability (random arrivals, random service times, breakdowns, supply disruptions) causes waiting even when average capacity exceeds average demand. Flow time and queues grow <b>non linearly</b> as utilization approaches 100%.</p>
+${EQ(SB(V('I'),'q')+' = '+FR(SP('&rho;','&radic;(2(<i>m</i>+1))'),'1 '+MN+' &rho;')+' '+TM+' '+FR('CV<sub>a</sub><sup>2</sup> + CV<sub>p</sub><sup>2</sup>','2'))}${EQA([[SB(V('T'),'q'),FR(SB(V('I'),'q'),SB(V('R'),'a'))],[V('T'),SB(V('T'),'q')+' + '+SB(V('T'),'p')]])}
+<p>Left factor = <b>utilization effect</b>. Right factor = <b>variability effect</b>. rho = Ra / Rp, m = number of servers, CV = standard deviation / mean (exponential gives CV = 1).</p>
+<div class="card" style="margin:8px 0"><b>Try it: how queue length reacts to utilization</b><div class="row" style="margin-top:8px"><label>servers m <select id="qm"><option>1</option><option>2</option><option>3</option></select></label><label>CVa <input type="range" id="qa" min="0" max="2" step="0.1" value="1"> <span id="qav">1</span></label><label>CVp <input type="range" id="qp" min="0" max="2" step="0.1" value="1"> <span id="qpv">1</span></label></div><div id="qsvg"></div></div>
+${TB(['Worked example (slide)','Working','Answer'],[['Ta = 4 min, sd 4; Tp = 3 min, sd 1.5; 1 server','CVa = 1, CVp = 0.5, rho = 3/4 = 0.75; Iq = 0.75^2/0.25 x (1 + 0.25)/2','Iq = 1.41; Tq = 1.41 x 4 = 5.6 min; T = 8.6 min'],['Bakery: 30 per hour, sd of gaps 2 min; service 1.5 min, sd 3 min','Ta = 2 min so CVa = 1; CVp = 3/1.5 = 2; rho = 0.75; Iq = 2.25 x (1 + 4)/2','Iq = 5.6; Tq = 5.6 x 2 = 11.25 min. Idle 25% of 8 h = 120 min = 12 exercises']])}
+${GR(BX('Three buffers','<b>Inventory</b>, <b>time</b> (waiting), <b>capacity</b>. Variability must be absorbed by at least one. Pens: inventory. Ambulance: capacity. Organ transplants: time.'),BX('OM triangle','Capacity, inventory/time and variability are substitutes: more safety capacity means less inventory or waiting; smoothing demand or reducing variability means less of both.'),BX('Reduce variability','Appointments, forecasting, off peak pricing; preventive maintenance, less rework, shorter set ups, standard processes. Pool capacity (one line, many servers). Overtime vicious cycle: releasing work at close to 100% utilization creates WIP and lateness, then overtime, then the same again.'))}
+${SL('IL 2026 3.pdf','whole deck, key slides: queue formula (about 20 to 24), three buffers (about 28 to 30), practice bakery example (last slide)')}`}
+],
+recall:['Fill in the capacity table for a 3 resource process and find the bottleneck and utilization.','What changes, and what does not, if you speed up a bottleneck, a critical non bottleneck, a non critical activity?','State Little\'s law and use it with a waiting line of 3 people and 20 arrivals per hour.','Define TFT, AFT and flow time efficiency.','Name the improvements for flow rate versus flow time.','Why is idle time at a non bottleneck OK?']});
+</script>
+<script>
+THEORY.push({id:'m3',title:'Module 3: Process selection and layout',time:'about 75 minutes',file:'OM 2026 3.pdf (28 slides; your annotated copy: OM+2026+3.pdf)',
+intro:'Three things to master: the product process matrix picture, flow shop versus job shop, and the two layout methods (assembly line balancing and the job shop cost method). All slide numbers below were checked against the PDF.',
+blocks:[
+{h:'1. Process selection and the product process matrix',html:`
+<p><b>The question.</b> How do we choose a type of process that fits the chosen product attributes (high flexibility, low costs, quick delivery), and what is the appropriate physical layout of the process resources?</p>
+${SV(svgPPM())}
+<p><b>How to read the picture (Hayes and Wheelwright, 1997).</b> Columns go from low volume and high variety (left) to high volume and small variety (right). Rows go from project or unit production, to batch production or job shop, to mass production, to continuous production. Companies sit on the diagonal. The blue arrow says flexibility rises going up, the orange arrow says cost efficiency rises going right and down.</p>
+${CO('trap','Trap','A company far from the diagonal (for example a job shop making one standard product in huge volume) has a mismatch: it pays for flexibility it does not use. Expect a question asking which position fits a described company.')}
+${SL('OM+2026+3.pdf','2 to 3')}`},
+{h:'2. McDonald\'s: layout as a competitive weapon',html:`
+${GR(BX('Five major innovations','Indoor seating (1950s), drive through window (1970s), breakfast on the menu (1980s), play areas (1990s), radical redesign of the kitchens (2000). The slide stresses: <b>four out of the five are layout decisions</b>.'),BX('The new kitchen','Mass customization: sandwiches assembled in order, production levels controlled by computers, no food prepared ahead except the meat patty. Total production time shortened to <b>45 seconds</b>, new bun toaster (11 seconds versus 1 minute), repositioned condiment containers saved 2 seconds, savings of <b>$100,000,000 per year</b> in food costs.'))}
+${SL('OM+2026+3.pdf','4 to 6')}`},
+{h:'3. Layout formats, flow shop and job shop',html:`
+<p><b>Facility layout</b> is the process by which the placement of departments, workgroups, workstations, machines and stock holding points within a facility are determined. Formats: <b>flow shop layout</b> (assembly line), <b>job shop or functional layout</b> (work centers), and other formats (manufacturing cell, project layout).</p>
+${GR(BX('Flow shop','Progressive assembly: machines, equipment and workers placed in several workstations <b>based on the sequence of tasks</b> required to produce a product.'),BX('Job shop','Machines, equipment and workers placed in work centers <b>based on the similarity of tasks</b>. Like machines and equipment are grouped together.'))}
+${TB(['','Flow shop','Job shop'],[['Product movement','Sequence of tasks, single path','Task similarities, multiple paths'],['Product characteristic','Low variety, high volume','High variety, low volume'],['Process flow','Continuous production','Batching, interrupted'],['Machines','Specialized','Universal']])}
+${SL('OM+2026+3.pdf','7 to 11')}`},
+{h:'4. Assembly line balancing: the method',html:`
+${SV(svgPrec(true))}
+<p><b>What the picture shows.</b> Circles are tasks with the task time above. Arrows are precedence: a task can start only when all its predecessors are done. The coloured boxes show a possible grouping of tasks into stations, where every station total must stay within the cycle time. (This is the same example network as on slides 15 to 19.)</p>
+<p><b>The problem.</b> Assign all tasks to workstations, taking into account the order and length of tasks, so that work is evenly divided and the cycle time is minimized.</p>
+${EQA([[TX('Cycle time')+' '+V('C'),FR(TX('production time per day'),TX('required output per day'))],[TX('Minimum stations')+' '+SB(V('N'),'min'),'<span class="ce">'+FR(SM+' '+TX('task times'),V('C'))+'</span>'],[TX('Efficiency'),FR(SM+' '+TX('task times'),TX('actual stations')+' '+TM+' '+TX('largest cycle time'))]])}
+<p><b>The six steps on the slides.</b></p>
+<ol class="sol"><li>Specify the tasks and the time of each.</li><li>Draw the precedence diagram.</li><li>Compute the cycle time C.</li><li>Compute the theoretical minimum number of stations N and round up.</li><li>Select a rule for assigning tasks.</li><li>Assign tasks one at a time by the rule and the precedence, so the unassigned time at each station is minimized. Open a new station when nothing fits, then count stations and compute efficiency.</li></ol>
+${CO('know','Five heuristics are listed on slide 18','1) <b>Longest task time</b>: the available task with the longest time. 2) <b>Most following tasks</b>: the available task with the largest number of following tasks. 3) <b>Ranked positional weight</b>: the available task whose following task times add up to the most. 4) <b>Shortest task time</b>. 5) <b>Least number of following tasks</b>. Only eligible tasks (all predecessors already assigned) that fit the remaining station time may be chosen.')}
+${CO('calc','Slide example and your exercises (verified)','<b>Slide 17</b>: 480 minutes available, 40 units required, C = 480 / 40 = 12 minutes, N = 66 / 12 = 5.5, so 6 stations. <b>Slide 19</b> (most following tasks): efficiency = 66 / (6 x 12) = 91.7%. <b>Bumper plates</b>: C = 180 s, sum = 500 s, N = 3, longest task time gives 3 stations, efficiency 500 / (3 x 180) = 92.6%. <b>Olympic bar</b>: C = 100 s, sum = 390 s, N = 3.9 so 4. Most following tasks gives 5 stations (390 / 500 = 78%), longest task time gives 4 stations (390 / 400 = 97.5%). The heuristic changes the answer, so always name it.')}
+${CO('trap','Two different "efficiencies"','Module 2 has flow time efficiency = TFT / AFT. Module 3 has line efficiency = sum of task times / (stations x C). The question text tells you which one. If it mentions stations, cycle time or balance, use the line formula.')}
+${GR(BX('Advantages of an assembly line (slide 27)','Short flow times, lower work in process inventories, improved demand forecasting, improved planning and control, high efficiency, low cost of internal transport, better space utilization, easier quality control, improved control of costs.'),BX('Disadvantages (slide 28)','Inflexibility, product variety, increasing volume, high sensitivity to absenteeism, machine malfunction and other delays, high investments into equipment, monotone labour.'))}
+${SL('OM+2026+3.pdf','12 to 19 and 27 to 28 (your handwriting is on slide 12)')}`},
+{h:'5. Job shop layout: cost method and CRAFT',html:`
+<p><b>Goal (slide 20).</b> Arrange work centers to minimize the costs of material handling. The big advantage of a job shop is flexibility and handling small batches. The basic cost elements are the number of loads (or people) moving between centers and the distance they move.</p>
+<p><b>Slides 24 to 26</b> set up an example: six departments (assembly, painting, machine shop, receiving, shipping, testing) in a 60 by 40 foot building, a table of loads per week between each pair, and a flow graph. The method below is the one used in your Exercise 3 package (OM_Exercises_3.docx), which contains the CRAFT write up.</p>
+${EQ(TX('Total cost')+' = '+SM+' ( '+TX('flow between a pair')+' '+TM+' '+TX('distance between their locations')+' '+TM+' '+TX('cost per unit distance')+' )')}
+${FLC([['Start layout, compute cost',''],['Try swapping every pair of departments, compute each new cost',''],['Make the swap with the largest saving','ok'],['Repeat until no swap improves','hot']])}
+<p><b>Important.</b> CRAFT is a <b>heuristic</b>. It stops at a local optimum that need not be the best layout.</p>
+${TB(['Your Exercise 3 example (S, L, Q)','Layout (L1 L2 L3)','Cost'],[['Start','S L Q','140 (your note says 190, that was a slip, the final answer was unaffected)'],['Swap S and L','L S Q','145'],['Swap S and Q','Q L S','130 (best, chosen)'],['Swap L and Q','S Q L','140'],['Final after the next round','Q L S','130 (no further improvement)'],['Brute force over all 6','Q S L','125 = true optimum']])}
+${CO('know','Why this matters','CRAFT gave 130, the real optimum is 125. A question may ask "does CRAFT guarantee the best layout?" Answer: no, only a local optimum. Professor example (W1, W2, W3) finishes at cost 80.')}
+${CO('calc','Method in the exam','Write the distance matrix between locations, the flow matrix between departments, then multiply pair by pair. Keep the table of all pair swaps in one block so you can see the best saving at once.')}
+${SL('OM+2026+3.pdf','20 to 26; OM_Exercises_3.docx practice 5 to 10 (layout totals 570, 480, 460)')}`}
+],
+recall:['Place three example companies on the product process matrix and justify.','Contrast flow shop and job shop on four points (movement, variety and volume, process flow, machines).','Write the six steps of line balancing and name at least three of the five heuristics.','Why can the same line need 4 stations with one heuristic and 5 with another?','Explain how CRAFT works and why it can miss the optimum.','Which efficiency is meant when a question mentions cycle time?']});
+
+THEORY.push({id:'m4',title:'Module 4: Demand forecasting',time:'about 75 minutes',file:'OM 2026 4.pdf (33 slides)',
+intro:'Regression (Exercise 4.2) is excluded. Everything else is fair game: horizons, principles, the steps, qualitative versus statistical methods, the four patterns, the four time series methods, error measures and choosing a model. All slide numbers below were checked against the PDF.',
+blocks:[
+{h:'1. Why forecast, time horizons and common principles',html:`
+<p>Demand forecast is the <b>key input</b> to operations planning, from strategic planning down to operational scheduling.</p>
+${TB(['Horizon','Length','Used for'],[['Short range','Up to 1 year, generally under 3 months','Purchasing, job scheduling, workforce levels, job assignments, production levels'],['Medium range','3 months to 3 years','Sales and production planning, budgeting'],['Long range','3 years or more','New product planning, facility location, capital expenditures, R&D']])}
+${GR(BX('Four common principles (slide 6)','Forecasts are rarely perfect. They should also reflect the uncertainty. They are more accurate for grouped (aggregate) data than for individual items. They are more accurate for shorter than for longer time periods.'),BX('Common forecasting problems (slide 31)','Excluding relevant employees from the procedure; forecasting not integral to company planning; not accounting for demand uncertainty; forecasting unnecessary things; inappropriate method; not following up on accuracy.'))}
+${SL('OM 2026 4.pdf','2 to 6 and 31')}`},
+{h:'2. The forecasting steps (six boxes, but the highlights say five)',html:`
+${FL('<b>1</b> Define the purpose<br><span class="meta">what decision will it support?</span>','<b>2</b> Specify what is forecast<br><span class="meta">item, level of detail, horizon, frequency</span>','<b>3</b> Collect and prepare data<br><span class="meta">history, explanatory variables, missing data, outliers</span>')}
+${FL('<b>4</b> Select and evaluate methods<br><span class="meta">out of sample accuracy, cost, ease of use</span>','<b>5</b> Generate and communicate<br><span class="meta">point forecast, uncertainty, key insights</span>','<b>6</b> Monitor performance and update<br><span class="meta">track errors and bias, feedback loop</span>')}
+${CO('trap','Trap: six or five steps?','The diagram on slide 7 has six numbered boxes. The Highlights slide 32 says "Five steps: what to forecast, evaluate appropriate data, select and test model, generate forecast, and monitor accuracy". If a multiple choice question says five, it follows slide 32. If it describes the diagram, it is six. Read the wording.')}
+${SL('OM 2026 4.pdf','7 and 32')}`},
+{h:'3. Qualitative versus statistical methods',html:`
+${GR(BX('Qualitative methods','Forecasts generated subjectively by the forecaster. Useful when historical demand is scarce or misleading. Best for <b>new products, structural change and long range decisions</b>. Risk: optimism bias and groupthink.'),BX('Statistical methods','Forecasts generated through mathematical modelling, using historical demand and relevant explanatory variables (prices, promotions, weather). Two families: <b>causal models</b> and <b>time series models</b>.'))}
+<p><b>The structured judgment process (slide 9).</b> Sources of different perspectives: market research (consumer intent), salespeople (retailer expectations and orders), management (launch plan and price), an expert panel (Delphi), and analogies (comparable earlier products). Three steps: 1) collect independent estimates, 2) challenge assumptions and bias, 3) reconcile into a forecast. The example is a new smartphone model with a range of 3,500 to 5,500 units around 4,500 in the first quarter.</p>
+${GR(BX('Causal models','Explore cause and effect relationships, use <b>leading indicators</b> (for example housing starts) to predict changes in demand. Example: residential natural gas demand depends on weather and consumer behaviour, so gas consumption is related to temperature. Linear regression describes such a relationship.'),BX('Time series models','Assume the future follows the same patterns as recognised in the past: all information needed is in the historical series of data.'))}
+<p>Slides 11 and 12 show a real retail study: a machine learning model using customer comments (more informative data) lowered the out of sample forecast error (MAPE) for an online apparel retailer. The message: new approaches such as big data and AI take advantage of better data and better models.</p>
+${SL('OM 2026 4.pdf','8 to 17')}`},
+{h:'4. Regression and correlation (low priority)',html:`
+${CO('trap','Probably excluded','The professor excluded regression (Exercise 4.2). Your computed correlation r = 0.8937 and r squared = 0.7986 sit in the same sheet as the regression, so correlation is probably excluded with it. This is UNVERIFIED, so spend at most 5 minutes here.')}
+<p>Linear regression has a dependent variable (y) and an independent variable (x). Correlation r measures the direction and strength of a linear relationship, from perfect negative (r = &minus;1) to perfect positive (r = 1). The slide warns: correlation does not necessarily imply causality.</p>
+${SL('OM 2026 4.pdf','18 to 20')}`},
+{h:'5. Time series: the four patterns',html:`
+${SV(svgPatterns())}
+<p><b>Read each panel.</b> Time series data = historic pattern + random variation. <b>Level</b> (long term average): demand moves randomly around a stable mean. <b>Trend</b>: steady upward or downward movement. <b>Seasonality</b>: a pattern that repeats at a fixed interval. <b>Cycle</b>: longer, irregular waves. <b>Random variation cannot be predicted</b>, so the best method follows the pattern and ignores noise.</p>
+${CO('trap','Season versus cycle','Fixed, known length = seasonality. Irregular, multi year = cycle.')}
+${SL('OM 2026 4.pdf','21 to 22')}`},
+{h:'6. Time series models, with the slide example',html:`
+<p><b>Notation (slide 23).</b> D<sub>t</sub> = actual demand in period t, F<sub>t</sub> = forecast for period t, e<sub>t</sub> = D<sub>t</sub> &minus; F<sub>t</sub> = forecasting error. Choosing a method: select the method, select its parameters, test it on past demand, evaluate the errors, determine accuracy, accept or change the method.</p>
+${TB(['Method (slide)','Formula','Notes from the slides'],[['Naive',IM(SB(V('F'),'t+1')+' = '+SB(V('D'),'t')),'Good for level patterns'],['Moving average',IM(SB(V('F'),'t+1')+' = '+FR(SB(V('D'),'t')+' + '+SB(V('D'),'t'+MN+'1')+' + &hellip; + '+SB(V('D'),'t'+MN+V('N')+'+1'),V('N'))),'Drops the oldest point, adds the newest. More responsive to a trend but still lags. Appropriate N?'],['Weighted moving average',IM(SB(V('F'),'t+1')+' = '+SB(V('w'),'1')+SB(V('D'),'t')+' + '+SB(V('w'),'2')+SB(V('D'),'t'+MN+'1')+' + &hellip;'),'Weights must add to 1.00 (for example 0.5, 0.3, 0.2). More weight on recent data.'],['Exponential smoothing',IM(SB(V('F'),'t+1')+' = '+SB(V('F'),'t')+' + &alpha; ('+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t')+')'),'&alpha; between 0 and 1. Needs last forecast, last actual and &alpha;. With no last forecast, average a few periods or use naive. High &alpha; (0.7 or 0.8) can put too much weight on last period\'s random variation.']])}
+<p><b>The slide example (27 and 28).</b> Periods 1 to 6 actual: 300, 315, 290, 345, 320, 360 and period 7 actual 375. Forecast periods 7 and 8 using a 2 period MA, a 4 period MA, a 2 period weighted MA (t&minus;1 weighted 0.6, t&minus;2 weighted 0.4) and exponential smoothing with &alpha; = 0.2 and the period 6 forecast equal to 375. All values below are recomputed by me.</p>
+${TB(['Method','Period 7','Period 8'],[['Naive','360','375'],['2 period moving average',IM(FR('320 + 360','2')+' = 340'),IM(FR('360 + 375','2')+' = 367.5')],['4 period moving average',IM(FR('290 + 345 + 320 + 360','4')+' = 328.75'),IM(FR('345 + 320 + 360 + 375','4')+' = 350')],['2 period weighted (0.6, 0.4)',IM('0.6 '+TM+' 360 + 0.4 '+TM+' 320 = 344'),IM('0.6 '+TM+' 375 + 0.4 '+TM+' 360 = 369')],['Exponential smoothing &alpha; = 0.2, F<sub>6</sub> = 375',IM('375 + 0.2 (360 '+MN+' 375) = 372'),IM('372 + 0.2 (375 '+MN+' 372) = 372.6')]])}
+<ul><li><b>Bigger N</b> in a moving average: smoother, slower to react, bigger lag with a trend.</li><li><b>Bigger &alpha;</b>: reacts faster, follows noise. Small &alpha;: smooth, slow.</li><li>A model built for a level pattern lags when applied to a trend (slide 30).</li></ul>
+${CO('know','Your results (Exercise 4.3 file)','Moving average MAD: N=3 11.4, N=5 10.72, N=7 11.29. Exponential smoothing MAD: alpha 0.1 10.89, alpha 0.5 11.62, alpha 0.9 14.82. Best overall is the moving average with N = 5. Practice sheet: ES alpha 0.2 gives MAD 20.7, CFE 165.5, MSE 491.9; MA N=3 gives MAD 12.5, CFE 99.7, MSE 170.8.')}
+${SL('OM 2026 4.pdf','23 to 28; OM_Exercises_4.xlsx sheets E 4.3a, E 4.3b, E 4.4')}`},
+{h:'7. Forecast accuracy and choosing a model',html:`
+${EQA([[SB(V('e'),'t'),SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t')],[TX('CFE'),SM+' '+SB(V('e'),'t')],[TX('MAD'),FR(SM+' |'+SB(V('e'),'t')+'|',V('n'))],[TX('MSE'),FR(SM+' '+SP(SB(V('e'),'t'),'2'),V('n'))]])}
+${GR(BX('CFE (bias)','Measures any bias. Positive and negative errors cancel. Far from zero means consistently too low or too high.'),BX('MAD','Total error without regard to sign, average size of the miss in demand units.'),BX('MSE','Squares errors, so it <b>penalizes larger errors</b>.'))}
+${CO('know','Sign convention on slide 29','e = D minus F. <b>Over forecasts are negative errors</b>, <b>under forecasts are positive errors</b>.')}
+${CO('trap','Trap','Low CFE with high MAD means errors cancel but are large. The model with the lowest MAD or MSE is the more accurate one, the one with CFE closest to zero is the least biased. These can be different models, as in your practice sheet: ES has CFE 165.5 and MA has 99.7.')}
+<p><b>Selecting the right model (slide 30), four factors:</b> the amount and type of available data (accuracy depends on data quality, relevance, model choice and validation); the degree of accuracy required (more accuracy needs more data); the length of the forecast horizon (different models for 3 months versus 10 years); the presence of data patterns (lagging occurs when a level model meets a trend).</p>
+<p><b>Highlights (slides 32 and 33).</b> Forecasts are not perfect, more accurate for groups and in the near term. Two methods: qualitative and statistical. Time series models assume all information is in the history, causal models relate demand to other variables. Four patterns: level, trend, seasonality, cycles. Level methods: naive, simple MA, weighted MA, exponential smoothing. Separate models are needed for trends and seasonality. Useful error measures: CFE, MAD and MSE.</p>
+${SL('OM 2026 4.pdf','29 to 33')}`}
+],
+recall:['Give the three forecast horizons with their lengths and one use each.','Name the four principles of forecasting.','List the six steps of the diagram and say why a question might say five.','Name the four patterns and give one real example of each.','Compute a 2 period moving average, a weighted MA and an exponential smoothing forecast by hand.','Define CFE, MAD and MSE, and state the sign convention for over and under forecasts.','Name the four factors for choosing a forecasting model.']});
+</script>
+<script>
+const MOD={m1:'Module 1',m2:'Module 2',m3:'Module 3',m4:'Module 4'};
+const BANK=[
+// Module 1
+{id:'a1',t:'m1',q:'Which statement describes the traditional (outdated) view of a company\'s output?',o:['Output is goods AND services','Output is either goods or services','Output is always intangible','Output is always stored'],a:1,e:'The slides call "goods OR services" outdated. The modern view is goods and services together, as in Hilti fleet management.'},
+{id:'a2',t:'m1',q:'Which property belongs to pure services rather than pure goods?',o:['Can be stored','Production precedes consumption','Production and consumption are simultaneous','Low customer contact'],a:2,e:'Services cannot be stored and are produced and consumed at the same time, with high customer contact.'},
+{id:'a3',t:'m1',q:'In the I, R, T view, which measure appears on the balance sheet (working capital)?',o:['Flow time T','Flow rate R','Inventory I','Utilization'],a:2,e:'T links to customer satisfaction, R to the income statement, I to the balance sheet.'},
+{id:'a4',t:'m1',q:'Which four perspectives build an operations strategy?',o:['Top down, bottom up, market requirements, operations capabilities','Cost, quality, speed, flexibility','Capacity, supply networks, technology, development','Corporate, business, functional, local'],a:0,e:'Cost, quality, speed, flexibility are performance objectives. Capacity, supply networks, process technology, development and organisation are decision areas.'},
+{id:'a5',t:'m1',q:'For inventory turns, the flow rate R is measured with:',o:['Sales','Cost of goods sold','Net income','Gross margin'],a:1,e:'Inventory is valued at cost, so the matching flow is COGS (cost of sales).'},
+{id:'a6',t:'m1',q:'Costco versus Walmart on the slide: which is true?',o:['Costco has more SKUs per store','Costco has lower gross margin and higher inventory turns','Walmart has higher sales per employee','Costco has a higher gross margin'],a:1,e:'Costco: 10.5% margin, 12.6 turns, 4,000 SKUs. Walmart: 23.5%, 8.1 turns, 60,000 SKUs.'},
+{id:'a7',t:'m1',q:'An order winner is:',o:['The minimum level needed to be considered','The dimension that makes the customer choose you','Any cost advantage','A capacity lever'],a:1,e:'Order qualifier: the minimum to be considered. Order winner: what decides the choice.'},
+{id:'a8',t:'m1',q:'Which is NOT one of the OM levers on the slide?',o:['Capacity','Material flows','Information flows','Brand advertising'],a:3,e:'Levers: capacity, material flows, information flows, quality or accuracy of the process.'},
+{id:'a9',t:'m1',q:'Cross docking in the Walmart system means:',o:['Goods are stored for months at the DC','Goods are sorted and shipped out again without being stored','Suppliers deliver directly to customers','Stores order from competitors'],a:1,e:'It shortens flow time and cuts inventory.'},
+{id:'a10',t:'m1',q:'Which AI type acts on information within defined limits and human oversight?',o:['Predictive AI','Generative AI','AI agents','Regression'],a:2,e:'Predictive anticipates, generative creates, agents act.'},
+// Module 2
+{id:'b1',t:'m2',q:'The process capacity equals:',o:['The sum of all resource capacities','The capacity of the bottleneck','The average capacity','The demand rate'],a:1,e:'The smallest resource capacity limits the whole process.'},
+{id:'b2',t:'m2',q:'You speed up an activity that is critical but not a bottleneck. What happens?',o:['Capacity up, flow time unchanged','Flow time down, capacity unchanged','Both improve','Nothing changes'],a:1,e:'Critical shortens flow time. Only a bottleneck lifts capacity.'},
+{id:'b3',t:'m2',q:'You add a worker to a parallel, non critical activity. TFT:',o:['Falls','Rises','Stays the same','Doubles'],a:2,e:'TFT follows the longest path, so TFT is unchanged.'},
+{id:'b4',t:'m2',q:'Flow time efficiency is:',o:['AFT / TFT','TFT / AFT','Capacity / demand','R / I'],a:1,e:'TFT divided by AFT. It is below 100% whenever there is waiting.'},
+{id:'b5',t:'m2',q:'Little\'s law:',o:['I = R x T','I = R / T','T = R x I','R = I x T'],a:0,e:'Inventory equals flow rate times flow time, with consistent time units.'},
+{id:'b6',t:'m2',q:'A process is demand constrained. The actual flow rate equals:',o:['Process capacity','Demand rate','Bottleneck utilization','Zero'],a:1,e:'Flow rate = min(capacity, demand).'},
+{id:'b7',t:'m2',q:'Which is a flow RATE improvement rather than a flow TIME improvement?',o:['Move work off the critical path','Reduce waiting time','Add capacity at the bottleneck','Do it right the first time to shorten work content'],a:2,e:'Bottleneck capacity and utilization raise flow rate.'},
+{id:'b8',t:'m2',q:'Which activity type should be eliminated?',o:['Value adding','Essential non value adding','Non value adding','All of them'],a:2,e:'Optimize value adding, minimize essential non value adding, eliminate the rest.'},
+{id:'b9',t:'m2',q:'A cafe serves 40 customers per hour who stay 15 minutes. Average customers inside:',o:['10','15','40','60'],a:0,e:'I = 40 x 0.25 = 10.'},
+{id:'b10',t:'m2',q:'The cookie company adds a second oven. Capacity rises from 24 to 30 dozen, not 48, because:',o:['Ovens are slow','Y becomes the new bottleneck','Demand falls','RM is idle'],a:1,e:'Y (capacity 30) now limits the process.'},
+{id:'b11',t:'m2',q:'Idle time at a non bottleneck resource is:',o:['Always waste to eliminate','Fine, since only the bottleneck limits capacity','A sign of capacity shortage','Impossible'],a:1,e:'Maximizing utilization everywhere can be counter productive.'},
+{id:'b12',t:'m2',q:'Which buffers absorb variability?',o:['Inventory, time, capacity','Cost, quality, speed','Price, promotion, place','R, I, T'],a:0,e:'Pens use inventory, ambulances capacity, organ transplants time.'},
+// Module 3
+{id:'c1',t:'m3',q:'Moving down and right on the product process matrix means:',o:['More flexibility, higher unit cost','More cost efficiency, less flexibility','Lower volume','More variety'],a:1,e:'Toward mass and continuous production.'},
+{id:'c2',t:'m3',q:'Which layout groups similar resources together, with varied routes?',o:['Product layout','Assembly line','Job shop (process layout)','Continuous flow'],a:2,e:'Job shop = functional grouping, flexible, long flow times.'},
+{id:'c3',t:'m3',q:'Minimum number of stations =',o:['Cycle time / sum of task times','Ceiling of sum of task times / cycle time','Number of tasks','Longest task / C'],a:1,e:'Round up the ratio sum / C.'},
+{id:'c4',t:'m3',q:'Line efficiency =',o:['TFT / AFT','Sum of task times / (stations x cycle time)','Cycle time / sum','Output / demand'],a:1,e:'Bumper plates: 500 / (3 x 180) = 92.6%.'},
+{id:'c5',t:'m3',q:'Which of these is NOT one of the five line balancing heuristics listed on the slide?',o:['Ranked positional weight','Shortest task time','Least number of following tasks','Random assignment'],a:3,e:'The five are: longest task time, most following tasks, ranked positional weight, shortest task time, least number of following tasks.'},
+{id:'c6',t:'m3',q:'CRAFT:',o:['Always finds the optimal layout','Stops at a local optimum','Ignores flows','Works only for assembly lines'],a:1,e:'Your example ended at cost 130, the true best was 125.'},
+{id:'c7',t:'m3',q:'A task may be assigned to a station only if:',o:['It is the longest task overall','All its predecessors are already assigned and it fits the remaining time','Its time equals C','It has no successors'],a:1,e:'Eligible and feasible.'},
+{id:'c8',t:'m3',q:'A job shop making one standard product in huge volume is:',o:['On the diagonal','Mismatched, paying for unused flexibility','Perfectly placed','A project'],a:1,e:'Off the diagonal means a mismatch.'},
+{id:'c9',t:'m3',q:'Which pairing is correct for flow shop versus job shop?',o:['Flow shop: universal machines, multiple paths','Flow shop: specialized machines, single path, high volume','Job shop: single path, continuous production','Job shop: low variety, high volume'],a:1,e:'Flow shop: sequence of tasks, single path, continuous, specialized machines. Job shop: task similarities, multiple paths, interrupted, universal machines.'},
+{id:'c10',t:'m3',q:'Slide example: 480 minutes per day, 40 units required, sum of task times 66 minutes. Minimum number of stations?',o:['5','5.5 so 6','12','7'],a:1,e:'C = 480/40 = 12 minutes, N = 66/12 = 5.5, round up to 6.'},
+// Module 4
+{id:'d9',t:'m4',q:'The slide 7 steps diagram has how many numbered boxes, and what does the Highlights slide say?',o:['Five boxes, Highlights says six','Six boxes, Highlights says five','Both say four','Both say seven'],a:1,e:'Six boxes on slide 7, "Five steps" on slide 32. Read the question wording.'},
+{id:'d10',t:'m4',q:'According to the slides, a medium range forecast covers:',o:['Up to 3 months','3 months to 3 years','3 years or more','Up to 1 week'],a:1,e:'Short: up to 1 year, generally under 3 months. Medium: 3 months to 3 years. Long: 3 years or more.'},
+{id:'d11',t:'m4',q:'With e = D minus F, an over forecast gives:',o:['A positive error','A negative error','Zero error','An undefined error'],a:1,e:'Over forecasts are negative errors, under forecasts are positive errors.'},
+{id:'d12',t:'m4',q:'Exponential smoothing, alpha = 0.2, F6 = 375, D6 = 360. What is F7?',o:['360','372','375','378'],a:1,e:'F7 = 375 + 0.2 x (360 minus 375) = 372.'},
+{id:'d1',t:'m4',q:'Demand that repeats at a fixed interval is:',o:['Trend','Cycle','Seasonality','Noise'],a:2,e:'Fixed known length = seasonality, irregular long waves = cycle.'},
+{id:'d2',t:'m4',q:'A larger alpha in exponential smoothing:',o:['Smooths more','Reacts faster to recent demand','Ignores recent data','Lowers MAD always'],a:1,e:'Alpha is the weight on the latest observation.'},
+{id:'d3',t:'m4',q:'Which measure shows bias?',o:['MAD','MSE','CFE','r squared'],a:2,e:'Signed errors add up, so CFE far from zero means consistently high or low.'},
+{id:'d4',t:'m4',q:'Which measure punishes large errors most?',o:['MAD','MSE','CFE','Naive'],a:1,e:'Squares weight big misses heavily.'},
+{id:'d5',t:'m4',q:'A moving average with a bigger N:',o:['Reacts faster','Smooths more and lags more','Is the same as naive','Removes the need for history'],a:1,e:'More periods averaged, more smoothing, more lag.'},
+{id:'d6',t:'m4',q:'Which are qualitative forecasting methods?',o:['Moving average, exponential smoothing','Expert opinion, Delphi, sales force estimates','Regression, correlation','MAD, MSE'],a:1,e:'They rely on judgment and are used for new products or missing history.'},
+{id:'d7',t:'m4',q:'Time series methods without a trend term, in a trending series, will:',o:['Be perfectly accurate','Lag behind the trend','Overshoot','Ignore noise completely'],a:1,e:'They follow the level, so they lag a steady rise.'},
+{id:'d8',t:'m4',q:'Which forecasts are typically most accurate?',o:['Long horizon item level','Aggregate and short horizon','Individual SKU long horizon','New products'],a:1,e:'Aggregating cancels noise and shorter horizons have less uncertainty.'}
+];
+const WK_KEYS=['m1','m2','m3','m4'];
+</script>
+<script>
+/* ===== seeded random ===== */
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let RNG=mulberry(Date.now()%2147483647);
+const R={seed:0,newSeed(){return Math.floor(Math.random()*1e9)},seeded(s,f){const old=RNG;RNG=mulberry(s);try{return f()}finally{RNG=old}},
+ int(a,b){return a+Math.floor(RNG()*(b-a+1))},pick(a){return a[Math.floor(RNG()*a.length)]},shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(RNG()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}};
+const NUM=(s)=>{if(s==null)return NaN;s=String(s).trim().replace(/%/g,'').replace(',','.').replace(/\s/g,'');if(s==='')return NaN;return Number(s)};
+function okPart(q,v){const x=NUM(v);if(!isFinite(x))return false;return Math.abs(x-q.ans)<=Math.max(q.tol!=null?q.tol:0.01*Math.abs(q.ans),1e-9)}
+
+/* ===== calculation types ===== */
+const CALC={};
+CALC.cap={name:'Capacity table (bottleneck and utilization)',wk:'m2',gen(){
+ const names=['A','B','C'],T=R.pick([240,480,420]);let loads,units,cap;
+ do{loads=names.map(()=>R.int(4,18));units=names.map(()=>R.pick([1,1,2]));cap=loads.map((l,i)=>T/l*units[i]);}while(cap.filter(c=>Math.abs(c-Math.min(...cap))<1e-9).length>1);const pc=Math.min(...cap);const bi=cap.indexOf(pc);const ui=(bi+1)%3;
+ const text=`<p>A process has three resources in a row. Each unit of product needs the minutes shown. Available time per resource unit is <b>${T} minutes</b> per day. Demand is plentiful.</p>${TB(['Resource','Minutes per unit','Number of identical resource units'],names.map((n,i)=>[n,loads[i],units[i]]))}`;
+ const parts=[{label:'Process capacity (units per day)',ans:Math.round(pc*100)/100,tol:0.05*1},{label:'Bottleneck (enter 1 for A, 2 for B, 3 for C)',ans:bi+1,tol:0.01},{label:'Utilization of resource '+names[ui]+' (%)',ans:Math.round(pc/cap[ui]*1000)/10,tol:0.2}];
+ parts[0].tol=Math.max(0.05,pc*0.005);
+ const sol=`<ol><li>Unit capacity = ${IM(FR(TX('available time'),TX('unit load')))} times the number of units: ${names.map((n,i)=>n+': '+IM(FR(T,loads[i])+' '+TM+' '+units[i]+' = '+fm(cap[i],2))).join('; ')}.</li><li>The smallest is the bottleneck: ${names[bi]} with ${fm(pc,2)} units per day. That is the process capacity.</li><li>Utilization of ${names[ui]} = ${IM(FR(fm(pc,2),fm(cap[ui],2)))} = ${fm(pc/cap[ui]*100,1)}%.</li></ol>`;
+ return{text,parts,sol}}};
+CALC.little={name:'Little\'s law',wk:'m2',gen(){
+ const R_=R.pick([20,30,45,60,120]),Tm=R.pick([10,15,20,30,45]);const I=R_*Tm/60;
+ const text=`<p>A service centre receives <b>${R_} customers per hour</b>. On average each customer spends <b>${Tm} minutes</b> in the centre, waiting and being served.</p>`;
+ const parts=[{label:'Average number of customers inside (I)',ans:Math.round(I*100)/100,tol:Math.max(0.05,I*0.01)},{label:'Inventory turnover per hour (R / I)',ans:Math.round(60/Tm*100)/100,tol:0.02},{label:'If demand rises 50%, the largest average stay (minutes) that keeps I the same',ans:Math.round(I/(R_*1.5)*60*10)/10,tol:0.2}];
+ const sol=`<ol><li>Convert time: ${Tm} min = ${fm(Tm/60,4)} hours.</li><li>${IM(V('I')+' = '+V('R')+' '+TM+' '+V('T')+' = '+R_+' '+TM+' '+fm(Tm/60,4)+' = '+fm(I,2))}.</li><li>${IM(TX('Turnover')+' = '+FR(V('R'),V('I'))+' = '+FR('1',V('T'))+' = '+fm(60/Tm,2))} per hour.</li><li>New R = ${R_*1.5}. ${IM(V('T')+' = '+FR(V('I'),V('R'))+' = '+FR(fm(I,2),R_*1.5)+' h = '+fm(I/(R_*1.5)*60,1))} min.</li></ol>`;
+ return{text,parts,sol}}};
+function lineHeur(tasks,prec,C,rule){const done=new Set(),st=[];const succ={};tasks.forEach(t=>succ[t.n]=0);
+ const allSucc=n=>{const s=new Set(),stack=[n];while(stack.length){const x=stack.pop();prec.forEach(([a,b])=>{if(a===x&&!s.has(b)){s.add(b);stack.push(b)}})}return s.size};
+ while(done.size<tasks.length){let rem=C,cur=[];while(true){const el=tasks.filter(t=>!done.has(t.n)&&prec.filter(p=>p[1]===t.n).every(p=>done.has(p[0]))&&t.t<=rem+1e-9);if(!el.length)break;
+  el.sort((x,y)=>rule==='long'?(y.t-x.t||x.n.localeCompare(y.n)):(allSucc(y.n)-allSucc(x.n)||y.t-x.t||x.n.localeCompare(y.n)));const p=el[0];cur.push(p.n);done.add(p.n);rem-=p.t}
+  if(!cur.length)return null;st.push(cur)}return st}
+CALC.line={name:'Assembly line balancing',wk:'m3',gen(){
+ const nm=['A','B','C','D','E','F','G'],prec=[['A','C'],['B','C'],['C','D'],['C','E'],['D','F'],['E','F'],['F','G']];
+ const tasks=nm.map(n=>({n,t:R.int(2,9)*10}));const sum=tasks.reduce((a,b)=>a+b.t,0);const maxT=Math.max(...tasks.map(t=>t.t));
+ const C=Math.max(maxT,R.pick([50,60,70,80,100]));const st=lineHeur(tasks,prec,C,'long');const N=Math.ceil(sum/C-1e-9);
+ const text=`<p>Seven tasks with times in seconds: ${tasks.map(t=>t.n+' = '+t.t).join(', ')}. Precedence: A and B before C; C before D and E; D and E before F; F before G. The cycle time is <b>${C} seconds</b>. Use the <b>longest task time</b> rule (ties: alphabetical order).</p>`;
+ const eff=sum/(st.length*C)*100;
+ const parts=[{label:'Sum of task times (seconds)',ans:sum,tol:0.01},{label:'Theoretical minimum number of stations',ans:N,tol:0.01},{label:'Stations used by the heuristic',ans:st.length,tol:0.01},{label:'Line efficiency (%)',ans:Math.round(eff*10)/10,tol:0.3}];
+ const sol=`<ol><li>Sum = ${sum} s. ${IM(SB(V('N'),'min')+' = <span class="ce">'+FR(sum,C)+'</span> = <span class="ce">'+fm(sum/C,2)+'</span> = '+N)}.</li><li>Fill station by station with eligible tasks that fit, largest first. Result: ${st.map((s,i)=>'Station '+(i+1)+': '+s.join(', ')).join('; ')}.</li><li>Stations used = ${st.length}.</li><li>${IM(TX('Efficiency')+' = '+FR(sum,st.length+' '+TM+' '+C)+' = '+fm(eff,1)+'%')}</li></ol>`;
+ return{text,parts,sol}}};
+CALC.fc={name:'Forecasting (MA, ES, MAD)',wk:'m4',gen(){
+ const base=R.int(200,400),D=[];for(let i=0;i<8;i++)D.push(base+R.int(-30,30)+i*R.int(0,6));const a=R.pick([0.2,0.3,0.5]);
+ const ma8=(D[5]+D[6]+D[7])/3;let F=D[0];const FS=[F];for(let i=1;i<8;i++){F=FS[i-1]+a*(D[i-1]-FS[i-1]);FS.push(F)}const es9=FS[7]+a*(D[7]-FS[7]);
+ let mad=0,n=0;for(let t=3;t<8;t++){const f=(D[t-3]+D[t-2]+D[t-1])/3;mad+=Math.abs(D[t]-f);n++}mad/=n;
+ const text=`<p>Demand in periods 1 to 8: ${D.join(', ')}. Exponential smoothing uses alpha = <b>${a}</b> and starts with the forecast for period 1 equal to the actual of period 1 (${D[0]}).</p>`;
+ const parts=[{label:'3 period moving average forecast for period 9',ans:Math.round(ma8*100)/100,tol:0.05},{label:'Exponential smoothing forecast for period 9',ans:Math.round(es9*100)/100,tol:0.1},{label:'MAD of the 3 period moving average over periods 4 to 8',ans:Math.round(mad*100)/100,tol:0.05}];
+ const sol=`<ol><li>${IM(SB('F','9')+' = '+FR(D[5]+' + '+D[6]+' + '+D[7],'3')+' = '+fm(ma8,2))}.</li><li>Exponential smoothing: ${IM(SB(V('F'),'t+1')+' = '+SB(V('F'),'t')+' + &alpha; ('+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t')+')')}, start F1 = ${D[0]}. Rolling forward gives F8 = ${fm(FS[7],2)}, then ${IM(SB('F','9')+' = '+fm(FS[7],2)+' + '+a+' ('+D[7]+' '+MN+' '+fm(FS[7],2)+') = '+fm(es9,2))}.</li><li>MAD: the forecast for each period 4 to 8 is the mean of the 3 previous actuals. ${IM(TX('MAD')+' = '+FR(SM+' |'+SB(V('e'),'t')+'|',V('n'))+' = '+fm(mad,2))}.</li></ol>`;
+ return{text,parts,sol}}};
+CALC.craft={name:'Job shop layout cost',wk:'m3',gen(){
+ const dep=['S','L','Q'],f={SL:R.int(5,25),SQ:R.int(5,25),LQ:R.int(5,25)};const dm={'12':R.int(2,5),'23':R.int(2,5)};dm['13']=dm['12']+dm['23'];
+ const cost=perm=>{const pos={};perm.forEach((d,i)=>pos[d]=i+1);const dist=(a,b)=>{const x=Math.min(pos[a],pos[b]),y=Math.max(pos[a],pos[b]);return dm[''+x+y]};return f.SL*dist('S','L')+f.SQ*dist('S','Q')+f.LQ*dist('L','Q')};
+ const perms=[['S','L','Q'],['S','Q','L'],['L','S','Q'],['L','Q','S'],['Q','S','L'],['Q','L','S']];const cs=perms.map(cost);const best=Math.min(...cs);
+ const text=`<p>Three departments S, L, Q go into locations L1, L2, L3 in a row. Distance L1 to L2 = ${dm['12']}, L2 to L3 = ${dm['23']}, so L1 to L3 = ${dm['13']}. Flows per day: S to L ${f.SL}, S to Q ${f.SQ}, L to Q ${f.LQ}. Cost = flow x distance, cost per unit distance is 1.</p>`;
+ const parts=[{label:'Cost of the layout S L Q (L1 L2 L3)',ans:cs[0],tol:0.01},{label:'Cost of the layout Q L S',ans:cs[5],tol:0.01},{label:'Lowest cost over all 6 layouts',ans:best,tol:0.01}];
+ const sol=`<ol><li>Cost = ${IM(SM+' '+TX('flow')+' '+TM+' '+TX('distance'))} over the three pairs.</li><li>${perms.map((p,i)=>p.join(' ')+' = '+cs[i]).join('; ')}.</li><li>The lowest of the six is ${best}. CRAFT swaps pairs from the start layout and may stop above this value.</li></ol>`;
+ return{text,parts,sol}}};
+const CALC_ORDER=['cap','little','line','fc','craft'];
+</script>
+<script>
+const SRC=[['Lecture 1','OM 2026 1.pdf'],['Lecture 2 (annotated)','Lecture_2 2.pdf'],['Lecture 3 (annotated)','OM+2026+3.pdf'],['Lecture 4','OM_2026_4.pdf'],['Variability deck (scope unverified)','IL 2026 3.pdf'],['Exercises 3 with practice solutions','OM_Exercises_3.docx'],['Exercises 4 with practice solution','OM_Exercises_4.docx and OM_Exercises_4.xlsx'],['Your tutorial workings','OM tutorials.pdf']];
+const PLAN=[
+['Sat 21 Nov, evening','90 min','Module 2 theory and capacity table method. Then 3 capacity and 3 Little problems in the Calculation lab.'],
+['Sat 21 Nov, late','45 min','Module 1 theory (pictures only) and 10 quiz questions.'],
+['Sun 22 Nov, morning','120 min','Module 3: matrix, line balancing, CRAFT. Do 3 line problems and 2 layout problems.'],
+['Sun 22 Nov, afternoon','90 min','Module 4: patterns, MA, ES, error measures. 3 forecasting problems.'],
+['Sun 22 Nov, evening','60 min','Quiz, all modules, until at least 80%. Re read every explanation of a missed one.'],
+['Mon 23 Nov, morning','60 min','Mock midterm (50 min timed) and review. Formula sheet recite once.'],
+['Mon 23 Nov, 17:00','','Exam. Pen, ID, simple calculator.']];
+const WORKINGS=[
+['Clinic (tutorial)','OK','TFT 36 min. Unit loads R 7, T 9, TR 30, D 20. Capacities 8.6, 6.7, 2, 3 per hour. Bottleneck TR, capacity 2 per hour. With two testing rooms the doctor limits to 3 per hour. Your note marking the doctor as the limit is right.'],
+['Customer service','OK','T = 9 + 2 + 12 + 7.5 = 30.5 min. Specialised operator handles 8 per hour. I about 10.'],
+['Bumper plates and Olympic bar','OK','Matches the independent run: 3 stations at 92.6%, and 4 stations at 97.5% (longest task) versus 5 stations at 78% (most following tasks).'],
+['CRAFT (S, L, Q)','FIX','Your start cost is written as 190. The correct start cost is 140 (check: S L Q). The swaps and final answer Q L S at 130 are correct. Note the true optimum is Q S L at 125, so CRAFT stopped at a local optimum.'],
+['WR 5','OK','TFT 140 min, capacity 8.33 per day, with a worker on A3 capacity 10 per day.'],
+['Forecasting sheets','OK','Moving average N = 5 has the lowest MAD (10.72). ES alpha 0.1 gives 10.89, alpha 0.5 11.62, alpha 0.9 14.82.']];
+const GAPS=[
+['Exercise 1 strategy cases','Use the chain: market requirements, then competitive dimensions (cost, quality, flexibility, delivery), then order winner versus qualifier, then OM lever. Answer in that order every time.'],
+['WR 5','Covered in the Module 2 section above. Verified.'],
+['X, Y, Z case, Daffy Dave, Wally','Apply the same capacity table method. The solutions file in your folder is not from Canvas (AI or self written), so its answers are UNVERIFIED. Recompute them yourself in the Calculation lab with the same structure.'],
+['Cafe (Little)','Seats = 40 x 0.25 = 10. If demand rises 50%, T must drop to 10 min to keep 10 seats. Verified.'],
+['Exercise 3 practice 5 to 10','Official solutions are inside OM_Exercises_3.docx. Layout totals 570, 480, 460. Redo them with the method in Module 3.'],
+['Exercise 4 practice','Official solution is in OM_Exercises_4.docx and the xlsx. Regression part (4.2) is excluded.']];
+const METHODS=[
+['Module 2','Capacity table (any process)',['List each resource with the minutes it spends per unit (unit load).','Unit capacity = '+IM(FR(TX('available time'),TX('unit load')))+'.','Total capacity = unit capacity '+TM+' number of identical units.','Smallest total capacity = bottleneck = process capacity.','Utilization of any resource = '+IM(FR(TX('process capacity'),TX('its capacity')))+'.']],
+['Module 2','Little\'s law',['Name the flow unit.','Convert so '+IM(V('R'))+' and '+IM(V('T'))+' use the same time unit.',IM(V('I')+' = '+V('R')+' '+TM+' '+V('T'))+'. Turnover = '+IM(FR(V('R'),V('I'))+' = '+FR('1',V('T')))+'.','If waiting is given as a count of people waiting, that count is '+IM(V('I'))+'. Waiting time = '+IM(FR(V('I'),V('R')))+'.']],
+['Module 2','TFT, AFT and critical path',['Draw the activity network.','Add times along every path.','TFT = longest path. AFT = TFT + all waiting.','Flow time efficiency = '+IM(FR('TFT','AFT'))+'.']],
+['Module 3','Line balancing',['Draw the precedence diagram.',IM(V('C')+' = '+FR(TX('available time'),TX('required output')))+'.',IM(SB(V('N'),'min')+' = <span class="ce">'+FR(SM+' '+TX('task times'),V('C'))+'</span>')+' (round up).','Assign eligible tasks that fit using the named rule. New station when none fit.','Efficiency = '+IM(FR(SM+' '+TX('task times'),TX('stations')+' '+TM+' '+V('C')))+'.']],
+['Module 3','CRAFT',['Compute cost of the start layout: '+IM(SM+' ('+TX('flow')+' '+TM+' '+TX('distance')+')')+'.','List every pair swap with its cost.','Take the best swap, repeat.','Stop when no swap improves. State that it is a heuristic.']],
+['Module 4','Forecasts and errors',['Moving average of '+IM(V('N'))+' periods: '+IM(SB(V('F'),'t+1')+' = '+FR(SB(V('D'),'t')+' + '+SB(V('D'),'t'+MN+'1')+' + &hellip; + '+SB(V('D'),'t'+MN+V('N')+'+1'),V('N')))+'.','Exponential smoothing: '+IM(SB(V('F'),'t+1')+' = '+SB(V('F'),'t')+' + &alpha; ('+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t')+')')+'.','Error '+IM(SB(V('e'),'t')+' = '+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t'))+'.','CFE = '+IM(SM+' '+SB(V('e'),'t'))+', MAD = '+IM(FR(SM+' |'+SB(V('e'),'t')+'|',V('n')))+', MSE = '+IM(FR(SM+' '+SP(SB(V('e'),'t'),'2'),V('n')))+'.']]];
+const FORMULAS=[
+['Process analysis',[
+ [TX('Unit capacity')+' = '+FR(TX('available time'),TX('unit load')),'per resource unit'],
+ [TX('Total capacity')+' = '+TX('unit capacity')+' '+TM+' '+TX('number of units'),''],
+ [TX('Process capacity')+' = '+TX('smallest resource capacity'),'the bottleneck'],
+ [TX('Utilization')+' = '+FR(TX('process capacity'),TX('resource capacity')),''],
+ [V('I')+' = '+V('R')+' '+TM+' '+V('T'),'Little\'s law'],
+ [V('T')+' = '+FR(V('I'),V('R')),''],
+ [TX('Turnover')+' = '+FR(V('R'),V('I'))+' = '+FR('1',V('T')),''],
+ [TX('Flow time efficiency')+' = '+FR('TFT','AFT'),'']]],
+['Layout',[
+ [V('C')+' = '+FR(TX('available time'),TX('required output')),'cycle time'],
+ [SB(V('N'),'min')+' = <span class="ce">'+FR(SM+' '+TX('task times'),V('C'))+'</span>','round up'],
+ [TX('Efficiency')+' = '+FR(SM+' '+TX('task times'),V('N')+' '+TM+' '+V('C')),'line balancing'],
+ [TX('Cost')+' = '+SM+' '+TX('flow')+' '+TM+' '+TX('distance'),'job shop']]],
+['Forecasting',[
+ [SB(V('F'),'t+1')+' = '+SB(V('F'),'t')+' + &alpha; ('+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t')+')','exponential smoothing'],
+ [SB(V('F'),'t+1')+' = '+FR(SB(V('D'),'t')+' + &hellip; + '+SB(V('D'),'t'+MN+V('N')+'+1'),V('N')),'moving average'],
+ [SB(V('e'),'t')+' = '+SB(V('D'),'t')+' '+MN+' '+SB(V('F'),'t'),'error'],
+ [TX('CFE')+' = '+SM+' '+SB(V('e'),'t'),'bias'],
+ [TX('MAD')+' = '+FR(SM+' |'+SB(V('e'),'t')+'|',V('n')),''],
+ [TX('MSE')+' = '+FR(SM+' '+SP(SB(V('e'),'t'),'2'),V('n')),'']]],
+['Retail',[
+ [TX('Inventory turns')+' = '+FR('COGS',TX('Inventory')),''],
+ [TX('Days of supply')+' = '+FR(TX('Inventory'),FR('COGS','365')),'']]]];
+</script>
+<script>
+/* ===== store with db + local fallback ===== */
+const EMPTY=()=>({mc:{},calc:{},mocks:[],rec:{},epoch:0});
+let store=EMPTY(),DB=null,DOC=null,saving=false,dirty=false,saveT=null;
+const LS='om_midterm_v1';
+function setStatus(k,t){const s=$('#sync');s.className=k==='ok'?'ok':k==='warn'?'warn':'';s.textContent=t}
+function localSave(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
+function localLoad(){try{const x=localStorage.getItem(LS);if(x)return JSON.parse(x)}catch(e){}return null}
+function save(){localSave();dirty=true;clearTimeout(saveT);saveT=setTimeout(pushDb,800)}
+async function pushDb(){if(!DOC||saving||!dirty)return;saving=true;dirty=false;try{await DOC.set({json:JSON.stringify(store),at:Date.now()});setStatus('ok','Progress saved to your account')}catch(e){setStatus('warn','Saved in this browser only ('+(e&&e.code||'error')+')')}saving=false;if(dirty)pushDb()}
+async function initSync(){
+ const loc=localLoad();if(loc)store=Object.assign(EMPTY(),loc);
+ try{const c=window.claude;if(!c||!c.use){setStatus('', 'Progress is saved in this browser only');return}
+  const [db,user]=await Promise.all([c.use('db'),c.use('user')]);const id=user&&await user.id();
+  if(!db||!id){setStatus('','Progress is saved in this browser only');return}
+  DB=db;DOC=db.doc('data/users/'+id+'/progress');
+  const tm=setTimeout(()=>setStatus('warn','Account storage not reachable yet, using this browser'),10000);
+  const snap=await DOC.get();clearTimeout(tm);
+  if(snap.exists){try{const remote=JSON.parse(snap.data().json);const rAt=snap.data().at||0;const lAt=(loc&&loc.epoch)||0;store=Object.assign(EMPTY(),remote);localSave();}catch(e){}}
+  setStatus('ok','Progress syncs to your account');render();
+ }catch(e){setStatus('warn','Saved in this browser only')}}
+
+/* ===== tabs ===== */
+const TABS=[['start','Start'],['theory','Theory'],['quiz','Quiz'],['lab','Calculation lab'],['mock','Mock midterm'],['work','Your workings'],['methods','Methods'],['formulas','Formulas'],['progress','Progress']];
+let tab='start';
+function renderTabs(){$('#tabs').innerHTML=TABS.map(t=>`<button role="tab" aria-selected="${t[0]===tab}" data-t="${t[0]}">${t[1]}</button>`).join('');$$('#tabs button').forEach(b=>b.onclick=()=>{if(M.state==='run'&&b.dataset.t!=='mock'&&!confirm('The mock is running. Leave it?'))return;tab=b.dataset.t;render();window.scrollTo(0,0)})}
+function render(){renderTabs();({start,theory,quiz,lab,mock,work,methods,formulas,progress})[tab]()}
+function countdown(){const t=new Date('2026-11-23T17:00:00+01:00').getTime()-Date.now();const el=$('#cd');if(t<=0){el.textContent='Midterm time: Mon 23 Nov 2026, 17:00, VD (A to O) or MD (P to Ž)';return}const h=Math.floor(t/36e5),d=Math.floor(h/24);el.textContent='Midterm Mon 23 Nov 17:00 (hall VD for surnames A to O, MD for P to Ž): '+d+' days '+(h%24)+' h left'}
+
+/* ===== start ===== */
+function start(){
+ const total=300+120+60+80+60;
+ $('#view').innerHTML=`<div class="card"><h2>The exam in one box</h2>${TB(['Item','Detail'],[['When','Mon 23 Nov 2026, 17:00, 50 minutes'],['Hall','VD for surnames A to O, MD for P to Ž (check which applies to your surname, you are listed as both Lazarov and Saje)'],['Scope','Modules 1 to 4. Regression (Exercise 4.2) is excluded.'],['Format','Closed book. About 60% multiple choice theory, 40% two calculation exercises.'],['Bring','ID, pen, simple calculator'],['Weight','Optional, worth 40% of the final grade. 50% or more allows the partial end exam.']])}<p class="meta">Source: Canvas announcement and syllabus. The Canvas Practice Mid-term Exam quiz (9 questions, 40 points, unlimited attempts) is unstarted: do it once after the mock.</p></div>
+<div class="card"><h2>Study load</h2><p>About <b>${Math.round(total/60*10)/10} hours</b> in total: theory 5 h (M1 60, M2 90, M3 75, M4 75 minutes), calculation lab 2 h, quiz 1 h, mock plus review 80 min, workings and gaps 1 h. Theory is 60% of the marks, so read the pictures first.</p>${TB(['When','Time','What'],PLAN.map(p=>[p[0],p[1],p[2]]))}</div>
+<div class="card"><h2>Files to open for the text heavy parts</h2>${TB(['Material','File in your folder'],SRC)}<p class="note">Syllabus section 6 restricts uploading course materials to generative AI systems. Check it before you share these files further.</p></div>`}
+
+/* ===== theory ===== */
+function theory(){
+ $('#view').innerHTML=`<p class="note" style="margin-top:0">Each module explains the lecture pictures step by step. Open one, read, then cover the page and answer the recall questions.</p>`+THEORY.map(m=>`<details class="mod" id="d_${m.id}"><summary>${m.title} <span class="meta">${m.time}</span></summary><div class="inner"><p class="meta">Source file: ${esc(m.file)}</p><p>${m.intro}</p>${m.blocks.map(b=>`<div class="blk"><h3>${b.h}</h3>${b.html}</div>`).join('')}<div class="recall"><b>Recall check</b>${m.recall.map((q,i)=>`<label class="chk"><input type="checkbox" data-r="${m.id}_${i}" ${store.rec[m.id+'_'+i]?'checked':''}> <span>${esc(q)}</span></label>`).join('')}</div></div></details>`).join('');
+ $$('input[data-r]').forEach(c=>c.onchange=()=>{store.rec[c.dataset.r]=c.checked?1:0;save()});
+ const qm=$('#qm');if(qm){const draw=()=>{const m=+$('#qm').value,a=+$('#qa').value,p=+$('#qp').value;$('#qav').textContent=a;$('#qpv').textContent=p;$('#qsvg').innerHTML=qCurve(m,a,p)};['qm','qa','qp'].forEach(i=>$('#'+i).oninput=draw);draw()}}
+
+/* ===== quiz ===== */
+let Q={mod:'all',list:[],i:0,sel:null,done:false,right:0,mode:'new'};
+function quiz(){
+ if(!Q.list.length){
+  $('#view').innerHTML=`<div class="card"><h2>Concept quiz</h2><p>${BANK.length} multiple choice questions on all four modules, shuffled. Explanations appear after each answer.</p><div class="chips" id="mods">${[['all','All modules']].concat(WK_KEYS.map(k=>[k,MOD[k]])).concat([['miss','Missed ones only']]).map(c=>`<button class="chip" aria-pressed="${Q.mod===c[0]}" data-m="${c[0]}">${c[1]}</button>`).join('')}</div><button class="btn" id="go">Start</button></div>`;
+  $$('#mods .chip').forEach(b=>b.onclick=()=>{Q.mod=b.dataset.m;quiz()});
+  $('#go').onclick=()=>{let pool=BANK.filter(q=>Q.mod==='all'||(Q.mod==='miss'?store.mc[q.id]&&store.mc[q.id].last===0:q.t===Q.mod));if(!pool.length){alert('No questions here yet.');return}Q.list=R.shuffle(pool);Q.i=0;Q.sel=null;Q.done=false;Q.right=0;quiz()};return}
+ if(Q.i>=Q.list.length){const n=Q.list.length;$('#view').innerHTML=`<div class="card"><h2>Result: ${Q.right} of ${n} (${Math.round(100*Q.right/n)}%)</h2><p>Aim for 80% or more across all modules before the mock.</p><button class="btn" id="again">Back</button></div>`;$('#again').onclick=()=>{Q.list=[];quiz()};return}
+ const q=Q.list[Q.i];const order=q._o||(q._o=R.shuffle([0,1,2,3]));
+ $('#view').innerHTML=`<div class="card"><div class="meta">${MOD[q.t]} · question ${Q.i+1} of ${Q.list.length}</div><div class="q">${esc(q.q)}</div>${order.map((oi,k)=>`<button class="opt ${Q.done?(oi===q.a?'good':(oi===Q.sel?'bad':'')):''}" data-o="${oi}" ${Q.done?'disabled':''}><span class="k">${'ABCD'[k]}</span>${esc(q.o[oi])}</button>`).join('')}${Q.done?`<div class="fb ${Q.sel===q.a?'good':'bad'}"><b>${Q.sel===q.a?'Correct.':'Not quite.'}</b>${esc(q.e)}</div><div class="row" style="margin-top:10px"><button class="btn" id="nx">${Q.i+1<Q.list.length?'Next':'Finish'}</button></div>`:''}</div>`;
+ $$('.opt').forEach(b=>b.onclick=()=>{Q.sel=+b.dataset.o;Q.done=true;const ok=Q.sel===q.a;if(ok)Q.right++;const r=store.mc[q.id]||{n:0};r.n++;r.last=ok?1:0;store.mc[q.id]=r;save();quiz()});
+ if(Q.done)$('#nx').onclick=()=>{q._o=null;Q.i++;Q.sel=null;Q.done=false;quiz()}}
+
+/* ===== calc rendering ===== */
+function partsHtml(t,pre,reveal){return t.parts.map((p,j)=>`<div class="part" id="${pre}row${j}"><label for="${pre}${j}">${esc(p.label)}</label><input id="${pre}${j}" type="text" inputmode="decimal" autocomplete="off"><span class="m" id="${pre}m${j}"></span></div>`).join('')}
+function gradeParts(t,pre){let good=0;t.parts.forEach((p,j)=>{const v=$('#'+pre+j).value;const ok=okPart(p,v);if(ok)good++;$('#'+pre+'row'+j).className='part '+(ok?'ok':'no');$('#'+pre+'m'+j).textContent=ok?'✓':'✗ '+fm(p.ans,2)});return good}
+function recCalc(k,good,parts){const r=store.calc[k]||{tasks:0,good:0,parts:0};r.tasks++;r.good+=good;r.parts+=parts;store.calc[k]=r;save()}
+let L={key:'cap',t:null,seed:null,checked:false};
+function lab(){
+ if(!L.t){L.seed=R.newSeed();L.t=R.seeded(L.seed,()=>CALC[L.key].gen());L.checked=false}
+ const t=L.t;
+ $('#view').innerHTML=`<div class="chips">${CALC_ORDER.map(k=>`<button class="chip" aria-pressed="${k===L.key}" data-k="${k}">${esc(CALC[k].name)}</button>`).join('')}</div><div class="card">${t.text}<div id="pp">${partsHtml(t,'l')}</div><div class="row"><button class="btn" id="chk" ${L.checked?'disabled':''}>Check</button><button class="btn ghost" id="nw">New problem</button></div><div id="out"></div><p class="note">Try on paper first. Numbers only, a comma or dot both work, rounding tolerance is built in.</p></div>`;
+ $$('.chip[data-k]').forEach(b=>b.onclick=()=>{L.key=b.dataset.k;L.t=null;lab()});
+ $('#nw').onclick=()=>{L.t=null;lab()};
+ $('#chk').onclick=()=>{const g=gradeParts(t,'l');L.checked=true;$('#chk').disabled=true;recCalc(L.key,g,t.parts.length);$('#out').innerHTML=`<div class="fb ${g===t.parts.length?'good':'bad'}"><b>${g} of ${t.parts.length} parts correct.</b></div><div class="fb sol"><b>Worked solution</b>${t.sol}</div>`};
+ $('#pp').onkeydown=e=>{if(e.key==='Enter'&&!L.checked)$('#chk').click()}}
+
+/* ===== mock ===== */
+const MOCKQ=[]; let M={state:'idle'};
+const mleft=()=>Math.max(0,3000-Math.floor((Date.now()-M.start)/1000));
+const mmss=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function mock(){
+ const v=$('#view');
+ if(M.state==='idle'){const last=store.mocks.slice(-5).reverse().map(m=>`<tr><td>${esc(m.date)}</td><td>${m.mc} / 12</td><td>${m.calc}</td><td><b>${m.pct}%</b></td></tr>`).join('');
+  v.innerHTML=`<div class="card"><h2>Mock midterm, 50 minutes</h2><p>12 multiple choice questions (3 per module, about 60% of the marks) and 2 calculation exercises (about 40%). New numbers every time. Paper first, simple calculator only, no notes.</p><button class="btn" id="go">Start the 50 minute mock</button></div>${last?`<div class="card"><b>Recent mocks</b><table><tr><th>Date</th><th>Multiple choice</th><th>Calculation parts</th><th>Weighted score</th></tr>${last}</table></div>`:''}`;
+  $('#go').onclick=()=>{const mc=[];WK_KEYS.forEach(k=>mc.push(...R.shuffle(BANK.filter(q=>q.t===k)).slice(0,3)));mc.forEach(q=>q._o=R.shuffle([0,1,2,3]));
+   const cA=R.pick(['cap','little','line']),cB=R.pick(['fc','craft']);const probs=[cA,cB].map(k=>{const s=R.newSeed();return{k,seed:s,t:R.seeded(s,()=>CALC[k].gen())}});
+   M={state:'run',mc:R.shuffle(mc),ans:{},probs,start:Date.now(),timer:null};M.timer=setInterval(()=>{const el=$('#tm');const l=mleft();if(el){el.textContent=mmss(l);if(l<300)el.classList.add('low')}if(l<=0)finishMock()},1000);mock();window.scrollTo(0,0)};return}
+ if(M.state==='run'){
+  v.innerHTML=`<div class="card row bar2"><span>Time left <span class="timer" id="tm">${mmss(mleft())}</span></span><button class="btn" id="fin">Submit</button></div>`+M.mc.map((q,i)=>`<div class="card"><div class="meta">Question ${i+1} (${MOD[q.t]})</div><div class="q">${esc(q.q)}</div>${q._o.map((oi,k)=>`<button class="opt ${M.ans[q.id]===oi?'sel':''}" data-q="${q.id}" data-o="${oi}"><span class="k">${'ABCD'[k]}</span>${esc(q.o[oi])}</button>`).join('')}</div>`).join('')+M.probs.map((p,i)=>`<div class="card"><div class="meta">Calculation exercise ${i+1}</div>${p.t.text}${partsHtml(p.t,'k'+i+'_')}</div>`).join('');
+  $$('.opt[data-q]').forEach(b=>b.onclick=()=>{M.ans[b.dataset.q]=+b.dataset.o;$$('.opt[data-q="'+b.dataset.q+'"]').forEach(x=>x.classList.toggle('sel',x===b))});
+  M.probs.forEach((p,i)=>p.t.parts.forEach((q,j)=>{const el=$('#k'+i+'_'+j);if(M.vals&&M.vals[i+'_'+j])el.value=M.vals[i+'_'+j];el.oninput=()=>{M.vals=M.vals||{};M.vals[i+'_'+j]=el.value}}));
+  $('#fin').onclick=()=>{const b=$('#fin');if(b.dataset.arm)finishMock();else{b.dataset.arm=1;b.textContent='Click again to submit';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent='Submit'}},4000)}};return}
+ const r=M.res;
+ v.innerHTML=`<div class="card"><h2>Result: ${r.pct}%</h2><p>Multiple choice ${r.mc} of 12. Calculation parts ${r.calc}. Weighted 60% and 40%. The Canvas practice quiz is the next step.</p><button class="btn" id="re">Back</button></div>`+M.mc.map((q,i)=>`<div class="card"><div class="meta">Question ${i+1}</div><div class="q">${esc(q.q)}</div>${q._o.map((oi,k)=>`<div class="opt ${oi===q.a?'good':(M.ans[q.id]===oi?'bad':'')}"><span class="k">${'ABCD'[k]}</span>${esc(q.o[oi])}</div>`).join('')}<div class="fb"><b>Why</b>${esc(q.e)}</div></div>`).join('')+M.probs.map((p,i)=>`<div class="card"><div class="meta">Calculation exercise ${i+1}</div>${p.t.text}${partsHtml(p.t,'k'+i+'_')}<div class="fb sol"><b>Solution</b>${p.t.sol}</div></div>`).join('');
+ M.probs.forEach((p,i)=>{p.t.parts.forEach((q,j)=>{$('#k'+i+'_'+j).value=(M.vals&&M.vals[i+'_'+j])||''});gradeParts(p.t,'k'+i+'_')});
+ $('#re').onclick=()=>{M={state:'idle'};mock()}}
+function finishMock(){clearInterval(M.timer);if(M.state!=='run')return;let mc=0;M.mc.forEach(q=>{const ok=M.ans[q.id]===q.a;if(ok)mc++;const r=store.mc[q.id]||{n:0};r.n++;r.last=ok?1:0;store.mc[q.id]=r});
+ let cg=0,cp=0;M.probs.forEach((p,i)=>{let g=0;p.t.parts.forEach((q,j)=>{if(okPart(q,(M.vals||{})[i+'_'+j]))g++});cg+=g;cp+=p.t.parts.length;recCalc(p.k,g,p.t.parts.length)});
+ const pct=Math.round(60*mc/12+40*cg/cp);M.res={mc,calc:cg+' / '+cp,pct};store.mocks.push({date:new Date().toISOString().slice(0,10),mc,calc:cg+' / '+cp,pct});save();M.state='done';if(tab==='mock')mock()}
+
+/* ===== workings, methods, formulas, progress ===== */
+function work(){
+ $('#view').innerHTML=`<div class="card"><h2>Your tutorial workings, checked</h2><p class="meta">Each result was recomputed independently. VERIFIED means your result matches my independent calculation or the professor files. CORRECTION means one of your numbers was wrong and should be fixed in your notes.</p>${TB(['Item','Status','Check'],WORKINGS.map(w=>[w[0],`<span class="tag ${w[1]==='OK'?'v':'f'}">${w[1]==='OK'?'VERIFIED':'CORRECTION'}</span>`,w[2]]))}</div><div class="card"><h2>Gaps explained</h2>${TB(['Exercise','What to know'],GAPS)}</div>`}
+function methods(){let last='';$('#view').innerHTML=METHODS.map(m=>{const h=m[0]!==last?`<h3>${m[0]}</h3>`:'';last=m[0];return h+`<div class="card"><b>${m[1]}</b><ol class="sol">${m[2].map(l=>'<li>'+l+'</li>').join('')}</ol></div>`}).join('')}
+function formulas(){$('#view').innerHTML=`<p class="note" style="margin-top:0">No formula sheet in the exam. Cover the formulas, say them out loud, then check.</p>`+FORMULAS.map(g=>`<div class="card"><b>${g[0]}</b>${g[1].map(r=>`<div class="mrow">${EQ(r[0])}<span class="meta">${esc(r[1])}</span></div>`).join('')}</div>`).join('')}
+function progress(){
+ const tiles=WK_KEYS.map(k=>{const qs=BANK.filter(q=>q.t===k),right=qs.filter(q=>store.mc[q.id]&&store.mc[q.id].last===1).length,tried=qs.filter(q=>store.mc[q.id]).length;const th=THEORY.find(t=>t.id===k),rc=th.recall.filter((x,i)=>store.rec[k+'_'+i]).length;const pct=Math.round(100*right/qs.length);return`<div class="stat"><div class="meta">${MOD[k]}</div><b>${pct}%</b><div class="bar"><i style="width:${pct}%"></i></div><div class="meta">Quiz: ${right} of ${qs.length} right (${tried} tried). Recall ticks: ${rc} of ${th.recall.length}</div></div>`}).join('');
+ const rows=CALC_ORDER.map(k=>{const r=store.calc[k];return`<tr><td>${esc(CALC[k].name)}</td><td>${r?r.tasks:0}</td><td>${r?Math.round(100*r.good/r.parts)+'%':'<span class="meta">not tried</span>'}</td></tr>`}).join('');
+ const sum='OM midterm trainer, summary '+new Date().toISOString().slice(0,16).replace('T',' ')+'\n'+WK_KEYS.map(k=>{const qs=BANK.filter(q=>q.t===k);return MOD[k]+': quiz '+qs.filter(q=>store.mc[q.id]&&store.mc[q.id].last===1).length+'/'+qs.length}).join('\n')+'\n'+CALC_ORDER.filter(k=>store.calc[k]).map(k=>CALC[k].name+': '+store.calc[k].tasks+' problems, '+Math.round(100*store.calc[k].good/store.calc[k].parts)+'% parts right').join('\n')+(store.mocks.length?'\nLast mock: '+store.mocks[store.mocks.length-1].pct+'% ('+store.mocks.length+' mocks)':'');
+ $('#view').innerHTML=`<div class="grid">${tiles}</div><div class="card" style="margin-top:14px"><b>Calculation types</b><table><tr><th>Type</th><th>Problems</th><th>Parts right</th></tr>${rows}</table></div><div class="card"><b>Session summary</b><p class="meta">Paste this to Claude so the next session resumes from here.</p><textarea id="sum" readonly></textarea><div class="row"><button class="btn" id="cp">Copy</button><button class="btn ghost" id="rs">Reset all progress</button></div></div>`;
+ $('#sum').value=sum;
+ $('#cp').onclick=()=>{const t=$('#sum');t.select();try{navigator.clipboard.writeText(t.value).then(()=>$('#cp').textContent='Copied',()=>$('#cp').textContent='Selected, press Cmd C')}catch(e){$('#cp').textContent='Selected, press Cmd C'}};
+ $('#rs').onclick=()=>{const b=$('#rs');if(b.dataset.arm){store=EMPTY();store.epoch=Date.now();save();progress()}else{b.dataset.arm=1;b.textContent='Click again to delete all progress'}}}
+
+render();countdown();setInterval(countdown,30000);setStatus('','Progress is saved in this browser');initSync();
+</script>
+</body>
+</html>
